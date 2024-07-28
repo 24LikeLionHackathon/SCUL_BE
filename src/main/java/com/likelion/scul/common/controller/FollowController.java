@@ -1,13 +1,13 @@
 package com.likelion.scul.common.controller;
 
+import com.likelion.scul.common.domain.Follow;
 import com.likelion.scul.common.dto.follow.FollowRequest;
 import com.likelion.scul.common.service.FollowService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/follow")
 public class FollowController {
 
     private FollowService followService;
@@ -17,8 +17,8 @@ public class FollowController {
     }
 
     @PostMapping
-    public void addFollow(@RequestBody FollowRequest request) {
-        followService.saveFollow(request);
-
+    public ResponseEntity<Follow> addFollow(@RequestBody FollowRequest request) {
+        Follow follow = followService.saveFollow(request);
+        return ResponseEntity.ok(follow);
     }
 }

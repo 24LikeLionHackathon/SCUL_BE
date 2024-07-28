@@ -20,8 +20,9 @@ public class FollowService {
         this.userRepository = userRepository;
     }
 
-    public void saveFollow(FollowRequest request) {
-
+    public Follow saveFollow(FollowRequest request) {
+        Follow follow = makeFollow(request);
+        return followRepository.save(follow);
     }
 
     private Follow makeFollow(FollowRequest request) {
