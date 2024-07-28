@@ -1,18 +1,26 @@
 package com.likelion.scul.auth.controller;
 
-import com.likelion.scul.auth.domain.User;
-import com.likelion.scul.auth.google.GoogleUserInfoResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.likelion.scul.auth.domain.KakaoToken;
 import com.likelion.scul.auth.google.GoogleRequest;
 import com.likelion.scul.auth.google.GoogleResponse;
+import com.likelion.scul.auth.google.GoogleUserInfoResponse;
+import com.likelion.scul.auth.kakao.KakaoAccount;
 import com.likelion.scul.auth.service.JwtService;
+import com.likelion.scul.auth.service.KakaoService;
 import com.likelion.scul.auth.service.UserService;
+import com.likelion.scul.common.domain.User;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -31,13 +39,26 @@ public class LoginController {
     private String googleClientPw;
     @Value("${google.redirect.uri}")
     private String googleRedirectUri;
+    @Value("${kakao.client.key}")
+    private String kakaoClientKey;
+    @Value("${kakao.redirect.uri}")
+    private String kakaoRedirectUri;
+    @Value("${kakao.auth.url}")
+    private String kakaoAuthUrl;
+    @Value("${kakao.user.api.url}")
+    private String kakaoUserApiUrl;
 
     private final JwtService jwtService;
     private final UserService userService;
+    private final KakaoService kakaoService;
 
-    public LoginController(JwtService jwtService, UserService userService) {
+    @Autowired
+    private RestTemplate restTemplate;
+
+    public LoginController(JwtService jwtService, UserService userService, KakaoService kakaoService) {
         this.jwtService = jwtService;
         this.userService = userService;
+        this.kakaoService = kakaoService;
     }
 
     @GetMapping("/")
@@ -56,9 +77,18 @@ public class LoginController {
         return new RedirectView(reqUrl.toString());
     }
 
+    @GetMapping("/oauth2/kakao/redirect")
+    public RedirectView redirectKakaoLogin() {
+        StringBuilder reqUrl = new StringBuilder("https://kauth.kakao.com/oauth/authorize");
+        reqUrl.append("?client_id=").append(kakaoClientKey)
+                .append("&redirect_uri=").append(kakaoRedirectUri)
+                .append("&response_type=code")
+                .append("&scope=account_email");
+        return new RedirectView(reqUrl.toString());
+    }
+
     @GetMapping("/oauth2/google")
     public void loginGoogle(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) throws IOException {
-        RestTemplate restTemplate = new RestTemplate();
         GoogleRequest googleOAuthRequestParam = GoogleRequest
                 .builder()
                 .clientId(googleClientId)
@@ -68,6 +98,7 @@ public class LoginController {
                 .grantType("authorization_code")
                 .build();
 
+        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<GoogleResponse> resultEntity = restTemplate.postForEntity("https://oauth2.googleapis.com/token",
                 googleOAuthRequestParam, GoogleResponse.class);
 
@@ -95,16 +126,26 @@ public class LoginController {
             response.sendRedirect("/additional-info");
             return;
         }
+    }
 
-        String accessJwt = jwtService.createAccessToken(email);
-        String refreshJwt = jwtService.createRefreshToken(email);
+    @GetMapping("/oauth2/kakao")
+    public KakaoAccount loginKakao(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) throws JsonProcessingException {
+        // Kakao Auth Server로 부터 Token 발급
+        KakaoToken kakaoToken = kakaoService.getToken(authCode);
+        String accessToken = kakaoToken.getAccess_token();
+        // Token으로 User의 KakaoAccount Email 정보
+        String UserEmail = kakaoService.getEmail(accessToken);
 
-        // Refresh Token 저장
-        userService.createRefreshToken(user.get(), refreshJwt);
-
-        response.setHeader("access_token", accessJwt);
-        response.setHeader("refresh_token", refreshJwt);
-        response.setStatus(HttpStatus.OK.value());
+//        Optional<User> user = userService.findByEmail(email);
+//        if (!user.isPresent()) {
+//            // 세션에 구글 사용자 정보 저장
+//            session.setAttribute("googleUser", userInfo);
+//
+//            // 추가 정보 입력 페이지로 리디렉션
+//            response.sendRedirect("/additional-info");
+//            return;
+//        }
+        return null;
     }
 
     @GetMapping("/additional-info")

@@ -2,8 +2,8 @@ package com.likelion.scul.auth.config;
 
 import com.likelion.scul.auth.service.JwtService;
 import com.likelion.scul.auth.service.UserService;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
