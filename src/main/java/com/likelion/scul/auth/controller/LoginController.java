@@ -129,22 +129,26 @@ public class LoginController {
     }
 
     @GetMapping("/oauth2/kakao")
-    public KakaoAccount loginKakao(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) throws JsonProcessingException {
+    public KakaoAccount loginKakao(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) {
         // Kakao Auth Server로 부터 Token 발급
         KakaoToken kakaoToken = kakaoService.getToken(authCode);
         String accessToken = kakaoToken.getAccess_token();
         // Token으로 User의 KakaoAccount Email 정보
-        String UserEmail = kakaoService.getEmail(accessToken);
+        String email = kakaoService.getEmail(accessToken);
 
-//        Optional<User> user = userService.findByEmail(email);
-//        if (!user.isPresent()) {
-//            // 세션에 구글 사용자 정보 저장
-//            session.setAttribute("googleUser", userInfo);
-//
-//            // 추가 정보 입력 페이지로 리디렉션
-//            response.sendRedirect("/additional-info");
-//            return;
-//        }
+        Optional<User> user = userService.findByEmail(email);
+        if (!user.isPresent()) {
+            // 세션에 구글 사용자 정보 저장
+            session.setAttribute("KakaoUser", kakaoToken);
+            session.setAttribute("UserEmail", email);
+            // 추가 정보 입력 페이지로 리디렉션
+            try {
+                response.sendRedirect("/additional-info");
+                return null;
+            } catch (IOException e) {
+                throw new IllegalStateException("리다이렉트에 실패했습니다.");
+            }
+        }
         return null;
     }
 
@@ -162,12 +166,11 @@ public class LoginController {
             @RequestParam String nickname,
             HttpSession session) {
 
-        GoogleUserInfoResponse googleUser = (GoogleUserInfoResponse) session.getAttribute("googleUser");
-        if (googleUser == null) {
+        KakaoToken kakaoToken = (KakaoToken) session.getAttribute("kakaoUser");
+        String email = (String) session.getAttribute("UserEmail");
+        if (kakaoToken == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-
-        String email = googleUser.getEmail();
 
         // 새로운 사용자 등록
         User newUser = new User();
