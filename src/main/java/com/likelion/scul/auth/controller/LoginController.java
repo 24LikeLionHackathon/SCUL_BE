@@ -1,6 +1,5 @@
 package com.likelion.scul.auth.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.likelion.scul.auth.domain.KakaoToken;
 import com.likelion.scul.auth.google.GoogleRequest;
 import com.likelion.scul.auth.google.GoogleResponse;
@@ -129,7 +128,7 @@ public class LoginController {
     }
 
     @GetMapping("/oauth2/kakao")
-    public KakaoAccount loginKakao(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) {
+    public String loginKakao(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) {
         // Kakao Auth Server로 부터 Token 발급
         KakaoToken kakaoToken = kakaoService.getToken(authCode);
         String accessToken = kakaoToken.getAccess_token();
@@ -137,6 +136,7 @@ public class LoginController {
         String email = kakaoService.getEmail(accessToken);
 
         Optional<User> user = userService.findByEmail(email);
+        // 기존 회원이 아니라면
         if (!user.isPresent()) {
             // 세션에 구글 사용자 정보 저장
             session.setAttribute("KakaoUser", kakaoToken);
@@ -149,7 +149,9 @@ public class LoginController {
                 throw new IllegalStateException("리다이렉트에 실패했습니다.");
             }
         }
-        return null;
+        // 기존 회원이라면
+        // 내부 로그인 accessToken을 발급한다.
+        return jwtService.createAccessToken(email);
     }
 
     @GetMapping("/additional-info")
@@ -167,27 +169,20 @@ public class LoginController {
             HttpSession session) {
 
         KakaoToken kakaoToken = (KakaoToken) session.getAttribute("kakaoUser");
-        String email = (String) session.getAttribute("UserEmail");
         if (kakaoToken == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        // 새로운 사용자 등록
-        User newUser = new User();
-        newUser.setEmail(email);
-        newUser.setName(name);
-        newUser.setGender(gender);
-        newUser.setAge(age);
-        newUser.setRegion(region);
-        newUser.setNickname(nickname);
-
+        // 새로운 유저 DB에 저장
+        User newUser = userService.makeNewUser(name, gender, age, region, nickname, session);
         userService.saveUser(newUser);
 
-        String accessJwt = jwtService.createAccessToken(email);
-        String refreshJwt = jwtService.createRefreshToken(email);
+        // 유저의 email을 기반으로 페이지 내부 토큰 발급
+        String accessJwt = jwtService.createAccessToken(newUser.getEmail());
+        String refreshJwt = jwtService.createRefreshToken(newUser.getEmail());
 
-        // Refresh Token 저장
-        userService.createRefreshToken(newUser, refreshJwt);
+        // Refresh Token 생성 및 저장
+        userService.createAndSaveRefreshToken(newUser, refreshJwt);
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", accessJwt);
