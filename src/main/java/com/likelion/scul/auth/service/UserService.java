@@ -5,6 +5,7 @@ import com.likelion.scul.auth.repository.RefreshTokenRepository;
 import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.repository.UserRepository;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +28,32 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public User makeNewUser(String name,
+                            String gender,
+                            int age,
+                            String region,
+                            String nickname,
+                            HttpSession session) {
+
+        String email = (String) session.getAttribute("UserEmail");
+
+        // 새로운 사용자 등록
+        User newUser = new User();
+        newUser.setEmail(email);
+        newUser.setName(name);
+        newUser.setGender(gender);
+        newUser.setAge(age);
+        newUser.setRegion(region);
+        newUser.setNickname(nickname);
+
+        return newUser;
+    }
+
     public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    public RefreshToken createRefreshToken(User user, String token) {
+    public RefreshToken createAndSaveRefreshToken(User user, String token) {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(user);
         refreshToken.setToken(token);
