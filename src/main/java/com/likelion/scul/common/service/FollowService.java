@@ -58,5 +58,9 @@ public class FollowService {
                 .map(Follow::getFollowed)
                 .collect(Collectors.toList());
     }
+
+    public void deleteFollow(Long followId) {
+        followRepository.deleteById(followId);
+    }
 }
 

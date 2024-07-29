@@ -24,8 +24,14 @@ public class FollowController {
     }
 
     @GetMapping
-    public ResponseEntity<FollowResponse> getFollow(@RequestParam Long UserId) {
-        FollowResponse response = followService.getFollows(UserId);
+    public ResponseEntity<FollowResponse> getFollow(@RequestParam Long userId) {
+        FollowResponse response = followService.getFollows(userId);
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteFollow(@RequestParam Long followId) {
+        followService.deleteFollow(followId);
+        return ResponseEntity.noContent().build();
     }
 }
