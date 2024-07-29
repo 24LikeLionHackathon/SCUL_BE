@@ -5,7 +5,7 @@
 </head>
 <body>
 <h2>Additional Information</h2>
-<form action="/submit-additional-info" method="POST">
+<form>
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required><br>
 
@@ -23,5 +23,38 @@
 
     <button type="submit">Submit</button>
 </form>
+<script>
+    document.getElementById('additional-info-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // 폼의 기본 제출 동작을 막음
+
+        // 폼 데이터를 가져옴
+        const name = document.getElementById('name').value;
+        const gender = document.getElementById('gender').value;
+        const age = document.getElementById('age').value;
+        const region = document.getElementById('region').value;
+        const nickname = document.getElementById('nickname').value;
+
+        // 새로운 URL 생성
+        const url = `/submit-additional-info?name=${encodeURIComponent(name)}&gender=${encodeURIComponent(gender)}&age=${encodeURIComponent(age)}&region=${encodeURIComponent(region)}&nickname=${encodeURIComponent(nickname)}`;
+
+        // 동적으로 생성된 URL로 POST 요청
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `name=${encodeURIComponent(name)}&gender=${encodeURIComponent(gender)}&age=${encodeURIComponent(age)}&region=${encodeURIComponent(region)}&nickname=${encodeURIComponent(nickname)}`
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            // 서버 응답에 따라 추가 작업을 수행할 수 있습니다.
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
 </body>
 </html>
+
+

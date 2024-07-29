@@ -1,11 +1,11 @@
 package com.likelion.scul.auth.controller;
 
-import com.likelion.scul.auth.domain.User;
 import com.likelion.scul.auth.google.GoogleUserInfoResponse;
 import com.likelion.scul.auth.google.GoogleRequest;
 import com.likelion.scul.auth.google.GoogleResponse;
 import com.likelion.scul.auth.service.JwtService;
 import com.likelion.scul.auth.service.UserService;
+import com.likelion.scul.common.domain.User;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
@@ -100,7 +100,7 @@ public class LoginController {
         String refreshJwt = jwtService.createRefreshToken(email);
 
         // Refresh Token 저장
-        userService.createRefreshToken(user.get(), refreshJwt);
+        userService.createAndSaveRefreshToken(user.get(), refreshJwt);
 
         response.setHeader("access_token", accessJwt);
         response.setHeader("refresh_token", refreshJwt);
@@ -143,7 +143,7 @@ public class LoginController {
         String refreshJwt = jwtService.createRefreshToken(email);
 
         // Refresh Token 저장
-        userService.createRefreshToken(newUser, refreshJwt);
+        userService.createAndSaveRefreshToken(newUser, refreshJwt);
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", accessJwt);

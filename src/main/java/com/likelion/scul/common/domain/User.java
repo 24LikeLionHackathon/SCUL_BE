@@ -1,4 +1,4 @@
-package com.likelion.scul.auth.domain;
+package com.likelion.scul.common.domain;
 
 import jakarta.persistence.*;
 
