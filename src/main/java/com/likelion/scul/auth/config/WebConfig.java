@@ -16,7 +16,8 @@ public class WebConfig implements WebMvcConfigurer {
     private final UserService userService;
 
     private static final String[] AUTH_WHITELIST = {
-            "/",
+            "**",
+            "/**",
             "/api/auth/**",
             "/follow",// 로그인 및 회원가입 경로
             "/oauth2/**", // OAuth2 관련 경로
@@ -35,10 +36,10 @@ public class WebConfig implements WebMvcConfigurer {
         this.userService = userService;
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new JwtInterceptor(jwtService, userService))
-                .addPathPatterns("/**")
-                .excludePathPatterns(AUTH_WHITELIST);
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(new JwtInterceptor(jwtService, userService))
+//                .addPathPatterns("/**")
+//                .excludePathPatterns(AUTH_WHITELIST);
+//    }
 }

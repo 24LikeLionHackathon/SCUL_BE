@@ -1,6 +1,7 @@
 package com.likelion.scul.auth.controller;
 
 import com.likelion.scul.auth.domain.KakaoToken;
+import com.likelion.scul.auth.domain.dto.AddUserInfoRequest;
 import com.likelion.scul.auth.google.GoogleRequest;
 import com.likelion.scul.auth.google.GoogleResponse;
 import com.likelion.scul.auth.google.GoogleUserInfoResponse;
@@ -8,6 +9,7 @@ import com.likelion.scul.auth.service.JwtService;
 import com.likelion.scul.auth.service.KakaoService;
 import com.likelion.scul.auth.service.UserService;
 import com.likelion.scul.common.domain.User;
+import com.likelion.scul.common.service.UserSportsService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -49,14 +48,20 @@ public class LoginController {
     private final JwtService jwtService;
     private final UserService userService;
     private final KakaoService kakaoService;
+    private final UserSportsService userSportsService;
 
     @Autowired
     private RestTemplate restTemplate;
 
-    public LoginController(JwtService jwtService, UserService userService, KakaoService kakaoService) {
+    public LoginController(
+            JwtService jwtService,
+            UserService userService,
+            KakaoService kakaoService,
+            UserSportsService userSportsService) {
         this.jwtService = jwtService;
         this.userService = userService;
         this.kakaoService = kakaoService;
+        this.userSportsService = userSportsService;
     }
 
     @GetMapping("/")
@@ -127,7 +132,7 @@ public class LoginController {
     }
 
     @GetMapping("/oauth2/kakao")
-    public String loginKakao(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) {
+    public ResponseEntity<String> loginKakao(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) {
         // Kakao Auth Server로 부터 Token 발급
         KakaoToken kakaoToken = kakaoService.getToken(authCode);
         String accessToken = kakaoToken.getAccess_token();
@@ -140,7 +145,7 @@ public class LoginController {
             // 세션에 구글 사용자 정보 저장
             session.setAttribute("KakaoUser", kakaoToken);
             session.setAttribute("UserEmail", email);
-            // 추가 정보 입력 페이지로 리디렉션
+            // 추가 정보 입력 페이지로 리디렉션 추후 프론트가 제공하는 URL로 리디렉션
             try {
                 response.sendRedirect("/additional-info");
                 return null;
@@ -149,8 +154,10 @@ public class LoginController {
             }
         }
         // 기존 회원이라면
-        // 내부 로그인 accessToken을 발급한다.
-        return jwtService.createAccessToken(email);
+        // refreshToken을 확인해서 만료되었다면 새로 발급하여 저장하고, 만료되지 않았다면 해당 리프레쉬를 준다.
+        // 내부 로그인 accessToken을 발급한다. 그리고, 홈페이지 메인으로 이동한다.
+        //
+        return ResponseEntity.ok(jwtService.createAccessToken(email));
     }
 
     @GetMapping("/additional-info")
@@ -158,25 +165,23 @@ public class LoginController {
         return "additional-info";
     }
 
-    @PostMapping("/submit-additional-info")
+    @PostMapping("/auth/join/submit-info")
     public ResponseEntity<Map<String, String>> submitAdditionalInfo(
-            @RequestParam String name,
-            @RequestParam String gender,
-            @RequestParam int age,
-            @RequestParam String region,
-            @RequestParam String nickname,
+            @RequestBody AddUserInfoRequest request,
             HttpSession session) {
 
-        KakaoToken kakaoToken = (KakaoToken) session.getAttribute("kakaoUser");
-        if (kakaoToken == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
+//        KakaoToken kakaoToken = (KakaoToken) session.getAttribute("kakaoUser");
+//        if (kakaoToken == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+//        }
 
         // 새로운 유저 DB에 저장
-        User newUser = userService.makeNewUser(name, gender, age, region, nickname, session);
+        User newUser = userService.makeNewUser(request,session);
         userService.saveUser(newUser);
-
+        // 새로운 UserSports DB에 저장
+        userSportsService.saveUserSports(request,newUser);
         // 유저의 email을 기반으로 페이지 내부 토큰 발급
+
         String accessJwt = jwtService.createAccessToken(newUser.getEmail());
         String refreshJwt = jwtService.createRefreshToken(newUser.getEmail());
 

@@ -12,7 +12,9 @@ public class Sports {
     private Long sportsId;
 
     private String sportsName;
-    private String sportsType;
+
+    @Transient
+    private String sportsIcon;
 
     @Transient
     private String sportsDefaultImg;
