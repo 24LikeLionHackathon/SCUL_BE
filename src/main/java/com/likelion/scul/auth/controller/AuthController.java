@@ -46,7 +46,7 @@ public class AuthController {
         }
 
         User user = userOpt.get();
-        Optional<RefreshToken> refreshTokenOpt = userService.findByToken(refreshToken);
+        Optional<RefreshToken> refreshTokenOpt = jwtService.findByToken(refreshToken);
         if (!refreshTokenOpt.isPresent()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }

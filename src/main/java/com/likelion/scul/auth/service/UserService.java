@@ -50,23 +50,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public RefreshToken createAndSaveRefreshToken(User user, String token) {
-        RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setUser(user);
-        refreshToken.setToken(token);
-        refreshToken.setExpiryDate(new Date(System.currentTimeMillis() + JwtService.REFRESH_TOKEN_VALIDITY));
-
-        return refreshTokenRepository.save(refreshToken);
-    }
-
-    public void deleteRefreshToken(User user) {
-        refreshTokenRepository.deleteByUser(user);
-    }
-
-    public Optional<RefreshToken> findByToken(String token) {
-        return refreshTokenRepository.findByToken(token);
-    }
-
     public Optional<User> getUserFromToken(String token, JwtService jwtService) {
         Claims claims = jwtService.getClaimsFromToken(token);
         String email = claims.getSubject();

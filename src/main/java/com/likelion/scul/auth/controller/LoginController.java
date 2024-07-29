@@ -132,7 +132,7 @@ public class LoginController {
     }
 
     @GetMapping("/oauth2/kakao")
-    public ResponseEntity<String> loginKakao(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) {
+    public ResponseEntity<Map<String,String>> loginKakao(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) {
         // Kakao Auth Server로 부터 Token 발급
         KakaoToken kakaoToken = kakaoService.getToken(authCode);
         String accessToken = kakaoToken.getAccess_token();
@@ -142,7 +142,7 @@ public class LoginController {
         Optional<User> user = userService.findByEmail(email);
         // 기존 회원이 아니라면
         if (!user.isPresent()) {
-            // 세션에 구글 사용자 정보 저장
+            // 세션에 사용자 정보 저장
             session.setAttribute("KakaoUser", kakaoToken);
             session.setAttribute("UserEmail", email);
             // 추가 정보 입력 페이지로 리디렉션 추후 프론트가 제공하는 URL로 리디렉션
@@ -157,7 +157,10 @@ public class LoginController {
         // refreshToken을 확인해서 만료되었다면 새로 발급하여 저장하고, 만료되지 않았다면 해당 리프레쉬를 준다.
         // 내부 로그인 accessToken을 발급한다. 그리고, 홈페이지 메인으로 이동한다.
         //
-        return ResponseEntity.ok(jwtService.createAccessToken(email));
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("access_token", jwtService.createAccessToken(email));
+        tokens.put("refresh_token", jwtService.findByUser(user.get()));
+        return ResponseEntity.ok(tokens);
     }
 
     @GetMapping("/additional-info")
@@ -186,7 +189,7 @@ public class LoginController {
         String refreshJwt = jwtService.createRefreshToken(newUser.getEmail());
 
         // Refresh Token 생성 및 저장
-        userService.createAndSaveRefreshToken(newUser, refreshJwt);
+        jwtService.createAndSaveRefreshToken(newUser, refreshJwt);
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", accessJwt);
