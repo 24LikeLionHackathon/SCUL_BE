@@ -1,7 +1,8 @@
-package com.likelion.scul.auth.domain;
+package com.likelion.scul.common.domain;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
 
 
 @Entity
@@ -16,6 +17,12 @@ public class User {
     private String email;
     private String region;
     private String nickname;
+
+    @OneToMany(mappedBy = "follower")
+    private Set<Follow> following;  // 내가 팔로우하는 유저들
+
+    @OneToMany(mappedBy = "followed")
+    private Set<Follow> followers;
 
     // Getters and Setters
 
