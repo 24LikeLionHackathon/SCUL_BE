@@ -1,10 +1,9 @@
 package com.likelion.scul.board.domain;
 
 import com.likelion.scul.auth.domain.Sports;
-import com.likelion.scul.auth.domain.User;
+import com.likelion.scul.common.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;

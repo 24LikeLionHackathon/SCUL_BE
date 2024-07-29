@@ -1,7 +1,7 @@
 package com.likelion.scul.auth.service;
 
 import com.likelion.scul.auth.domain.RefreshToken;
-import com.likelion.scul.auth.domain.User;
+import com.likelion.scul.common.domain.User;
 import com.likelion.scul.auth.repository.RefreshTokenRepository;
 import com.likelion.scul.auth.repository.UserRepository;
 import io.jsonwebtoken.Claims;

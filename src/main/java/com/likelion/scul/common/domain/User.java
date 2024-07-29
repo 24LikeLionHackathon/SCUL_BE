@@ -1,5 +1,6 @@
-package com.likelion.scul.auth.domain;
+package com.likelion.scul.common.domain;
 
+import com.likelion.scul.auth.domain.UserSports;
 import com.likelion.scul.board.domain.Comment;
 import com.likelion.scul.board.domain.Like;
 import jakarta.persistence.*;

@@ -1,6 +1,6 @@
 package com.likelion.scul.auth.controller;
 
-import com.likelion.scul.auth.domain.User;
+import com.likelion.scul.common.domain.User;
 import com.likelion.scul.auth.domain.RefreshToken;
 import com.likelion.scul.auth.service.JwtService;
 import com.likelion.scul.auth.service.UserService;

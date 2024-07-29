@@ -1,11 +1,9 @@
 package com.likelion.scul.board.service;
 
-import com.likelion.scul.auth.domain.User;
+import com.likelion.scul.common.domain.User;
 import com.likelion.scul.auth.repository.UserRepository;
 import com.likelion.scul.board.domain.*;
 import com.likelion.scul.board.dto.CommentDto;
-import com.likelion.scul.board.dto.PostDetailDTO;
-import com.likelion.scul.board.dto.CommentDTO;
 import com.likelion.scul.board.dto.PostDto;
 import com.likelion.scul.board.repository.*;
 import com.likelion.scul.auth.domain.Sports;

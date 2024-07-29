@@ -1,6 +1,6 @@
 package com.likelion.scul.auth.controller;
 
-import com.likelion.scul.auth.domain.User;
+import com.likelion.scul.common.domain.User;
 import com.likelion.scul.auth.google.GoogleUserInfoResponse;
 import com.likelion.scul.auth.google.GoogleRequest;
 import com.likelion.scul.auth.google.GoogleResponse;
