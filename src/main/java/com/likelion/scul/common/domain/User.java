@@ -1,10 +1,7 @@
 package com.likelion.scul.common.domain;
 
-import com.likelion.scul.auth.domain.UserSports;
-import com.likelion.scul.board.domain.Comment;
-import com.likelion.scul.board.domain.Like;
 import jakarta.persistence.*;
-import java.util.List;
+
 
 
 @Entity
@@ -19,15 +16,6 @@ public class User {
     private String email;
     private String region;
     private String nickname;
-
-    @OneToMany(mappedBy = "user")
-    private List<Like> likes;
-
-    @OneToMany(mappedBy = "user")
-    private List<Comment> comments;
-
-    @OneToMany(mappedBy = "user")
-    private List<UserSports> userSports;
 
     // Getters and Setters
 

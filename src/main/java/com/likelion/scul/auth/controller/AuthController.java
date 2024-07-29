@@ -1,9 +1,9 @@
 package com.likelion.scul.auth.controller;
 
-import com.likelion.scul.common.domain.User;
 import com.likelion.scul.auth.domain.RefreshToken;
 import com.likelion.scul.auth.service.JwtService;
 import com.likelion.scul.auth.service.UserService;
+import com.likelion.scul.common.domain.User;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
