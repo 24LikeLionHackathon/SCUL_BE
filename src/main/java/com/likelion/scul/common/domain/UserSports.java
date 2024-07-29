@@ -1,6 +1,5 @@
-package com.likelion.scul.auth.domain;
+package com.likelion.scul.common.domain;
 
-import com.likelion.scul.common.domain.User;
 import jakarta.persistence.*;
 
 @Entity
