@@ -13,6 +13,13 @@ public class WebConfig implements WebMvcConfigurer {
     private final JwtService jwtService;
     private final UserService userService;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/api/auth/**", // 로그인 및 회원가입 경로
+            "/oauth2/**", // OAuth2 관련 경로
+            "/additional-info", // 추가 정보 입력 페이지
+            "/submit-additional-info" // 추가 정보 입력 처리
+    };
+
     @Autowired
     public WebConfig(JwtService jwtService, UserService userService) {
         this.jwtService = jwtService;
@@ -22,6 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new JwtInterceptor(jwtService, userService))
-                .addPathPatterns("/api/**"); // 필요한 경로에만 적용
+                .addPathPatterns("/**")
+                .excludePathPatterns(AUTH_WHITELIST);
     }
 }
