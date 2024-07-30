@@ -27,4 +27,15 @@ public class Comment {
     private String createdAt;
 
     // Getters and Setters
+
+    public Comment(User user, Post post, String commentContent, String createdAt) {
+        this.user = user;
+        this.post = post;
+        this.commentContent = commentContent;
+        this.createdAt = createdAt;
+    }
+
+    public Comment() {
+
+    }
 }

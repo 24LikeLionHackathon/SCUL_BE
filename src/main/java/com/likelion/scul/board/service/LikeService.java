@@ -6,21 +6,23 @@ import com.likelion.scul.board.repository.LikeRepository;
 import com.likelion.scul.board.repository.PostRepository;
 import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LikeService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
-    @Autowired
-    private LikeRepository likeRepository;
+    private final LikeRepository likeRepository;
+
+    public LikeService(UserRepository userRepository, PostRepository postRepository, LikeRepository likeRepository) {
+        this.userRepository = userRepository;
+        this.postRepository = postRepository;
+        this.likeRepository = likeRepository;
+    }
 
     @Transactional
     public void addLike(String email, Long postId) {
