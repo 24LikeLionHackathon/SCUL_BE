@@ -7,10 +7,12 @@ import com.likelion.scul.club.dto.ClubUpdateRequest;
 import com.likelion.scul.common.domain.User;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class ClubController {
@@ -27,6 +29,12 @@ public class ClubController {
     @GetMapping("/club/{id}")
     public ClubResponse getClub(@PathVariable Long id) {
         return clubService.findById(id);
+    }
+
+    // sports에 해당하는 모든 club 조회
+    @GetMapping("club/sports/{id}")
+    public List<ClubResponse> getClubList(@PathVariable Long id) {
+        return clubService.findBySportsId(id);
     }
 
     // club 생성
@@ -53,5 +61,7 @@ public class ClubController {
         clubService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    // 
 }
 

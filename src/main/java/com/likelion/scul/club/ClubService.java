@@ -7,6 +7,7 @@ import com.likelion.scul.club.dto.ClubUpdateRequest;
 import com.likelion.scul.common.domain.Sports;
 import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.repository.SportsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +15,10 @@ import java.util.List;
 @Service
 public class ClubService {
 
-    private ClubRepository clubRepository;
-    private SportsRepository sportsRepository;
+    private final ClubRepository clubRepository;
+    private final SportsRepository sportsRepository;
 
+    @Autowired
     public ClubService(ClubRepository clubRepository, SportsRepository sportsRepository) {
         this.clubRepository = clubRepository;
         this.sportsRepository = sportsRepository;
@@ -41,15 +43,13 @@ public class ClubService {
     }
 
     // sports의 모든 club 조회
-//    public List<ClubResponse> findBySportsId(Long sportsId) {
-//
-//    }
+    public List<ClubResponse> findBySportsId(Long sportsId) {
+        return clubRepository.findAllBySports_SportsId(sportsId).stream().map(ClubResponse::toClubResponse).toList();
+    }
 
     // club 수정
     public ClubResponse update(Long id, ClubUpdateRequest request) {
-        Club club = clubRepository.findById(id).orElseThrow(() -> {
-            return new IllegalArgumentException("id에 해당하는 Club을 찾을 수 없습니다");
-        });
+        Club club = clubRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("id에 해당하는 Club을 찾을 수 없습니다"));
 
         club.update(request.getClubName(), request.getClubContent(), request.getClubPlace(), request.getClubDate(), request.getClubTotalNumber(), request.getClubParticipateNumber(), request.getClubQnaLink(), request.getClubParticipateLink(), request.getClubCost(), request.getClubImage(), request.getClubStatus());
 
