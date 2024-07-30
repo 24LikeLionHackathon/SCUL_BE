@@ -1,19 +1,21 @@
 package com.likelion.scul.board.service;
 
+import com.likelion.scul.board.dto.PostDetailDto;
+import com.likelion.scul.board.dto.PostListDto;
 import com.likelion.scul.common.domain.User;
-import com.likelion.scul.auth.repository.UserRepository;
 import com.likelion.scul.board.domain.*;
 import com.likelion.scul.board.dto.CommentDto;
-import com.likelion.scul.board.dto.PostDto;
 import com.likelion.scul.board.repository.*;
-import com.likelion.scul.auth.domain.Sports;
-import com.likelion.scul.auth.repository.SportsRepository;
+import com.likelion.scul.common.domain.Sports;
+import com.likelion.scul.common.repository.SportsRepository;
+import com.likelion.scul.common.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -126,10 +128,14 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    @Transactional(readOnly = true)
-    public PostDto getPostDetail(Long postId) {
+    @Transactional
+    public PostDetailDto getPostDetail(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        // 조회수 1 증가
+        post.setPostView(post.getPostView() + 1);
+        postRepository.save(post);
 
         List<String> imageUrls = imageRepository.findByPost(post).stream()
                 .map(Image::getImageUrl)
@@ -143,7 +149,7 @@ public class PostService {
                 ))
                 .collect(Collectors.toList());
 
-        return new PostDto(
+        return new PostDetailDto(
                 post.getUser().getNickname(),
                 post.getBoard().getBoardName(),
                 post.getTag().getTagName(),
@@ -155,5 +161,70 @@ public class PostService {
                 post.getLikes().size(),
                 comments
         );
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<PostListDto> getPostList(String sportsName, String boardName, String tagName, String sortMethod, String searchType, String searchContent, int page) {
+        List<Post> posts = postRepository.findAll().stream()
+                .filter(post -> post.getSports().getSportsName().equals(sportsName))
+                .filter(post -> post.getBoard().getBoardName().equals(boardName))
+                .filter(post -> post.getTag().getTagName().equals(tagName))
+                .collect(Collectors.toList());
+
+        if (searchContent != null && !searchContent.isEmpty()) {
+            switch (searchType) {
+                case "제목":
+                    posts = posts.stream()
+                            .filter(post -> post.getPostTitle().contains(searchContent))
+                            .collect(Collectors.toList());
+                    break;
+                case "내용":
+                    posts = posts.stream()
+                            .filter(post -> post.getPostContent().contains(searchContent))
+                            .collect(Collectors.toList());
+                    break;
+                case "작성자":
+                    posts = posts.stream()
+                            .filter(post -> post.getUser().getNickname().contains(searchContent))
+                            .collect(Collectors.toList());
+                    break;
+            }
+        }
+
+        switch (sortMethod) {
+            case "최신순":
+                posts = posts.stream()
+                        .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
+                        .collect(Collectors.toList());
+                break;
+            case "조회순":
+                posts = posts.stream()
+                        .sorted(Comparator.comparing(Post::getPostView).reversed())
+                        .collect(Collectors.toList());
+                break;
+            case "댓글순":
+                posts = posts.stream()
+                        .sorted(Comparator.comparing(post -> post.getComments().size(), Comparator.reverseOrder()))
+                        .collect(Collectors.toList());
+                break;
+        }
+
+        int start = (page - 1) * 14;
+        int end = Math.min(start + 14, posts.size());
+        posts = posts.subList(start, end);
+
+        return posts.stream()
+                .map(post -> new PostListDto(
+                        post.getUser().getNickname(),
+                        post.getTag().getTagName(),
+                        post.getPostTitle(),
+                        post.getCreatedAt(),
+                        post.getLikes().size(),
+                        post.getPostView(),
+                        post.getComments().size(),
+                        post.getImages().isEmpty() ? null : post.getImages().get(0).getImageUrl()
+                ))
+                .collect(Collectors.toList());
     }
 }

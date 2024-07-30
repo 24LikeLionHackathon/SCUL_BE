@@ -1,6 +1,7 @@
 package com.likelion.scul.board.controller;
 
-import com.likelion.scul.board.dto.PostDto;
+import com.likelion.scul.board.dto.PostDetailDto;
+import com.likelion.scul.board.dto.PostListDto;
 import com.likelion.scul.board.service.PostService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ public class PostController {
     /**
      * 게시판 작성
      * */
-    @PostMapping("/newpost/{post_id}")
+    @PostMapping("/newpost")
     public ResponseEntity<String> createPost(@RequestParam("board_name") String boardName,
                                              @RequestParam("tag_name") String tagName,
                                              @RequestParam("sports_name") String sportsName,
@@ -79,10 +80,29 @@ public class PostController {
      * 게시물 상세보기
      * */
     @GetMapping("/posts/{post_id}")
-    public ResponseEntity<PostDto> getPostDetail(@PathVariable Long post_id) {
+    public ResponseEntity<PostDetailDto> getPostDetail(@PathVariable Long post_id) {
         try {
-            PostDto postDetail = postService.getPostDetail(post_id);
+            PostDetailDto postDetail = postService.getPostDetail(post_id);
             return new ResponseEntity<>(postDetail, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * 게시물 목록
+     * */
+    @GetMapping("/posts")
+    public ResponseEntity<List<PostListDto>> getPostList(@RequestParam String sports_name,
+                                                         @RequestParam String board_name,
+                                                         @RequestParam String tag_name,
+                                                         @RequestParam String sort_method,
+                                                         @RequestParam String search_type,
+                                                         @RequestParam String search_content,
+                                                         @RequestParam int page) {
+        try {
+            List<PostListDto> postList = postService.getPostList(sports_name, board_name, tag_name, sort_method, search_type, search_content, page);
+            return new ResponseEntity<>(postList, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -4,7 +4,7 @@ package com.likelion.scul.board.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record PostDto(
+public record PostDetailDto(
         String nickname,
         String boardName,
         String tagName,
