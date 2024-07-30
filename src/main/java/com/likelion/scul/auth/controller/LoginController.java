@@ -182,7 +182,7 @@ public class LoginController {
         User newUser = userService.makeNewUser(request,session);
         userService.saveUser(newUser);
         // 새로운 UserSports DB에 저장
-        userSportsService.saveUserSports(request,newUser);
+        userSportsService.saveUserSports(request.getSportsName(),newUser);
         // 유저의 email을 기반으로 페이지 내부 토큰 발급
 
         String accessJwt = jwtService.createAccessToken(newUser.getEmail());
