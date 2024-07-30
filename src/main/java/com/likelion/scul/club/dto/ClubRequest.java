@@ -16,4 +16,5 @@ public class ClubRequest {
     private String clubParticipateLink;
     private int clubCost;
     private String clubImage;
+    private Long sportsId;
 }

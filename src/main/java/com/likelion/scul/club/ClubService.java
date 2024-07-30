@@ -4,21 +4,31 @@ import com.likelion.scul.auth.service.UserService;
 import com.likelion.scul.club.dto.ClubRequest;
 import com.likelion.scul.club.dto.ClubResponse;
 import com.likelion.scul.club.dto.ClubUpdateRequest;
+import com.likelion.scul.common.domain.Sports;
+import com.likelion.scul.common.domain.User;
+import com.likelion.scul.common.repository.SportsRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ClubService {
 
     private ClubRepository clubRepository;
+    private SportsRepository sportsRepository;
 
-    public ClubService(ClubRepository clubRepository) {
+    public ClubService(ClubRepository clubRepository, SportsRepository sportsRepository) {
         this.clubRepository = clubRepository;
+        this.sportsRepository = sportsRepository;
     }
 
     // club 생성
-    public ClubResponse save(ClubRequest clubRequest) {
+    public ClubResponse save(ClubRequest clubRequest, User user) {
         String status = "모집 중";
-        Club club = new Club(clubRequest, status);
+
+        Sports sports = sportsRepository.getReferenceById(clubRequest.getSportsId());
+
+        Club club = new Club(clubRequest, status, user, sports);
 
         clubRepository.save(club);
 
@@ -31,6 +41,9 @@ public class ClubService {
     }
 
     // sports의 모든 club 조회
+//    public List<ClubResponse> findBySportsId(Long sportsId) {
+//
+//    }
 
     // club 수정
     public ClubResponse update(Long id, ClubUpdateRequest request) {

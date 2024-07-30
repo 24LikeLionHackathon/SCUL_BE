@@ -16,6 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
     private final UserService userService;
 
     private static final String[] AUTH_WHITELIST = {
+            "/",
             "/api/auth/**", // 로그인 및 회원가입 경로
             "/oauth2/**", // OAuth2 관련 경로
             "/additional-info", // 추가 정보 입력 페이지

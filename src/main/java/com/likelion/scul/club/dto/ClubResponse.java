@@ -24,15 +24,30 @@ public class ClubResponse {
     private String clubImage;
 
     private String userName;
+    private String sportsName;
 
-    public ClubResponse(Long clubId, String clubName, String clubContent, String clubPlace, LocalDate clubDate, int clubTotalNumber, int clubParticipateNumber, String clubQnaLink, String clubParticipateLink, int clubCost, String clubStatus, String clubImage, String name) {
+    public ClubResponse(Long clubId, String clubName, String clubContent, String clubPlace, LocalDate clubDate, int clubTotalNumber, int clubParticipateNumber, String clubQnaLink, String clubParticipateLink, int clubCost, String clubStatus, String clubImage, String name, String sportsName) {
+        this.clubId = clubId;
+        this.clubName = clubName;
+        this.clubContent = clubContent;
+        this.clubPlace = clubPlace;
+        this.clubDate = clubDate;
+        this.clubTotalNumber = clubTotalNumber;
+        this.clubParticipateNumber = clubParticipateNumber;
+        this.clubQnaLink = clubQnaLink;
+        this.clubParticipateLink = clubParticipateLink;
+        this.clubCost = clubCost;
+        this.clubStatus = clubStatus;
+        this.clubImage = clubImage;
+        this.userName = name;
+        this.sportsName = sportsName;
     }
 
     public static ClubResponse toClubResponse(Club club) {
         return new ClubResponse(
                 club.getClubId(), club.getClubName(), club.getClubContent(), club.getClubPlace(), club.getClubDate(),
                 club.getClubTotalNumber(), club.getClubParticipateNumber(), club.getClubQnaLink(), club.getClubParticipateLink(),
-                club.getClubCost(), club.getClubStatus(), club.getClubImage(), club.getUser().getName()
+                club.getClubCost(), club.getClubStatus(), club.getClubImage(), club.getUser().getName(), club.getSports().getSportsName()
         );
     }
 }
