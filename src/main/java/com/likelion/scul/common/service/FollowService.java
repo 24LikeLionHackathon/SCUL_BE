@@ -2,6 +2,7 @@ package com.likelion.scul.common.service;
 
 import com.likelion.scul.common.domain.Follow;
 import com.likelion.scul.common.domain.User;
+import com.likelion.scul.common.dto.follow.FollowNumResponse;
 import com.likelion.scul.common.dto.follow.FollowRequest;
 import com.likelion.scul.common.dto.follow.FollowResponse;
 import com.likelion.scul.common.repository.FollowRepository;
@@ -61,6 +62,14 @@ public class FollowService {
 
     public void deleteFollow(Long followId) {
         followRepository.deleteById(followId);
+    }
+
+    public FollowNumResponse getFollowNum(Long userId) {
+        FollowNumResponse response = new FollowNumResponse();
+        response.setFollowerNumber(followRepository.countFollowersByUserId(userId));
+        response.setFollowingNumber(followRepository.countFollowingByUserId(userId));
+
+        return response;
     }
 }
 
