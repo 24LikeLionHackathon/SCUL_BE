@@ -15,4 +15,5 @@ public record PostDto(
         List<String> imageUrls,
         int likeCount,
         List<CommentDto> comments
-) {}
+) {
+}

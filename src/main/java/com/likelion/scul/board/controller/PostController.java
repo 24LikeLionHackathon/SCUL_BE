@@ -19,7 +19,7 @@ public class PostController {
 
     /**
      * 게시판 작성
-     * */
+     */
     @PostMapping("/newpost/{post_id}")
     public ResponseEntity<String> createPost(@RequestParam("board_name") String boardName,
                                              @RequestParam("tag_name") String tagName,
@@ -41,7 +41,7 @@ public class PostController {
 
     /**
      * 게시판 수정
-     * */
+     */
     @PutMapping("/updatepost/{post_id}")
     public ResponseEntity<String> updatePost(@PathVariable Long postId,
                                              @RequestParam("board_name") String boardName,
@@ -77,7 +77,7 @@ public class PostController {
 
     /**
      * 게시물 상세보기
-     * */
+     */
     @GetMapping("/posts/{post_id}")
     public ResponseEntity<PostDto> getPostDetail(@PathVariable Long post_id) {
         try {

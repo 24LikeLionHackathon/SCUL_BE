@@ -19,7 +19,8 @@ public class Image {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    public Image() {}
+    public Image() {
+    }
 
     public Image(String imageUrl, Post post) {
         this.imageUrl = imageUrl;
