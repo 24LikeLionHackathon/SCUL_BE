@@ -135,7 +135,7 @@ public class LoginController {
             session.setAttribute("GoogleUser", resultEntity.getBody());
             session.setAttribute("UserEmail", email);
             try {
-                response.sendRedirect("/additional-info");
+                response.sendRedirect("/initial");
                 return null;
             } catch (IOException e) {
                 throw new IllegalStateException("리다이렉트에 실패했습니다.");
