@@ -135,7 +135,7 @@ public class LoginController {
             session.setAttribute("GoogleUser", resultEntity.getBody());
             session.setAttribute("UserEmail", email);
             try {
-                response.sendRedirect("/additional-info");
+                response.sendRedirect("/initial");
                 return null;
             } catch (IOException e) {
                 throw new IllegalStateException("리다이렉트에 실패했습니다.");
@@ -168,7 +168,7 @@ public class LoginController {
             session.setAttribute("UserEmail", email);
             // 추가 정보 입력 페이지로 리디렉션 추후 프론트가 제공하는 URL로 리디렉션
             try {
-                response.sendRedirect("/additional-info");
+                response.sendRedirect("/initial");
                 return null;
             } catch (IOException e) {
                 throw new IllegalStateException("리다이렉트에 실패했습니다.");
@@ -184,10 +184,10 @@ public class LoginController {
         return ResponseEntity.ok(tokens);
     }
 
-    @GetMapping("/additional-info")
-    public String additionalInfoForm() {
-        return "additional-info";
-    }
+//    @GetMapping("/additional-info")
+//    public String additionalInfoForm() {
+//        return "additional-info";
+//    }
 
     @PostMapping("/auth/join/submit-info")
     public ResponseEntity<Map<String, String>> submitAdditionalInfo(
