@@ -1,14 +1,22 @@
 package com.likelion.scul.board.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
-public record PostUpdateRequestDto(
-        Long postId,
-        String boardName,
-        String tagName,
-        String sportsName,
-        String postTitle,
-        String postContent,
-        String createdAt,
-        List<String> imageUrls
-) {}
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class PostUpdateRequestDto{
+    private Long postId;
+    private String boardName;
+    private String tagName;
+    private String sportsName;
+    private String postTitle;
+    private String postContent;
+    private String createdAt;
+    private List<MultipartFile> files;
+}

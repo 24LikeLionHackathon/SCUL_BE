@@ -12,7 +12,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -23,11 +25,13 @@ public class PostController {
     public PostController(PostService postService) {
         this.postService = postService;
     }
+
     @PostMapping("/newpost")
-    public ResponseEntity<String> createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request) {
+    public ResponseEntity<String> createPost(@ModelAttribute PostRequestDto postRequestDto, HttpServletRequest request) {
         try {
             Claims claims = (Claims) request.getAttribute("claims");
             String email = claims.getSubject();
+            System.out.println(postRequestDto.getPostTitle());
             postService.createPost(postRequestDto, email);
             return new ResponseEntity<>("Post created successfully", HttpStatus.CREATED);
         } catch (Exception e) {
@@ -36,7 +40,7 @@ public class PostController {
     }
 
     @PutMapping("/updatepost")
-    public ResponseEntity<String> updatePost(@RequestBody PostUpdateRequestDto postUpdateRequestDto, HttpServletRequest request) {
+    public ResponseEntity<String> updatePost(@ModelAttribute PostUpdateRequestDto postUpdateRequestDto, HttpServletRequest request) {
         try {
             Claims claims = (Claims) request.getAttribute("claims");
             String email = claims.getSubject();
@@ -78,4 +82,6 @@ public class PostController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 }

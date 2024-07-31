@@ -5,6 +5,7 @@ import com.likelion.scul.board.dto.PostListDto;
 import com.likelion.scul.board.dto.PostRequestDto;
 import com.likelion.scul.board.dto.PostUpdateRequestDto;
 import com.likelion.scul.board.dto.PostListRequestDto;
+import com.likelion.scul.board.service.S3Service;
 import com.likelion.scul.common.domain.User;
 import com.likelion.scul.board.domain.*;
 import com.likelion.scul.board.dto.CommentDto;
@@ -14,7 +15,9 @@ import com.likelion.scul.common.repository.SportsRepository;
 import com.likelion.scul.common.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -30,42 +33,48 @@ public class PostService {
     private final TagRepository tagRepository;
     private final SportsRepository sportsRepository;
     private final ImageRepository imageRepository;
+    private final S3Service s3Service;
 
     public PostService(UserRepository userRepository, BoardRepository boardRepository, PostRepository postRepository,
-                       TagRepository tagRepository, SportsRepository sportsRepository, ImageRepository imageRepository) {
+                       TagRepository tagRepository, SportsRepository sportsRepository, ImageRepository imageRepository,
+                       S3Service s3Service) {
         this.userRepository = userRepository;
         this.boardRepository = boardRepository;
         this.postRepository = postRepository;
         this.tagRepository = tagRepository;
         this.sportsRepository = sportsRepository;
         this.imageRepository = imageRepository;
+        this.s3Service = s3Service;
     }
+
     @Transactional
-    public void createPost(PostRequestDto postRequestDto, String email) {
+    public void createPost(PostRequestDto postRequestDto, String email) throws IOException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Board board = boardRepository.findByBoardName(postRequestDto.boardName())
+        Board board = boardRepository.findByBoardName(postRequestDto.getBoardName())
                 .orElseThrow(() -> new RuntimeException("Board not found"));
-        Tag tag = tagRepository.findByTagName(postRequestDto.tagName())
+        Tag tag = tagRepository.findByTagName(postRequestDto.getTagName())
                 .orElseThrow(() -> new RuntimeException("Tag not found"));
-        Sports sports = sportsRepository.findBySportsName(postRequestDto.sportsName())
+        Sports sports = sportsRepository.findBySportsName(postRequestDto.getSportsName())
                 .orElseThrow(() -> new RuntimeException("Sports not found"));
 
-        LocalDateTime createdDateTime = LocalDateTime.parse(postRequestDto.createdAt(), DateTimeFormatter.ISO_DATE_TIME);
+        LocalDateTime createdDateTime = LocalDateTime.parse(postRequestDto.getCreatedAt(), DateTimeFormatter.ISO_DATE_TIME);
 
-        Post post = new Post(board, tag, sports, user, postRequestDto.postTitle(), postRequestDto.postContent(), createdDateTime, 0);
+        Post post = new Post(board, tag, sports, user, postRequestDto.getPostTitle(), postRequestDto.getPostContent(), createdDateTime, 0);
         postRepository.save(post);
 
-        for (String imageUrl : postRequestDto.imageUrls()) {
+        for (MultipartFile file : postRequestDto.getFiles()) {
+            String key = s3Service.uploadFile(file);
+            String imageUrl = s3Service.getFileUrl(key).toString();
             Image postImage = new Image(imageUrl, post);
             imageRepository.save(postImage);
         }
     }
 
     @Transactional
-    public void updatePost(PostUpdateRequestDto postUpdateRequestDto, String email) {
-        Post post = postRepository.findById(postUpdateRequestDto.postId())
+    public void updatePost(PostUpdateRequestDto postUpdateRequestDto, String email) throws IOException {
+        Post post = postRepository.findById(postUpdateRequestDto.getPostId())
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
         User user = userRepository.findByEmail(email)
@@ -75,28 +84,32 @@ public class PostService {
             throw new RuntimeException("User not authorized to update this post");
         }
 
-        Board board = boardRepository.findByBoardName(postUpdateRequestDto.boardName())
+        Board board = boardRepository.findByBoardName(postUpdateRequestDto.getBoardName())
                 .orElseThrow(() -> new RuntimeException("Board not found"));
-        Tag tag = tagRepository.findByTagName(postUpdateRequestDto.tagName())
+        Tag tag = tagRepository.findByTagName(postUpdateRequestDto.getTagName())
                 .orElseThrow(() -> new RuntimeException("Tag not found"));
-        Sports sports = sportsRepository.findBySportsName(postUpdateRequestDto.sportsName())
+        Sports sports = sportsRepository.findBySportsName(postUpdateRequestDto.getSportsName())
                 .orElseThrow(() -> new RuntimeException("Sports not found"));
 
-        LocalDateTime createdDateTime = LocalDateTime.parse(postUpdateRequestDto.createdAt(), DateTimeFormatter.ISO_DATE_TIME);
+        LocalDateTime createdDateTime = LocalDateTime.parse(postUpdateRequestDto.getCreatedAt(), DateTimeFormatter.ISO_DATE_TIME);
 
         post.setBoard(board);
         post.setTag(tag);
         post.setSports(sports);
-        post.setPostTitle(postUpdateRequestDto.postTitle());
-        post.setPostContent(postUpdateRequestDto.postContent());
+        post.setPostTitle(postUpdateRequestDto.getPostTitle());
+        post.setPostContent(postUpdateRequestDto.getPostContent());
         post.setCreatedAt(createdDateTime);
 
         List<Image> existingImages = imageRepository.findByPost(post);
         for (Image image : existingImages) {
+            String key = image.getImageUrl().substring(image.getImageUrl().lastIndexOf("/") + 1);
+            s3Service.deleteFile(key);
             imageRepository.delete(image);
         }
 
-        for (String imageUrl : postUpdateRequestDto.imageUrls()) {
+        for (MultipartFile file : postUpdateRequestDto.getFiles()) {
+            String key = s3Service.uploadFile(file);
+            String imageUrl = s3Service.getFileUrl(key).toString();
             Image postImage = new Image(imageUrl, post);
             imageRepository.save(postImage);
         }
@@ -116,6 +129,8 @@ public class PostService {
 
         List<Image> images = imageRepository.findByPost(post);
         for (Image image : images) {
+            String key = image.getImageUrl().substring(image.getImageUrl().lastIndexOf("/") + 1);
+            s3Service.deleteFile(key);
             imageRepository.delete(image);
         }
 
