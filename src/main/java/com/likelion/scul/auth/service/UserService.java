@@ -59,4 +59,9 @@ public class UserService {
         String email = claims.getSubject();
         return findByEmail(email);
     }
+
+    public boolean isNickNameDuplicate(String nickName) {
+        Optional<User> user = userRepository.findBynickname(nickName);
+        return user.isPresent();
+    }
 }
