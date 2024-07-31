@@ -15,8 +15,6 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/auth")
-@CrossOrigin("*")
 public class AuthController {
 
     private final JwtService jwtService;
@@ -29,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<Map<String, String>> refreshAccessToken(@RequestParam String refreshToken) {
+    public ResponseEntity<Map<String, String>> refreshAccessToken(@RequestParam("refreshToken") String refreshToken) {
         // Refresh Token의 유효성 검사
         if (!jwtService.validateToken(refreshToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
