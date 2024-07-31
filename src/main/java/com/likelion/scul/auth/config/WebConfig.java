@@ -25,19 +25,6 @@ public class WebConfig implements WebMvcConfigurer {
             "/oauth2/**", // OAuth2 관련 경로
             "/initial", // 추가 정보 입력 페이지
     };
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
-            }
-        };
-    }
 
 
     @Bean
