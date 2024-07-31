@@ -83,5 +83,24 @@ public class PostController {
         }
     }
 
+    @GetMapping("/posts/recent-posts")
+    public ResponseEntity<List<PostListDto>> getRecentPosts() {
+        try {
+            List<PostListDto> recentPosts = postService.getRecentPosts();
+            return new ResponseEntity<>(recentPosts, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/posts/hot-posts")
+    public ResponseEntity<List<PostListDto>> getHotPosts() {
+        try {
+            List<PostListDto> hotPosts = postService.getHotPosts();
+            return new ResponseEntity<>(hotPosts, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
