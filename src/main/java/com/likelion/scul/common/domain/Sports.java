@@ -2,10 +2,12 @@ package com.likelion.scul.common.domain;
 
 import com.likelion.scul.board.domain.Board;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
+@Data
 public class Sports {
 
     @Id
