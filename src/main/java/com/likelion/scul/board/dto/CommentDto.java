@@ -6,4 +6,5 @@ public record CommentDto(
         String nickname,
         String commentContent,
         LocalDateTime createdAt
-) {}
+) {
+}

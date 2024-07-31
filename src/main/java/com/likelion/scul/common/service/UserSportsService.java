@@ -3,7 +3,6 @@ package com.likelion.scul.common.service;
 import com.likelion.scul.common.domain.Sports;
 import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.domain.UserSports;
-import com.likelion.scul.common.dto.usersports.PrioritySport;
 import com.likelion.scul.common.dto.usersports.UserSportsResponse;
 import com.likelion.scul.common.repository.SportsRepository;
 import com.likelion.scul.common.repository.UserSportsRepository;

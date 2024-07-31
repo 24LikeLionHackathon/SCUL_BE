@@ -15,6 +15,7 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
     @GetMapping("/check-nickname")
     public ResponseEntity<Boolean> isNickNameDuplicate(@RequestParam String nickname) {
         return ResponseEntity.ok(userService.isNickNameDuplicate(nickname));

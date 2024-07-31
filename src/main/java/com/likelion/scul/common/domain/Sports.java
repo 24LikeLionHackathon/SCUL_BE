@@ -2,6 +2,7 @@ package com.likelion.scul.common.domain;
 
 import com.likelion.scul.board.domain.Board;
 import jakarta.persistence.*;
+
 import java.util.List;
 
 @Entity

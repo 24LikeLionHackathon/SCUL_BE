@@ -1,11 +1,17 @@
 package com.likelion.scul.board.service;
 
-import com.likelion.scul.common.domain.User;
-import com.likelion.scul.board.domain.*;
+import com.likelion.scul.board.domain.Board;
+import com.likelion.scul.board.domain.Image;
+import com.likelion.scul.board.domain.Post;
+import com.likelion.scul.board.domain.Tag;
 import com.likelion.scul.board.dto.CommentDto;
 import com.likelion.scul.board.dto.PostDto;
-import com.likelion.scul.board.repository.*;
+import com.likelion.scul.board.repository.BoardRepository;
+import com.likelion.scul.board.repository.ImageRepository;
+import com.likelion.scul.board.repository.PostRepository;
+import com.likelion.scul.board.repository.TagRepository;
 import com.likelion.scul.common.domain.Sports;
+import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.repository.SportsRepository;
 import com.likelion.scul.common.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
