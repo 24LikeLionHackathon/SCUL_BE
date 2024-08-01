@@ -57,6 +57,7 @@ public class LoginController {
     }
 
     @GetMapping("/oauth2/google")
+
     public ResponseEntity<Map<String, Object>> loginGoogle(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) throws IOException {
         RestTemplate restTemplate = new RestTemplate();
         GoogleRequest googleOAuthRequestParam = GoogleRequest
@@ -92,7 +93,7 @@ public class LoginController {
             // Return JSON indicating that the user is not a member
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("is_member", false);
-
+            response.sendRedirect("http://localhost:3000/initial");
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
         }
 
@@ -107,6 +108,7 @@ public class LoginController {
         tokens.put("refresh_token", refreshJwt);
         tokens.put("is_member", true);
 
+        response.sendRedirect("http://localhost:3000/home");
         return ResponseEntity.ok(tokens);
     }
 
