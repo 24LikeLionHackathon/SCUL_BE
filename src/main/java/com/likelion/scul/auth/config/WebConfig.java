@@ -17,15 +17,14 @@ public class WebConfig implements WebMvcConfigurer {
     private final UserService userService;
 
     private static final String[] AUTH_WHITELIST = {
-            "/",
-            "/api/auth/**",
-            "/follow",// 로그인 및 회원가입 경로
-            "/refresh-token",
-            "/api/auth/**", // 로그인 및 회원가입 경로
-            "/oauth2/**", // OAuth2 관련 경로
-            "/initial", // 추가 정보 입력 페이지
+            "/api/auth/**",       // 로그인 및 회원가입 경로
+            "/refresh-token",     // 리프레시 토큰 경로
+            "/oauth2/**",         // OAuth2 관련 경로
+            "/additional-info",           // 추가 정보 입력 페이지
+            "/auth/join/**",      // 회원가입 관련 경로
+            "/oauth2/google/**",  // 구글 OAuth2 관련 경로
+            "/oauth2/kakao/**"    // 카카오 OAuth2 관련 경로
     };
-
 
     @Bean
     public RestTemplate restTemplate() {
@@ -44,4 +43,5 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns(AUTH_WHITELIST);
     }
+
 }
