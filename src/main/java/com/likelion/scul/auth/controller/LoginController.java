@@ -57,7 +57,7 @@ public class LoginController {
     }
 
     @GetMapping("/oauth2/google")
-    public void loginGoogle(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) throws IOException {
+    public ResponseEntity<Map<String, Object>> loginGoogle(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) throws IOException {
         RestTemplate restTemplate = new RestTemplate();
         GoogleRequest googleOAuthRequestParam = GoogleRequest
                 .builder()
@@ -81,30 +81,33 @@ public class LoginController {
         GoogleUserInfoResponse userInfo = userInfoResponseEntity.getBody();
         String email = userInfo.getEmail();
         String name = userInfo.getName();
-        // GoogleUserInfoResponse 클래스에는 gender 필드가 없으므로 제거
-        // String gender = userInfo.getGender();
         String picture = userInfo.getPicture();
 
-        // 이메일이 데이터베이스에 존재하는지 확인
+        // Check if the email already exists in the database
         Optional<User> user = userService.findByEmail(email);
         if (!user.isPresent()) {
-            // 세션에 구글 사용자 정보 저장
+            // Save Google user information in the session
             session.setAttribute("googleUser", userInfo);
 
-            // 추가 정보 입력 페이지로 리디렉션
-            response.sendRedirect("/additional-info");
-            return;
+            // Return JSON indicating that the user is not a member
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("is_member", false);
+
+            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
         }
 
         String accessJwt = jwtService.createAccessToken(email);
         String refreshJwt = jwtService.createRefreshToken(email);
 
-        // Refresh Token 저장
+        // Save Refresh Token
         userService.createAndSaveRefreshToken(user.get(), refreshJwt);
 
-        response.setHeader("access_token", accessJwt);
-        response.setHeader("refresh_token", refreshJwt);
-        response.setStatus(HttpStatus.OK.value());
+        Map<String, Object> tokens = new HashMap<>();
+        tokens.put("access_token", accessJwt);
+        tokens.put("refresh_token", refreshJwt);
+        tokens.put("is_member", true);
+
+        return ResponseEntity.ok(tokens);
     }
 
     @GetMapping("/additional-info")
