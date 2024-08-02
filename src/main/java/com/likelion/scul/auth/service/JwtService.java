@@ -92,11 +92,31 @@ public class JwtService {
         refreshTokenRepository.deleteByUser(user);
     }
 
-    public String findByUser(User user) {
-        RefreshToken token = refreshTokenRepository.findByUser(user)
-                .orElseThrow(() -> new IllegalStateException("user의 refreshToken이 존재하지 않습니다."));
-        return token.getToken();
+    public String findOrCreateRefreshToken(User user) {
+        // Refresh token 조회
+        Optional<RefreshToken> tokenOptional = refreshTokenRepository.findByUser(user);
+
+        if (tokenOptional.isPresent()) {
+            RefreshToken refreshToken = tokenOptional.get();
+            // 만료 여부 확인
+            if (!isTokenExpired(refreshToken.getExpiryDate())) {
+                // 만료되지 않은 경우 기존 토큰 반환
+                return refreshToken.getToken();
+            }
+            // 만료된 경우 기존 토큰 삭제
+            deleteRefreshToken(user);
+        }
+
+        // 새로 발급하여 저장
+        String newRefreshToken = createRefreshToken(user.getEmail());
+        createAndSaveRefreshToken(user, newRefreshToken);
+        return newRefreshToken;
     }
+
+    private boolean isTokenExpired(Date expiryDate) {
+        return expiryDate.before(new Date());
+    }
+
 
     public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);

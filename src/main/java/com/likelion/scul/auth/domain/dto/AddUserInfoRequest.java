@@ -9,7 +9,6 @@ public class AddUserInfoRequest {
     private String name;
     private String gender;
     private int age;
-    private String region;
     private String nickname;
     private List<String> sportsName;
 }

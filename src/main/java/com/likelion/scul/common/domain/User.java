@@ -16,7 +16,6 @@ public class User {
     private String gender;
     private int age;
     private String email;
-    private String region;
     private String nickname;
 
     // Getters and Setters
@@ -61,13 +60,6 @@ public class User {
         this.email = email;
     }
 
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
-    }
 
     public String getNickname() {
         return nickname;

@@ -42,7 +42,6 @@ public class UserService {
         newUser.setName(request.getName());
         newUser.setGender(request.getGender());
         newUser.setAge(request.getAge());
-        newUser.setRegion(request.getRegion());
         newUser.setNickname(request.getNickname());
 
         return newUser;
