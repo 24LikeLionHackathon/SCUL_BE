@@ -237,4 +237,48 @@ public class PostService {
                 ))
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<PostListDto> getRecentPosts() {
+        List<Post> posts = postRepository.findAll().stream()
+                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
+
+        return posts.stream()
+                .map(post -> new PostListDto(
+                        post.getPostId(),
+                        post.getUser().getNickname(),
+                        post.getTag().getTagName(),
+                        post.getPostTitle(),
+                        post.getCreatedAt(),
+                        post.getLikes().size(),
+                        post.getPostView(),
+                        post.getComments().size(),
+                        post.getImages().isEmpty() ? null : post.getImages().get(0).getImageUrl()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostListDto> getHotPosts() {
+        List<Post> posts = postRepository.findAll().stream()
+                .sorted(Comparator.comparing((Post post) -> post.getLikes().size()).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
+
+        return posts.stream()
+                .map(post -> new PostListDto(
+                        post.getPostId(),
+                        post.getUser().getNickname(),
+                        post.getTag().getTagName(),
+                        post.getPostTitle(),
+                        post.getCreatedAt(),
+                        post.getLikes().size(),
+                        post.getPostView(),
+                        post.getComments().size(),
+                        post.getImages().isEmpty() ? null : post.getImages().get(0).getImageUrl()
+                ))
+                .collect(Collectors.toList());
+    }
 }
