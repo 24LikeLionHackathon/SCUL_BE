@@ -187,7 +187,12 @@ public class PostService {
                 })
                 .collect(Collectors.toList());
 
-        if (postListRequestDto.searchContent() != null && !postListRequestDto.searchContent().isEmpty()) {
+        for (Post post : posts) {
+            System.out.println("post.getPostTitle() = " + post.getPostTitle());
+        }
+
+        // 수정된 부분: searchContent가 null이거나 빈 문자열일 경우 필터링을 건너뜁니다.
+        if (postListRequestDto.searchContent() != null && !postListRequestDto.searchContent().trim().isEmpty()) {
             switch (postListRequestDto.searchType()) {
                 case "제목":
                     posts = posts.stream()
