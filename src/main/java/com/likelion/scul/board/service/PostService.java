@@ -174,6 +174,11 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostListDto> getPostList(PostListRequestDto postListRequestDto) {
+
+        System.out.println("postListRequestDto.boardName() = " + postListRequestDto.boardName());
+        System.out.println("postListRequestDto.tagName() = " + postListRequestDto.tagName());
+        System.out.println("postListRequestDto = " + postListRequestDto.sportsName());
+
         List<Post> posts = postRepository.findAll().stream()
                 .filter(post -> post.getBoard().getSports().getSportsName().equals(postListRequestDto.sportsName())) // Board의 sports로 필터링
                 .filter(post -> post.getBoard().getBoardName().equals(postListRequestDto.boardName()))
