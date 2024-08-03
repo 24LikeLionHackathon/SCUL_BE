@@ -178,7 +178,13 @@ public class PostService {
         List<Post> posts = postRepository.findAll().stream()
                 .filter(post -> post.getSports().getSportsName().equals(postListRequestDto.sportsName()))
                 .filter(post -> post.getBoard().getBoardName().equals(postListRequestDto.boardName()))
-                .filter(post -> post.getTag().getTagName().equals(postListRequestDto.tagName()))
+                .filter(post -> {
+                    if ("전체".equals(postListRequestDto.tagName())) {
+                        return true; // 전체일 경우 모든 태그 포함
+                    } else {
+                        return post.getTag().getTagName().equals(postListRequestDto.tagName());
+                    }
+                })
                 .collect(Collectors.toList());
 
         if (postListRequestDto.searchContent() != null && !postListRequestDto.searchContent().isEmpty()) {
@@ -202,17 +208,17 @@ public class PostService {
         }
 
         switch (postListRequestDto.sortMethod()) {
-            case "최신순":
+            case "최신 순":
                 posts = posts.stream()
                         .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                         .collect(Collectors.toList());
                 break;
-            case "조회순":
+            case "조회 순":
                 posts = posts.stream()
                         .sorted(Comparator.comparing(Post::getPostView).reversed())
                         .collect(Collectors.toList());
                 break;
-            case "댓글순":
+            case "댓글 순":
                 posts = posts.stream()
                         .sorted(Comparator.comparing(post -> post.getComments().size(), Comparator.reverseOrder()))
                         .collect(Collectors.toList());
