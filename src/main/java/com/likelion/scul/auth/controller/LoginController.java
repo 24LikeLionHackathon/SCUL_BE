@@ -1,7 +1,5 @@
 package com.likelion.scul.auth.controller;
 
-import com.likelion.scul.auth.domain.GoogleRefreshToken;
-import com.likelion.scul.auth.domain.KakaoRefreshToken;
 import com.likelion.scul.auth.domain.KakaoToken;
 import com.likelion.scul.auth.domain.dto.AddUserInfoRequest;
 import com.likelion.scul.auth.google.GoogleRequest;
@@ -131,6 +129,7 @@ public class LoginController {
             session.setAttribute("UserEmail", email);
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("is_member", false);
+//            response.sendRedirect("/additional-info");
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
         }
 
@@ -143,7 +142,7 @@ public class LoginController {
     }
 
     @GetMapping("/oauth2/kakao")
-    public ResponseEntity<Map<String, Object>> loginKakao(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) {
+    public ResponseEntity<Map<String, Object>> loginKakao(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) throws IOException {
         // Kakao Auth Server로 부터 Token 발급
         KakaoToken kakaoToken = kakaoService.getToken(authCode);
         String accessToken = kakaoToken.getAccess_token();
@@ -155,11 +154,11 @@ public class LoginController {
         if (!user.isPresent()) {
             // 세션에 사용자 정보 저장
             session.setAttribute("loginType", "kakao");
-            session.setAttribute("KakaoUser", kakaoToken);
             session.setAttribute("UserEmail", email);
 
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("is_member", false);
+//            response.sendRedirect("/additional-info");
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
         }
 
@@ -171,6 +170,11 @@ public class LoginController {
         return ResponseEntity.ok(tokens);
     }
 
+    @GetMapping("/additional-info")
+    public String additionalInfoForm() {
+        return "additional-info";
+    }
+
     @PostMapping("/auth/join/submit-info")
     public ResponseEntity<Map<String, String>> submitAdditionalInfo(
             @RequestBody AddUserInfoRequest request,
@@ -178,21 +182,14 @@ public class LoginController {
 
 
         if ((String) session.getAttribute("loginType") == "kakao") {
-            // 카카오 로그인을 통해 Token을 발급받지 않은 상태라면 권한 없음
-//        KakaoToken kakaoToken = (KakaoToken) session.getAttribute("KakaoUser");
-//        if (kakaoToken == null) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-//      }
+
             User newUser = userService.makeNewUser(request, session);
             newUser = userService.saveUser(newUser);
-            // 유저의 카카오 리프레쉬 토큰을 DB에 저장
-            KakaoToken kakaoToken = (KakaoToken) session.getAttribute("KakaoUser");
-            KakaoRefreshToken kakaoRefreshToken = kakaoService.makeKakaoRefreshToken(newUser, kakaoToken.getAccess_token());
-            kakaoService.saveKakaoRefreshToken(kakaoRefreshToken);
             // 새로운 UserSports DB에 저장
             userSportsService.saveUserSports(request.getSportsName(), newUser);
-            // 유저의 email을 기반으로 페이지 내부 토큰 발급
 
+
+            // 유저의 email을 기반으로 페이지 내부 토큰 발급
             String accessJwt = jwtService.createAccessToken(newUser.getEmail());
             String refreshJwt = jwtService.createRefreshToken(newUser.getEmail());
 
@@ -205,19 +202,13 @@ public class LoginController {
 
             return ResponseEntity.ok(tokens);
         } else {
-            GoogleResponse googleToken = (GoogleResponse) session.getAttribute("GoogleUser");
-            if (googleToken == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-            }
+
             User newUser = userService.makeNewUser(request, session);
             newUser = userService.saveUser(newUser);
-            // 유저의 구글 리프레쉬 토큰을 DB에 저장
-            GoogleRefreshToken googleRefreshToken = googleService.makeGoogleRefreshToken(newUser, googleToken.getRefresh_token());
-            googleService.saveGoogleRefreshToken(googleRefreshToken);
             // 새로운 UserSports DB에 저장
             userSportsService.saveUserSports(request.getSportsName(), newUser);
-            // 유저의 email을 기반으로 페이지 내부 토큰 발급
 
+            // 유저의 email을 기반으로 페이지 내부 토큰 발급
             String accessJwt = jwtService.createAccessToken(newUser.getEmail());
             String refreshJwt = jwtService.createRefreshToken(newUser.getEmail());
 
