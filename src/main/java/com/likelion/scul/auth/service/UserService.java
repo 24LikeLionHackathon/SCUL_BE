@@ -39,7 +39,6 @@ public class UserService {
         // 새로운 사용자 등록
         User newUser = new User();
         newUser.setEmail(email);
-        newUser.setName(request.getName());
         newUser.setGender(request.getGender());
         newUser.setAge(request.getAge());
         newUser.setNickname(request.getNickname());
