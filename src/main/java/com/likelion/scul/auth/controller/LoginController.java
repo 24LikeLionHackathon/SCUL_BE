@@ -205,6 +205,11 @@ public class LoginController {
 
             User newUser = userService.makeNewUser(request, session);
             newUser = userService.saveUser(newUser);
+
+            for(String sport: request.getSportsName()){
+                System.out.println("sport = " + sport);
+            }
+
             // 새로운 UserSports DB에 저장
             userSportsService.saveUserSports(request.getSportsName(), newUser);
 
