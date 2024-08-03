@@ -179,17 +179,19 @@ public class PostService {
         System.out.println("postListRequestDto.tagName() = " + postListRequestDto.tagName());
         System.out.println("postListRequestDto = " + postListRequestDto.sportsName());
 
-        List<Post> posts = postRepository.findAll().stream()
-                .filter(post -> post.getBoard().getSports().getSportsName().equals(postListRequestDto.sportsName())) // Board의 sports로 필터링
-                .filter(post -> post.getBoard().getBoardName().equals(postListRequestDto.boardName()))
-                .filter(post -> {
-                    if ("전체".equals(postListRequestDto.tagName())) {
-                        return true; // 전체일 경우 모든 태그 포함
-                    } else {
-                        return post.getTag().getTagName().equals(postListRequestDto.tagName());
-                    }
-                })
-                .collect(Collectors.toList());
+        List<Post> posts = postRepository.findAll();
+
+//                .stream()
+//                .filter(post -> post.getBoard().getSports().getSportsName().equals(postListRequestDto.sportsName())) // Board의 sports로 필터링
+//                .filter(post -> post.getBoard().getBoardName().equals(postListRequestDto.boardName()))
+//                .filter(post -> {
+//                    if ("전체".equals(postListRequestDto.tagName())) {
+//                        return true; // 전체일 경우 모든 태그 포함
+//                    } else {
+//                        return post.getTag().getTagName().equals(postListRequestDto.tagName());
+//                    }
+//                })
+//                .collect(Collectors.toList());
 
         for (Post post : posts) {
             System.out.println("post.getPostTitle() = " + post.getPostTitle());
