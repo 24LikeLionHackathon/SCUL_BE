@@ -72,6 +72,7 @@ public class PostController {
     public ResponseEntity<PostListResponseDto> getPostList(@RequestBody PostListRequestDto postListRequestDto) {
         try {
             PostListResponseDto postListResponse = postService.getPostList(postListRequestDto);
+            System.out.println("postListResponse = " + postListResponse.getTotalPosts());
             return new ResponseEntity<>(postListResponse, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -227,6 +227,12 @@ public class PostService {
                 break;
         }
 
+        System.out.println("--------------------");
+        for (Post filteredPost : filteredPosts) {
+            System.out.println(filteredPost.getPostTitle());
+        }
+        System.out.println("--------------------");
+
         int start = (postListRequestDto.page() - 1) * 14;
         int end = Math.min(start + 14, filteredPosts.size());
         List<PostListDto> paginatedPosts = filteredPosts.subList(start, end).stream()
@@ -243,7 +249,15 @@ public class PostService {
                 ))
                 .collect(Collectors.toList());
 
+        System.out.println("--------------------");
+        for (PostListDto paginatedPost : paginatedPosts) {
+            System.out.println("paginatedPost.postTitle() = " + paginatedPost.postTitle());
+        }
+        System.out.println("--------------------");
+
         int totalPosts = filteredPosts.size(); // 필터 조건을 만족하는 총 게시물 수 계산
+        System.out.println("totalPosts = " + totalPosts);
+
         return new PostListResponseDto(paginatedPosts, totalPosts);
     }
     @Transactional(readOnly = true)
