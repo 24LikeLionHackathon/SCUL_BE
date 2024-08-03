@@ -183,7 +183,9 @@ public class PostService {
 //                        return post.getTag().getTagName().equals(postListRequestDto.tagName());
 //                    }
 //                })
-
+        for (Post filteredPost : filteredPosts) {
+            System.out.println(filteredPost.getPostTitle());
+        }
 
 
         // 필터링된 게시물 목록을 페이징 처리
