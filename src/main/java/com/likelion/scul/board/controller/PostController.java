@@ -1,11 +1,6 @@
 package com.likelion.scul.board.controller;
 
-import com.likelion.scul.board.dto.PostDetailDto;
-import com.likelion.scul.board.dto.PostListDto;
-import com.likelion.scul.board.dto.PostRequestDto;
-import com.likelion.scul.board.dto.PostUpdateRequestDto;
-import com.likelion.scul.board.dto.PostDeleteRequestDto;
-import com.likelion.scul.board.dto.PostListRequestDto;
+import com.likelion.scul.board.dto.*;
 import com.likelion.scul.board.service.PostService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -74,10 +69,10 @@ public class PostController {
     }
 
     @PostMapping("/posts/list")
-    public ResponseEntity<List<PostListDto>> getPostList(@RequestBody PostListRequestDto postListRequestDto) {
+    public ResponseEntity<PostListResponseDto> getPostList(@RequestBody PostListRequestDto postListRequestDto) {
         try {
-            List<PostListDto> postList = postService.getPostList(postListRequestDto);
-            return new ResponseEntity<>(postList, HttpStatus.OK);
+            PostListResponseDto postListResponse = postService.getPostList(postListRequestDto);
+            return new ResponseEntity<>(postListResponse, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
