@@ -171,19 +171,20 @@ public class PostService {
     public PostListResponseDto getPostList(PostListRequestDto postListRequestDto) {
 
 
-        List<Post> filteredPosts = postRepository.findAll().stream()
-//                .filter(post -> post.getBoard().getSports().getSportsName().equals(postListRequestDto.sportsName())) // Board의 sports로 필터링
-                .filter(post -> post.getBoard().getBoardName().equals(postListRequestDto.boardName()))
-                .filter(post -> {
-                    if ("전체".equals(postListRequestDto.tagName())) {
-                        return true; // 전체일 경우 모든 태그 포함
-                    } else {
-                        return post.getTag().getTagName().equals(postListRequestDto.tagName());
-                    }
-                })
+        List<Post> filteredPosts = postRepository.findAll()
+                .stream()
+                .filter(post -> post.getBoard().getSports().getSportsName().equals(postListRequestDto.sportsName())) // Board의 sports로 필터링
                 .collect(Collectors.toList());
+//                .filter(post -> post.getBoard().getBoardName().equals(postListRequestDto.boardName()))
+//                .filter(post -> {
+//                    if ("전체".equals(postListRequestDto.tagName())) {
+//                        return true; // 전체일 경우 모든 태그 포함
+//                    } else {
+//                        return post.getTag().getTagName().equals(postListRequestDto.tagName());
+//                    }
+//                })
 
-        int totalPosts = filteredPosts.size(); // 필터 조건을 만족하는 총 게시물 수 계산
+
 
         // 필터링된 게시물 목록을 페이징 처리
         if (postListRequestDto.searchContent() != null && !postListRequestDto.searchContent().trim().isEmpty()) {
@@ -240,6 +241,7 @@ public class PostService {
                 ))
                 .collect(Collectors.toList());
 
+        int totalPosts = filteredPosts.size(); // 필터 조건을 만족하는 총 게시물 수 계산
         return new PostListResponseDto(paginatedPosts, totalPosts);
     }
     @Transactional(readOnly = true)
