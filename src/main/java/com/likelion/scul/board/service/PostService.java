@@ -171,18 +171,19 @@ public class PostService {
     public PostListResponseDto getPostList(PostListRequestDto postListRequestDto) {
 
 
-        List<Post> filteredPosts = postRepository.findAll();
-//                .stream()
-//                .filter(post -> post.getBoard().getSports().getSportsName().equals(postListRequestDto.sportsName())) // Board의 sports로 필터링
-//                .collect(Collectors.toList());
-//                .filter(post -> post.getBoard().getBoardName().equals(postListRequestDto.boardName()))
-//                .filter(post -> {
-//                    if ("전체".equals(postListRequestDto.tagName())) {
-//                        return true; // 전체일 경우 모든 태그 포함
-//                    } else {
-//                        return post.getTag().getTagName().equals(postListRequestDto.tagName());
-//                    }
-//                })
+        List<Post> filteredPosts = postRepository.findAll()
+                .stream()
+                .filter(post -> post.getBoard().getSports().getSportsName().equals(postListRequestDto.sportsName())) // Board의 sports로 필터링
+                .filter(post -> post.getBoard().getBoardName().equals(postListRequestDto.boardName()))
+                .filter(post -> {
+                    if ("전체".equals(postListRequestDto.tagName())) {
+                        return true; // 전체일 경우 모든 태그 포함
+                    } else {
+                        return post.getTag().getTagName().equals(postListRequestDto.tagName());
+                    }
+                })
+                .collect(Collectors.toList());
+
         for (Post filteredPost : filteredPosts) {
             System.out.println(filteredPost.getPostTitle());
         }
