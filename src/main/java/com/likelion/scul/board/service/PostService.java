@@ -95,7 +95,6 @@ public class PostService {
 
         post.setBoard(board);
         post.setTag(tag);
-        post.setSports(sports);
         post.setPostTitle(postUpdateRequestDto.getPostTitle());
         post.setPostContent(postUpdateRequestDto.getPostContent());
         post.setCreatedAt(createdDateTime);
@@ -176,7 +175,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public List<PostListDto> getPostList(PostListRequestDto postListRequestDto) {
         List<Post> posts = postRepository.findAll().stream()
-                .filter(post -> post.getSports().getSportsName().equals(postListRequestDto.sportsName()))
+                .filter(post -> post.getBoard().getSports().getSportsName().equals(postListRequestDto.sportsName())) // Board의 sports로 필터링
                 .filter(post -> post.getBoard().getBoardName().equals(postListRequestDto.boardName()))
                 .filter(post -> {
                     if ("전체".equals(postListRequestDto.tagName())) {
