@@ -47,9 +47,13 @@ public class PostService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Board 찾기: boardName과 sportsName을 함께 사용
-        Board board = boardRepository.findByBoardNameAndSportsSportsName(postRequestDto.getBoardName(), postRequestDto.getSportsName())
-                .orElseThrow(() -> new RuntimeException("Board not found for given boardName and sportsName"));
+        // Sports 찾기
+        Sports sports = sportsRepository.findBySportsName(postRequestDto.getSportsName())
+                .orElseThrow(() -> new RuntimeException("Sports not found for given sportsName"));
+
+        // Board 찾기: boardName과 sportsId를 함께 사용
+        Board board = boardRepository.findByBoardNameAndSportsSportsId(postRequestDto.getBoardName(), sports.getSportsId())
+                .orElseThrow(() -> new RuntimeException("Board not found for given boardName and sportsId"));
 
         Tag tag = tagRepository.findByTagName(postRequestDto.getTagName())
                 .orElseThrow(() -> new RuntimeException("Tag not found"));

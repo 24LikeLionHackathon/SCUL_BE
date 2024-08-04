@@ -9,4 +9,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Optional<Board> findByBoardName(String boardName);
 
     Optional<Board> findByBoardNameAndSportsSportsName(String boardName, String sportsName);
+
+    Optional<Board> findByBoardNameAndSportsSportsId(String boardName, Long sportsId);
 }
