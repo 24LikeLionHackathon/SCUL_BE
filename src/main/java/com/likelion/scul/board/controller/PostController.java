@@ -46,7 +46,7 @@ public class PostController {
         }
     }
 
-    @DeleteMapping("/posts{postId}")
+    @DeleteMapping("/posts/{postId}")
     public ResponseEntity<String> deletePost(@PathVariable Long postId, HttpServletRequest request) {
         try {
             Claims claims = (Claims) request.getAttribute("claims");
