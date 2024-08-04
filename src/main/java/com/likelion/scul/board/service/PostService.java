@@ -158,7 +158,8 @@ public class PostService {
                 ))
                 .collect(Collectors.toList());
 
-
+        System.out.println(post.getUser().getEmail());
+        System.out.println(email);
         return new PostDetailDto(
                 post.getPostId(),
                 post.getUser().getNickname(),
@@ -171,7 +172,7 @@ public class PostService {
                 imageUrls,
                 post.getLikes().size(),
                 comments,
-                post.getUser().getEmail()==email
+                post.getUser().getEmail().equals(email)
         );
     }
 
