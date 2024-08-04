@@ -55,14 +55,14 @@ public class MyPageController {
     }
 
     @GetMapping("/activity/likes")
-    public ResponseEntity<LikedPostsDto> getActivityLikes(
+    public ResponseEntity<ActivityLikesDto> getActivityLikes(
             HttpServletRequest request,
             @RequestParam("page") int page) {
 
         Claims claims = (Claims) request.getAttribute("claims");
         String email = claims.getSubject();
 
-        LikedPostsDto likedPostsDto=myPageService.getActivityLikes(email, page);
+        ActivityLikesDto likedPostsDto=myPageService.getActivityLikes(email, page);
         return ResponseEntity.ok(likedPostsDto);
     }
 }

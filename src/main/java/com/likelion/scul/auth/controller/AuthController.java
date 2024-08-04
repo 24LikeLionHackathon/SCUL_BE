@@ -53,7 +53,7 @@ public class AuthController {
         // 새로운 Access Token 발급
         String newAccessToken = jwtService.createAccessToken(email);
         Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", newAccessToken);
+        tokens.put("access_token", "Bearer " + newAccessToken); // Bearer 접두사를 붙임
 
         return ResponseEntity.ok(tokens);
     }

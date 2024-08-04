@@ -158,8 +158,6 @@ public class PostService {
                 ))
                 .collect(Collectors.toList());
 
-        System.out.println(post.getUser().getEmail());
-        System.out.println(email);
         return new PostDetailDto(
                 post.getPostId(),
                 post.getUser().getNickname(),
@@ -232,12 +230,6 @@ public class PostService {
                         .collect(Collectors.toList());
                 break;
         }
-
-        System.out.println("--------------------");
-        for (Post filteredPost : filteredPosts) {
-            System.out.println(filteredPost.getPostTitle());
-        }
-        System.out.println("--------------------");
 
         int start = (postListRequestDto.page() - 1) * 14;
         int end = Math.min(start + 14, filteredPosts.size());

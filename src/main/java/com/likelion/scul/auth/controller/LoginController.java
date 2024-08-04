@@ -124,14 +124,13 @@ public class LoginController {
             session.setAttribute("UserEmail", email);
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("is_member", false);
-//            response.sendRedirect("/additional-info");
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
         }
 
 
         Map<String, Object> tokens = new HashMap<>();
-        tokens.put("access_token", jwtService.createAccessToken(email));
-        tokens.put("refresh_token", jwtService.findOrCreateRefreshToken(user.get()));
+        tokens.put("access_token", "Bearer " + jwtService.createAccessToken(email)); // Bearer 추가
+        tokens.put("refresh_token", "Bearer " + jwtService.findOrCreateRefreshToken(user.get())); // Bearer 추가
         tokens.put("is_member", true);
         return ResponseEntity.ok(tokens);
     }
@@ -153,22 +152,21 @@ public class LoginController {
 
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("is_member", false);
-//            response.sendRedirect("/additional-info");
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
         }
 
         Map<String, Object> tokens = new HashMap<>();
-        tokens.put("access_token", jwtService.createAccessToken(email));
-        tokens.put("refresh_token", jwtService.findOrCreateRefreshToken(user.get()));
+        tokens.put("access_token", "Bearer " + jwtService.createAccessToken(email)); // Bearer 추가
+        tokens.put("refresh_token", "Bearer " + jwtService.findOrCreateRefreshToken(user.get())); // Bearer 추가
         tokens.put("is_member", true);
 
         return ResponseEntity.ok(tokens);
     }
 
-    @GetMapping("/additional-info")
-    public String additionalInfoForm() {
-        return "additional-info";
-    }
+//    @GetMapping("/additional-info")
+//    public String additionalInfoForm() {
+//        return "additional-info";
+//    }
 
     @PostMapping("/auth/join/submit-info")
     public ResponseEntity<Map<String, String>> submitAdditionalInfo(
@@ -192,8 +190,8 @@ public class LoginController {
             jwtService.createAndSaveRefreshToken(newUser, refreshJwt);
 
             Map<String, String> tokens = new HashMap<>();
-            tokens.put("access_token", accessJwt);
-            tokens.put("refresh_token", refreshJwt);
+            tokens.put("access_token", "Bearer " + accessJwt);
+            tokens.put("refresh_token", "Bearer " + refreshJwt);
 
             return ResponseEntity.ok(tokens);
         } else {
@@ -216,8 +214,8 @@ public class LoginController {
             jwtService.createAndSaveRefreshToken(newUser, refreshJwt);
 
             Map<String, String> tokens = new HashMap<>();
-            tokens.put("access_token", accessJwt);
-            tokens.put("refresh_token", refreshJwt);
+            tokens.put("access_token", "Bearer " + accessJwt);
+            tokens.put("refresh_token", "Bearer " + refreshJwt);
 
             return ResponseEntity.ok(tokens);
         }

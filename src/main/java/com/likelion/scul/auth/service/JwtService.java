@@ -38,7 +38,7 @@ public class JwtService {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
         System.out.println("Generated Access Token: " + token);
-        return "Bearer " + token;
+        return token;
     }
 
     public String createRefreshToken(String email) {
@@ -48,7 +48,7 @@ public class JwtService {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
         System.out.println("Generated Refresh Token: " + token);
-        return "Bearer " + token;
+        return token;
     }
 
     public RefreshToken createAndSaveRefreshToken(User user, String token) {

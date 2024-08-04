@@ -50,12 +50,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Optional<User> getUserFromToken(String token, JwtService jwtService) {
-        Claims claims = jwtService.getClaimsFromToken(token);
-        String email = claims.getSubject();
-        return findByEmail(email);
-    }
-
     public boolean isNickNameDuplicate(String nickName) {
         Optional<User> user = userRepository.findBynickname(nickName);
         return user.isPresent();

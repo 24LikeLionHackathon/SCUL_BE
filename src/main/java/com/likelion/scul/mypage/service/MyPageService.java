@@ -153,7 +153,7 @@ public class MyPageService {
         );
     }
 
-    public LikedPostsDto getActivityLikes(String email, int page) {
+    public ActivityLikesDto getActivityLikes(String email, int page) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
@@ -185,7 +185,7 @@ public class MyPageService {
             );
         }).collect(Collectors.toList());
 
-        return new LikedPostsDto(
+        return new ActivityLikesDto(
                 postsList,
                 totalPosts,
                 totalComments,

@@ -2,14 +2,14 @@ package com.likelion.scul.mypage.dto;
 
 import java.util.List;
 
-public class LikedPostsDto {
+public class ActivityLikesDto {
     private List<LikedPostInfoDto> postsList;
     private int totalPosts;
     private int totalComments;
     private int totalLikes;
     private int participatingClubs;
 
-    public LikedPostsDto(List<LikedPostInfoDto> postsList, int totalPosts, int totalComments, int totalLikes, int participatingClubs) {
+    public ActivityLikesDto(List<LikedPostInfoDto> postsList, int totalPosts, int totalComments, int totalLikes, int participatingClubs) {
         this.postsList = postsList;
         this.totalPosts = totalPosts;
         this.totalComments = totalComments;
