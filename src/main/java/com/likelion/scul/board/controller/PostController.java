@@ -59,9 +59,9 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<PostDetailDto> getPostDetail(@RequestParam Long post_id) {
+    public ResponseEntity<PostDetailDto> getPostDetail(@PathVariable Long postId) {
         try {
-            PostDetailDto postDetail = postService.getPostDetail(post_id);
+            PostDetailDto postDetail = postService.getPostDetail(postId);
             return new ResponseEntity<>(postDetail, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -77,10 +77,10 @@ public class JwtService {
     }
 
     private String removeBearerPrefix(String token) {
-        if (token.startsWith("Bearer ")) {
-            return token.substring(7);
-        }
-        return token;
+            if (token.startsWith("Bearer ")) {
+                return token.substring(7).trim(); // 공백 제거
+            }
+            return token.trim(); // 공백 제거
     }
 
     public Claims getClaimsFromToken(String token) {
