@@ -34,12 +34,12 @@ public class PostController {
         }
     }
 
-    @PutMapping("/posts")
-    public ResponseEntity<String> updatePost(@ModelAttribute PostUpdateRequestDto postUpdateRequestDto, HttpServletRequest request) {
+    @PutMapping("/posts/{postId}")
+    public ResponseEntity<String> updatePost(@PathVariable Long postId,@ModelAttribute PostUpdateRequestDto postUpdateRequestDto, HttpServletRequest request) {
         try {
             Claims claims = (Claims) request.getAttribute("claims");
             String email = claims.getSubject();
-            postService.updatePost(postUpdateRequestDto, email);
+            postService.updatePost(postId,postUpdateRequestDto, email);
             return new ResponseEntity<>("Post updated successfully", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

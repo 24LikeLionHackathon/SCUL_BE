@@ -74,8 +74,8 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(PostUpdateRequestDto postUpdateRequestDto, String email) throws IOException {
-        Post post = postRepository.findById(postUpdateRequestDto.getPostId())
+    public void updatePost(Long postId, PostUpdateRequestDto postUpdateRequestDto, String email) throws IOException {
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
         User user = userRepository.findByEmail(email)

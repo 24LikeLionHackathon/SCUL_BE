@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostUpdateRequestDto{
-    private Long postId;
     private String boardName;
     private String tagName;
     private String sportsName;
