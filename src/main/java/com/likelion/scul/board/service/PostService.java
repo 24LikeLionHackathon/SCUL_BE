@@ -173,7 +173,7 @@ public class PostService {
                         comment.getCommentId(),
                         comment.getUser().getNickname(),
                         comment.getCommentContent(),
-                        LocalDateTime.parse(comment.getCreatedAt(), DateTimeFormatter.ISO_DATE_TIME),
+                        comment.getCreatedAt(),
                         comment.getUser().getUserImage().getImageUrl(),
                         comment.getUser().getEmail().equals(email)
                 ))
