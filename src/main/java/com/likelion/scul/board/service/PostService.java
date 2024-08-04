@@ -63,11 +63,13 @@ public class PostService {
         Post post = new Post(board, tag, user, postRequestDto.getPostTitle(), postRequestDto.getPostContent(), createdDateTime, 0);
         postRepository.save(post);
 
-        for (MultipartFile file : postRequestDto.getFiles()) {
-            String key = s3Service.uploadFile(file);
-            String imageUrl = s3Service.getFileUrl(key).toString();
-            Image postImage = new Image(imageUrl, post);
-            imageRepository.save(postImage);
+        if (postRequestDto.getFiles() != null) {
+            for (MultipartFile file : postRequestDto.getFiles()) {
+                String key = s3Service.uploadFile(file);
+                String imageUrl = s3Service.getFileUrl(key).toString();
+                Image postImage = new Image(imageUrl, post);
+                imageRepository.save(postImage);
+            }
         }
     }
 
