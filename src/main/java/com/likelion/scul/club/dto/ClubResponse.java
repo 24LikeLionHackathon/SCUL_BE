@@ -1,6 +1,6 @@
 package com.likelion.scul.club.dto;
 
-import com.likelion.scul.club.Club;
+import com.likelion.scul.club.domain.Club;
 import lombok.Getter;
 
 import java.time.LocalDate;

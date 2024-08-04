@@ -1,4 +1,4 @@
-package com.likelion.scul.club;
+package com.likelion.scul.club.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,13 +16,13 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QClub extends EntityPathBase<Club> {
 
-    private static final long serialVersionUID = 103915637L;
+    private static final long serialVersionUID = 2076331841L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QClub club = new QClub("club");
 
-    public final QTimeEntity _super = new QTimeEntity(this);
+    public final com.likelion.scul.club.QTimeEntity _super = new com.likelion.scul.club.QTimeEntity(this);
 
     public final StringPath clubContent = createString("clubContent");
 

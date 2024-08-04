@@ -1,10 +1,7 @@
 package com.likelion.scul.club;
 
 import com.likelion.scul.auth.service.UserService;
-import com.likelion.scul.club.dto.ClubRequest;
-import com.likelion.scul.club.dto.ClubResponse;
-import com.likelion.scul.club.dto.ClubSearchRequest;
-import com.likelion.scul.club.dto.ClubUpdateRequest;
+import com.likelion.scul.club.dto.*;
 import com.likelion.scul.common.domain.User;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,6 +70,18 @@ public class ClubController {
     @PostMapping("/club/sports/search/{id}")
     public List<ClubResponse> filterClubs(@PathVariable Long id, @RequestBody ClubSearchRequest clubSearchRequest) {
         return clubService.findBySearchOptions(id, clubSearchRequest);
+    }
+
+    // club 신청
+    @PostMapping("/club/application/{id}")
+    public ResponseEntity<ClubApplicationResponse> applicateClub(@PathVariable Long id, @RequestBody ClubApplicationRequest clubApplicationRequest, HttpServletRequest request) {
+        User applicant = (User) request.getAttribute("user");
+        // 이미 신청을 한 경우에는 bad request
+        if (clubService.getApplicationByClubAndApplicant(id, applicant) != null) {
+            return ResponseEntity.badRequest().build();
+        }
+        ClubApplicationResponse clubApplicationResponse = clubService.saveApplication(id, clubApplicationRequest, applicant);
+        return ResponseEntity.created(URI.create("/club/application/" + clubApplicationResponse.getClubApplicationId())).body(clubApplicationResponse);
     }
 }
 

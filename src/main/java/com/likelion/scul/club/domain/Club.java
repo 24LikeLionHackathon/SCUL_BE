@@ -1,5 +1,6 @@
-package com.likelion.scul.club;
+package com.likelion.scul.club.domain;
 
+import com.likelion.scul.club.TimeEntity;
 import com.likelion.scul.club.dto.ClubRequest;
 import com.likelion.scul.common.domain.Sports;
 import com.likelion.scul.common.domain.User;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @Entity
-public class Club extends TimeEntity{
+public class Club extends TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clubId;

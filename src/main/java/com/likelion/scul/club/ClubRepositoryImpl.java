@@ -1,5 +1,7 @@
 package com.likelion.scul.club;
 
+import com.likelion.scul.club.domain.Club;
+import com.likelion.scul.club.domain.QClub;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -8,7 +10,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.likelion.scul.club.QClub.club;
+import static com.likelion.scul.club.domain.QClub.club;
 
 public class ClubRepositoryImpl extends QuerydslRepositorySupport implements ClubRepositoryCustom {
 

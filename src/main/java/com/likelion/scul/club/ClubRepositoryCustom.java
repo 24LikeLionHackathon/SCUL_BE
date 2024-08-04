@@ -1,5 +1,6 @@
 package com.likelion.scul.club;
 
+import com.likelion.scul.club.domain.Club;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;

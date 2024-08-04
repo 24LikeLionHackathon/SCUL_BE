@@ -1,9 +1,8 @@
 package com.likelion.scul.club;
 
-import com.likelion.scul.club.dto.ClubRequest;
-import com.likelion.scul.club.dto.ClubResponse;
-import com.likelion.scul.club.dto.ClubSearchRequest;
-import com.likelion.scul.club.dto.ClubUpdateRequest;
+import com.likelion.scul.club.domain.Club;
+import com.likelion.scul.club.domain.ClubApplication;
+import com.likelion.scul.club.dto.*;
 import com.likelion.scul.common.domain.Sports;
 import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.repository.SportsRepository;
@@ -18,12 +17,14 @@ public class ClubService {
     private final ClubRepository clubRepository;
     private final SportsRepository sportsRepository;
     private final ClubRepositoryCustom clubRepositoryCustom;
+    private final ClubApplicationRepository clubApplicationRepository;
 
     @Autowired
-    public ClubService(ClubRepository clubRepository, SportsRepository sportsRepository, ClubRepositoryCustom clubRepositoryCustom) {
+    public ClubService(ClubRepository clubRepository, SportsRepository sportsRepository, ClubRepositoryCustom clubRepositoryCustom, ClubApplicationRepository clubApplicationRepository) {
         this.clubRepository = clubRepository;
         this.sportsRepository = sportsRepository;
         this.clubRepositoryCustom = clubRepositoryCustom;
+        this.clubApplicationRepository = clubApplicationRepository;
     }
 
     // club 생성
@@ -79,5 +80,32 @@ public class ClubService {
                 .stream().map(ClubResponse::toClubResponse).toList();
     }
 
+    // 소모임 신청
+    public ClubApplicationResponse saveApplication(Long clubId, ClubApplicationRequest clubApplicationRequest, User applicant) {
+        Club club = clubRepository.findByClubId(clubId);
+        if (club == null) {
+            throw new IllegalArgumentException("Invalid clubId: " + clubId);
+        }
 
+        User leader = club.getUser();
+        if (leader == null) {
+            throw new IllegalArgumentException("No Leader");
+        }
+
+        ClubApplication clubApplication = new ClubApplication(clubApplicationRequest.getApplicantIntro(), club, applicant, leader);
+        System.out.println("club: " + clubApplication.getClub().getClubName());
+        System.out.println("leader: " + clubApplication.getLeader().getName());
+        System.out.println("applicant: " + clubApplication.getApplicant().getName());
+        System.out.println("intro: " + clubApplication.getApplicantIntro());
+
+        clubApplicationRepository.save(clubApplication);
+        return ClubApplicationResponse.toClubApplicationResponse(clubApplication);
+
+
+    }
+
+    public ClubApplication getApplicationByClubAndApplicant(Long id, User user) {
+        Club club = clubRepository.findByClubId(id);
+        return clubApplicationRepository.findByClubAndApplicant(club, user);
+    }
 }
