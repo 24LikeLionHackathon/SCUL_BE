@@ -1,5 +1,6 @@
 package com.likelion.scul.board.dto;
 
+import javax.swing.text.StyledEditorKit;
 import java.time.LocalDateTime;
 
 public record CommentDto(
@@ -7,6 +8,8 @@ public record CommentDto(
         String nickname,
         String commentContent,
         LocalDateTime createdAt,
-        String userImageUrl
+        String userImageUrl,
+
+        Boolean isMe
 ) {
 }

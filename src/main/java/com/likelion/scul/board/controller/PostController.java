@@ -70,7 +70,7 @@ public class PostController {
         }
     }
 
-    @PostMapping("/posts-list")
+    @PostMapping("/postlist")
     public ResponseEntity<PostListResponseDto> getPostList(@RequestBody PostListRequestDto postListRequestDto) {
         try {
             PostListResponseDto postListResponse = postService.getPostList(postListRequestDto);

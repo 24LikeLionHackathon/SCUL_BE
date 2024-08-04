@@ -48,7 +48,7 @@ public class CommentService {
         // Retrieve user image URL
         String userImageUrl = user.getUserImage() != null ? user.getUserImage().getImageUrl() : null;
 
-        return new CommentDto(comment.getCommentId(), user.getNickname(), comment.getCommentContent(), createdDateTime, userImageUrl);
+        return new CommentDto(comment.getCommentId(), user.getNickname(), comment.getCommentContent(), createdDateTime, userImageUrl,comment.getUser().getEmail().equals(email));
     }
 
     @Transactional
@@ -71,7 +71,7 @@ public class CommentService {
         // Retrieve user image URL
         String userImageUrl = user.getUserImage() != null ? user.getUserImage().getImageUrl() : null;
 
-        return new CommentDto(comment.getCommentId(), user.getNickname(), comment.getCommentContent(), createdDateTime, userImageUrl);
+        return new CommentDto(comment.getCommentId(), user.getNickname(), comment.getCommentContent(), createdDateTime, userImageUrl,comment.getUser().getEmail().equals(email));
     }
 
     @Transactional
