@@ -1,13 +1,15 @@
 package com.likelion.scul.mypage.dto;
 
+import java.time.LocalDateTime;
+
 public class CommentInfoDto {
     private String commentContent;
-    private String createdAt;
+    private LocalDateTime createdAt;
     private String sportsName;
     private String boardName;
     private String postTitle;
 
-    public CommentInfoDto(String commentContent, String createdAt, String sportsName, String boardName, String postTitle) {
+    public CommentInfoDto(String commentContent, LocalDateTime createdAt, String sportsName, String boardName, String postTitle) {
         this.commentContent = commentContent;
         this.createdAt = createdAt;
         this.sportsName = sportsName;
@@ -25,11 +27,11 @@ public class CommentInfoDto {
         this.commentContent = commentContent;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 

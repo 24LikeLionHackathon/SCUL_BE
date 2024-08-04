@@ -42,7 +42,7 @@ public class CommentService {
         comment.setUser(user);
         comment.setPost(post);
         comment.setCommentContent(commentRequestDto.commentContent());
-        comment.setCreatedAt(createdDateTime.toString());
+        comment.setCreatedAt(createdDateTime);
         commentRepository.save(comment);
 
         // Retrieve user image URL
@@ -66,7 +66,7 @@ public class CommentService {
         LocalDateTime createdDateTime = LocalDateTime.parse(commentUpdateRequestDto.createdAt(), DateTimeFormatter.ISO_DATE_TIME);
 
         comment.setCommentContent(commentUpdateRequestDto.commentContent());
-        comment.setCreatedAt(createdDateTime.toString());
+        comment.setCreatedAt(createdDateTime);
 
         // Retrieve user image URL
         String userImageUrl = user.getUserImage() != null ? user.getUserImage().getImageUrl() : null;
