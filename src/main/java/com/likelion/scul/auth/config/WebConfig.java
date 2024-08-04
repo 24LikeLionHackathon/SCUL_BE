@@ -19,6 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
     private static final String[] PROTECTED_PATHS = {
             //예시
 //            "/user/**",         // 회원 전용 페이지
+            "/newpost",
             "/dashboard/**",    // 대시보드
             "/profile/**",      // 프로필 페이지
             // 필요한 경로 (게시물 작성/삭제/수정, 댓글작성/삭제/수정, 마이페이지 ..)

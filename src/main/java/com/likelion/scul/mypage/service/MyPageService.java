@@ -1,5 +1,7 @@
 package com.likelion.scul.mypage.service;
 
+import com.likelion.scul.board.domain.Comment;
+import com.likelion.scul.board.domain.Like;
 import com.likelion.scul.board.domain.Post;
 import com.likelion.scul.board.repository.CommentRepository;
 import com.likelion.scul.board.repository.LikeRepository;
@@ -10,9 +12,7 @@ import com.likelion.scul.common.repository.UserRepository;
 import com.likelion.scul.common.repository.UserSportsRepository;
 import com.likelion.scul.common.repository.FollowRepository;
 import com.likelion.scul.club.ClubRepository;
-import com.likelion.scul.mypage.dto.ActivityPostsDto;
-import com.likelion.scul.mypage.dto.MyPageHeaderDto;
-import com.likelion.scul.mypage.dto.PostInfoDto;
+import com.likelion.scul.mypage.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -79,20 +79,23 @@ public class MyPageService {
         );
     }
 
-    public ActivityPostsDto getActivityPostsInfo(Long userId, int page) {
-        Optional<User> optionalUser = userRepository.findById(userId);
+    public ActivityPostsDto getActivityPostsInfo(String email, int page) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
         }
 
         User user = optionalUser.get();
+
+        // 사용자별 게시물을 페이지 단위로 조회
         Page<Post> postsPage = postRepository.findByUser(user, PageRequest.of(page - 1, 10));
-        int totalPosts = postRepository.countByUser(user);
+
+        int totalPosts = (int) postsPage.getTotalElements();
         int totalComments = commentRepository.countByUser(user);
         int totalLikes = likeRepository.countByUser(user);
         int participatingClubs = clubRepository.countByUser(user);
 
-        var postsList = postsPage.stream().map(post -> {
+        List<PostInfoDto> postsList = postsPage.getContent().stream().map(post -> {
             String postImage = post.getImages().isEmpty() ? null : post.getImages().get(0).getImageUrl();
             int commentCount = post.getComments().size();
 
@@ -115,6 +118,80 @@ public class MyPageService {
         );
     }
 
+    public ActivityCommentsDto getActivityComments(String email, int page) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
 
+        User user = optionalUser.get();
+
+        // 사용자별 댓글을 페이지 단위로 조회
+        Page<Comment> commentsPage = commentRepository.findByUser(user, PageRequest.of(page - 1, 10));
+
+        int totalPosts = postRepository.countByUser(user);
+        int totalComments = (int) commentsPage.getTotalElements();
+        int totalLikes = likeRepository.countByUser(user);
+        int participatingClubs = clubRepository.countByUser(user);
+
+        List<CommentInfoDto> commentList = commentsPage.getContent().stream().map(comment -> {
+            return new CommentInfoDto(
+                    comment.getCommentContent(),
+                    comment.getCreatedAt(),
+                    comment.getPost().getBoard().getSports().getSportsName(),
+                    comment.getPost().getBoard().getBoardName(),
+                    comment.getPost().getPostTitle()
+            );
+        }).collect(Collectors.toList());
+
+        return new ActivityCommentsDto(
+                commentList,
+                totalPosts,
+                totalComments,
+                totalLikes,
+                participatingClubs
+        );
+    }
+
+    public LikedPostsDto getActivityLikes(String email, int page) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+
+        User user = optionalUser.get();
+
+        // 사용자가 좋아요를 누른 게시물 목록을 페이지 단위로 조회
+        Page<Like> likesPage = likeRepository.findByUser(user, PageRequest.of(page - 1, 10));
+
+        int totalPosts = postRepository.countByUser(user);
+        int totalComments = commentRepository.countByUser(user);
+        int totalLikes = (int) likesPage.getTotalElements();
+        int participatingClubs = clubRepository.countByUser(user);
+
+        List<LikedPostInfoDto> postsList = likesPage.getContent().stream().map(like -> {
+            Post post = like.getPost();
+            String postImage = post.getImages().isEmpty() ? null : post.getImages().get(0).getImageUrl();
+            int commentCount = post.getComments().size();
+
+            return new LikedPostInfoDto(
+                    postImage,
+                    post.getBoard().getSports().getSportsName(),
+                    post.getBoard().getBoardName(),
+                    post.getPostTitle(),
+                    post.getUser().getNickname(),
+                    post.getCreatedAt(),
+                    commentCount
+            );
+        }).collect(Collectors.toList());
+
+        return new LikedPostsDto(
+                postsList,
+                totalPosts,
+                totalComments,
+                totalLikes,
+                participatingClubs
+        );
+    }
 }
 

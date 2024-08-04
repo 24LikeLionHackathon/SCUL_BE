@@ -24,7 +24,7 @@ public class JwtService {
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    public static final long ACCESS_TOKEN_VALIDITY = 1000 * 60 * 60; // 1시간
+    public static final long ACCESS_TOKEN_VALIDITY = 1000 * 60 * 60*24*7; // 임시로 7일
     public static final long REFRESH_TOKEN_VALIDITY = 1000 * 60 * 60 * 24 * 7; // 7일
 
     private Key getSigningKey() {

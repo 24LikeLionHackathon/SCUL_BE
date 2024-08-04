@@ -1,5 +1,7 @@
 package com.likelion.scul.mypage.controller;
 
+import com.likelion.scul.mypage.dto.ActivityCommentsDto;
+import com.likelion.scul.mypage.dto.ActivityLikesDto;
 import com.likelion.scul.mypage.dto.ActivityPostsDto;
 import com.likelion.scul.mypage.dto.MyPageHeaderDto;
 import com.likelion.scul.mypage.service.MyPageService;
@@ -33,10 +35,37 @@ public class MyPageController {
 
     @GetMapping("/activity/posts")
     public ResponseEntity<ActivityPostsDto> getActivityPosts(
-            @RequestParam("user_id") Long userId,
+            HttpServletRequest request,
             @RequestParam("page") int page) {
 
-        ActivityPostsDto activityInfo = myPageService.getActivityPostsInfo(userId, page);
-        return ResponseEntity.ok(activityInfo);
+        Claims claims = (Claims) request.getAttribute("claims");
+        String email = claims.getSubject();
+
+        ActivityPostsDto activityPostsInfo = myPageService.getActivityPostsInfo(email, page);
+        return ResponseEntity.ok(activityPostsInfo);
+    }
+
+    @GetMapping("/activity/comments")
+    public ResponseEntity<ActivityCommentsDto> getActivityComments(
+            HttpServletRequest request,
+            @RequestParam("page") int page) {
+
+        Claims claims = (Claims) request.getAttribute("claims");
+        String email = claims.getSubject();
+
+        ActivityCommentsDto activityCommentsInfo = myPageService.getActivityComments(email, page);
+        return ResponseEntity.ok(activityCommentsInfo);
+    }
+
+    @GetMapping("/activity/likes")
+    public ResponseEntity<ActivityLikesDto> getActivityLikes(
+            HttpServletRequest request,
+            @RequestParam("page") int page) {
+
+        Claims claims = (Claims) request.getAttribute("claims");
+        String email = claims.getSubject();
+
+        ActivityLikesDto activityLikesInfo = myPageService.getActivityLikes(email, page);
+        return ResponseEntity.ok(activityLikesInfo);
     }
 }
