@@ -22,7 +22,6 @@ public class JwtInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String authHeader = request.getHeader("Authorization");
         System.out.println("Authorization Header: " + authHeader);
-
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             try {
@@ -35,14 +34,11 @@ public class JwtInterceptor implements HandlerInterceptor {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Access token has expired");
                 return false;
-            } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Invalid token");
-                return false;
             }
         }
 
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        // 로그인 페이지로 리다이렉트
+//        response.sendRedirect("/login");
         return false;
     }
 }
