@@ -47,16 +47,16 @@ public class PostService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Board board = boardRepository.findByBoardName(postRequestDto.getBoardName())
-                .orElseThrow(() -> new RuntimeException("Board not found"));
+        // Board 찾기: boardName과 sportsName을 함께 사용
+        Board board = boardRepository.findByBoardNameAndSportsSportsName(postRequestDto.getBoardName(), postRequestDto.getSportsName())
+                .orElseThrow(() -> new RuntimeException("Board not found for given boardName and sportsName"));
+
         Tag tag = tagRepository.findByTagName(postRequestDto.getTagName())
                 .orElseThrow(() -> new RuntimeException("Tag not found"));
-        Sports sports = sportsRepository.findBySportsName(postRequestDto.getSportsName())
-                .orElseThrow(() -> new RuntimeException("Sports not found"));
 
         LocalDateTime createdDateTime = LocalDateTime.parse(postRequestDto.getCreatedAt(), DateTimeFormatter.ISO_DATE_TIME);
 
-        Post post = new Post(board, tag, sports, user, postRequestDto.getPostTitle(), postRequestDto.getPostContent(), createdDateTime, 0);
+        Post post = new Post(board, tag, user, postRequestDto.getPostTitle(), postRequestDto.getPostContent(), createdDateTime, 0);
         postRepository.save(post);
 
         for (MultipartFile file : postRequestDto.getFiles()) {

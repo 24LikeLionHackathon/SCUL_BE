@@ -44,7 +44,7 @@ public class Post {
     private LocalDateTime createdAt;
     private int postView;
 
-    public Post(Board board, Tag tag, Sports sports, User user, String postTitle, String postContent, LocalDateTime createdAt, int postView) {
+    public Post(Board board, Tag tag, User user, String postTitle, String postContent, LocalDateTime createdAt, int postView) {
         this.board = board;
         this.tag = tag;
         this.user = user;
