@@ -184,10 +184,6 @@ public class PostService {
                 })
                 .collect(Collectors.toList());
 
-        for (Post filteredPost : filteredPosts) {
-            System.out.println(filteredPost.getPostTitle());
-        }
-
 
         // 필터링된 게시물 목록을 페이징 처리
         if (postListRequestDto.searchContent() != null && !postListRequestDto.searchContent().trim().isEmpty()) {
@@ -250,15 +246,8 @@ public class PostService {
                 ))
                 .collect(Collectors.toList());
 
-        System.out.println("--------------------");
-        for (PostListDto paginatedPost : paginatedPosts) {
-            System.out.println("paginatedPost.postTitle() = " + paginatedPost.postTitle());
-        }
-        System.out.println("--------------------");
 
         int totalPosts = filteredPosts.size(); // 필터 조건을 만족하는 총 게시물 수 계산
-        System.out.println("totalPosts = " + totalPosts);
-
         return new PostListResponseDto(paginatedPosts, totalPosts);
     }
     @Transactional(readOnly = true)

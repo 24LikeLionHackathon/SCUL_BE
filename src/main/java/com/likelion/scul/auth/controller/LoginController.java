@@ -73,26 +73,26 @@ public class LoginController {
         return "index";
     }
 
-    @GetMapping("/oauth2/google/redirect")
-    public RedirectView redirectGoogleLogin() {
-        StringBuilder reqUrl = new StringBuilder("https://accounts.google.com/o/oauth2/v2/auth");
-        reqUrl.append("?client_id=").append(googleClientId)
-                .append("&redirect_uri=").append(googleRedirectUri)
-                .append("&response_type=code")
-                .append("&scope=email%20profile%20openid")
-                .append("&access_type=offline");
-        return new RedirectView(reqUrl.toString());
-    }
-
-    @GetMapping("/oauth2/kakao/redirect")
-    public RedirectView redirectKakaoLogin() {
-        StringBuilder reqUrl = new StringBuilder("https://kauth.kakao.com/oauth/authorize");
-        reqUrl.append("?client_id=").append(kakaoClientKey)
-                .append("&redirect_uri=").append(kakaoRedirectUri)
-                .append("&response_type=code")
-                .append("&scope=account_email");
-        return new RedirectView(reqUrl.toString());
-    }
+//    @GetMapping("/oauth2/google/redirect")
+//    public RedirectView redirectGoogleLogin() {
+//        StringBuilder reqUrl = new StringBuilder("https://accounts.google.com/o/oauth2/v2/auth");
+//        reqUrl.append("?client_id=").append(googleClientId)
+//                .append("&redirect_uri=").append(googleRedirectUri)
+//                .append("&response_type=code")
+//                .append("&scope=email%20profile%20openid")
+//                .append("&access_type=offline");
+//        return new RedirectView(reqUrl.toString());
+//    }
+//
+//    @GetMapping("/oauth2/kakao/redirect")
+//    public RedirectView redirectKakaoLogin() {
+//        StringBuilder reqUrl = new StringBuilder("https://kauth.kakao.com/oauth/authorize");
+//        reqUrl.append("?client_id=").append(kakaoClientKey)
+//                .append("&redirect_uri=").append(kakaoRedirectUri)
+//                .append("&response_type=code")
+//                .append("&scope=account_email");
+//        return new RedirectView(reqUrl.toString());
+//    }
 
     @GetMapping("/oauth2/google")
     public ResponseEntity<Map<String, Object>> loginGoogle(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) throws IOException {
