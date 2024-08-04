@@ -85,12 +85,15 @@ public class PostService {
             throw new RuntimeException("User not authorized to update this post");
         }
 
-        Board board = boardRepository.findByBoardName(postUpdateRequestDto.getBoardName())
-                .orElseThrow(() -> new RuntimeException("Board not found"));
         Tag tag = tagRepository.findByTagName(postUpdateRequestDto.getTagName())
                 .orElseThrow(() -> new RuntimeException("Tag not found"));
         Sports sports = sportsRepository.findBySportsName(postUpdateRequestDto.getSportsName())
                 .orElseThrow(() -> new RuntimeException("Sports not found"));
+
+        // Board 찾기: boardName과 sportsId를 함께 사용
+        Board board = boardRepository.findByBoardNameAndSportsSportsId(postUpdateRequestDto.getBoardName(), sports.getSportsId())
+                .orElseThrow(() -> new RuntimeException("Board not found for given boardName and sportsId"));
+
 
         LocalDateTime createdDateTime = LocalDateTime.parse(postUpdateRequestDto.getCreatedAt(), DateTimeFormatter.ISO_DATE_TIME);
 
