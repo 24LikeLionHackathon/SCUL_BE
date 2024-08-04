@@ -1,6 +1,5 @@
 package com.likelion.scul.board.controller;
 
-import com.likelion.scul.board.dto.CommentDeleteRequestDto;
 import com.likelion.scul.board.dto.CommentDto;
 import com.likelion.scul.board.dto.CommentRequestDto;
 import com.likelion.scul.board.dto.CommentUpdateRequestDto;
@@ -21,39 +20,39 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping
-    public ResponseEntity<CommentDto> createComment(@RequestBody CommentRequestDto commentRequestDto,
+    @PostMapping("/{commentId}")
+    public ResponseEntity<CommentDto> createComment(@PathVariable Long commentId,@RequestBody CommentRequestDto commentRequestDto,
                                                     HttpServletRequest request) {
         try {
             Claims claims = (Claims) request.getAttribute("claims");
             String email = claims.getSubject();
-            CommentDto commentDto = commentService.createComment(email, commentRequestDto);
+            CommentDto commentDto = commentService.createComment(commentId,email, commentRequestDto);
             return new ResponseEntity<>(commentDto, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping
-    public ResponseEntity<CommentDto> updateComment(@RequestBody CommentUpdateRequestDto commentUpdateRequestDto,
+    @PutMapping("/{commentId}")
+    public ResponseEntity<CommentDto> updateComment(@PathVariable Long commentId,@RequestBody CommentUpdateRequestDto commentUpdateRequestDto,
                                                     HttpServletRequest request) {
         try {
             Claims claims = (Claims) request.getAttribute("claims");
             String email = claims.getSubject();
-            CommentDto commentDto = commentService.updateComment(email, commentUpdateRequestDto);
+            CommentDto commentDto = commentService.updateComment(commentId,email, commentUpdateRequestDto);
             return new ResponseEntity<>(commentDto, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> deleteComment(@RequestBody CommentDeleteRequestDto commentDeleteRequestDto,
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<String> deleteComment(@PathVariable Long commentId,
                                                 HttpServletRequest request) {
         try {
             Claims claims = (Claims) request.getAttribute("claims");
             String email = claims.getSubject();
-            commentService.deleteComment(email, commentDeleteRequestDto.commentId());
+            commentService.deleteComment(commentId,email);
             return new ResponseEntity<>("Comment deleted successfully", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

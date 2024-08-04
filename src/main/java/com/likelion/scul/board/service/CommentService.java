@@ -29,11 +29,11 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDto createComment(String email, CommentRequestDto commentRequestDto) {
+    public CommentDto createComment(Long postId,String email, CommentRequestDto commentRequestDto) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Post post = postRepository.findById(commentRequestDto.postId())
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
         LocalDateTime createdDateTime = LocalDateTime.parse(commentRequestDto.createdAt(), DateTimeFormatter.ISO_DATE_TIME);
@@ -52,11 +52,11 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDto updateComment(String email, CommentUpdateRequestDto commentUpdateRequestDto) {
+    public CommentDto updateComment(Long postId,String email, CommentUpdateRequestDto commentUpdateRequestDto) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Comment comment = commentRepository.findById(commentUpdateRequestDto.commentId())
+        Comment comment = commentRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
 
         if (!comment.getUser().getEmail().equals(email)) {
@@ -75,7 +75,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(String email, Long commentId) {
+    public void deleteComment(Long commentId,String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
