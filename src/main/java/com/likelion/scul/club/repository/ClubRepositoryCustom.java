@@ -1,4 +1,4 @@
-package com.likelion.scul.club;
+package com.likelion.scul.club.repository;
 
 import com.likelion.scul.club.domain.Club;
 import org.springframework.stereotype.Repository;

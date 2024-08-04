@@ -5,6 +5,7 @@ import com.likelion.scul.club.dto.*;
 import com.likelion.scul.common.domain.User;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -83,5 +84,19 @@ public class ClubController {
         ClubApplicationResponse clubApplicationResponse = clubService.saveApplication(id, clubApplicationRequest, applicant);
         return ResponseEntity.created(URI.create("/club/application/" + clubApplicationResponse.getClubApplicationId())).body(clubApplicationResponse);
     }
+
+    // club 신청 승인
+    @PostMapping("/club/application/approve/{id}")
+    public ResponseEntity<ClubApplicationResponse> approveApplication(@PathVariable Long id, @RequestBody ClubApplicationApproveRequest clubApplicationApproveRequest, HttpServletRequest request) {
+        User user = (User) request.getAttribute("user");
+        ClubApplicationResponse clubApplicationResponse = clubService.approveApplication(id, clubApplicationApproveRequest, user);
+        return ResponseEntity.ok(clubApplicationResponse);
+    }
+
+//    @GetMapping("/club/mine/{id}")
+//    public ResponseEntity<List<ClubResponse>> getMyClubs(@PathVariable Long id, HttpServletRequest request) {
+//        User user = (User) request.getAttribute("user");
+//
+//    }
 }
 

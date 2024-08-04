@@ -10,13 +10,15 @@ public class ClubApplicationResponse {
     private String applicantName;
     private String leaderName;
     private String applicantIntro;
+    private Boolean isApprove;
 
-    ClubApplicationResponse(long clubApplicationId, String clubName, String applicantName, String leaderName, String applicantIntro) {
+    ClubApplicationResponse(long clubApplicationId, String clubName, String applicantName, String leaderName, String applicantIntro, Boolean isApprove) {
         this.clubApplicationId = clubApplicationId;
         this.clubName = clubName;
         this.applicantName = applicantName;
         this.leaderName = leaderName;
         this.applicantIntro = applicantIntro;
+        this.isApprove = isApprove;
     }
 
     public static ClubApplicationResponse toClubApplicationResponse(ClubApplication clubApplication) {
@@ -28,7 +30,7 @@ public class ClubApplicationResponse {
 
         return new ClubApplicationResponse(
                 clubApplication.getClubApplicationId(), clubApplication.getClub().getClubName(), clubApplication.getApplicant().getName(),
-                clubApplication.getLeader().getName(), clubApplication.getApplicantIntro()
+                clubApplication.getLeader().getName(), clubApplication.getApplicantIntro(), clubApplication.getIsApprove()
         );
     }
 }

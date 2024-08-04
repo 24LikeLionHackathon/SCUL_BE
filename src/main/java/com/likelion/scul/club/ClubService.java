@@ -3,6 +3,9 @@ package com.likelion.scul.club;
 import com.likelion.scul.club.domain.Club;
 import com.likelion.scul.club.domain.ClubApplication;
 import com.likelion.scul.club.dto.*;
+import com.likelion.scul.club.repository.ClubApplicationRepository;
+import com.likelion.scul.club.repository.ClubRepository;
+import com.likelion.scul.club.repository.ClubRepositoryCustom;
 import com.likelion.scul.common.domain.Sports;
 import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.repository.SportsRepository;
@@ -10,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ClubService {
@@ -64,6 +69,7 @@ public class ClubService {
         clubRepository.deleteById(id);
     }
 
+    // 모집 중 -> 모집 완료
     public ClubResponse updateClubStatus(Long id) {
         Club club = clubRepository.findByClubId(id);
         if (club.getClubStatus().equals("모집 완료")) {
@@ -71,6 +77,7 @@ public class ClubService {
         }
 
         club.setClubStatus("모집 완료");
+        clubRepository.save(club);
         return ClubResponse.toClubResponse(club);
     }
 
@@ -82,6 +89,7 @@ public class ClubService {
 
     // 소모임 신청
     public ClubApplicationResponse saveApplication(Long clubId, ClubApplicationRequest clubApplicationRequest, User applicant) {
+        Boolean isApprove = false;
         Club club = clubRepository.findByClubId(clubId);
         if (club == null) {
             throw new IllegalArgumentException("Invalid clubId: " + clubId);
@@ -92,11 +100,7 @@ public class ClubService {
             throw new IllegalArgumentException("No Leader");
         }
 
-        ClubApplication clubApplication = new ClubApplication(clubApplicationRequest.getApplicantIntro(), club, applicant, leader);
-        System.out.println("club: " + clubApplication.getClub().getClubName());
-        System.out.println("leader: " + clubApplication.getLeader().getName());
-        System.out.println("applicant: " + clubApplication.getApplicant().getName());
-        System.out.println("intro: " + clubApplication.getApplicantIntro());
+        ClubApplication clubApplication = new ClubApplication(clubApplicationRequest.getApplicantIntro(), club, applicant, leader, isApprove);
 
         clubApplicationRepository.save(clubApplication);
         return ClubApplicationResponse.toClubApplicationResponse(clubApplication);
@@ -108,4 +112,28 @@ public class ClubService {
         Club club = clubRepository.findByClubId(id);
         return clubApplicationRepository.findByClubAndApplicant(club, user);
     }
+
+    // 소모임 신청 승인
+    public ClubApplicationResponse approveApplication(Long clubApplicationId, ClubApplicationApproveRequest clubApplicationApproveRequest, User user) {
+        ClubApplication clubApplication = clubApplicationRepository.findByClubApplicationId(clubApplicationId);
+
+        if (!Objects.equals(clubApplication.getLeader().getUserId(), user.getUserId())) {
+            throw new IllegalArgumentException("승인이 허가된 사용자가 아닙니다");
+        }
+
+        if (clubApplicationApproveRequest.getApprove()) {
+            Club club = clubRepository.findByClubId(clubApplication.getClub().getClubId());
+            int originCount = club.getClubParticipateNumber();
+            club.setClubParticipateNumber(originCount + 1);
+            clubRepository.save(club);
+
+            clubApplication.setIsApprove(true);
+            clubApplicationRepository.save(clubApplication);
+        }
+        return ClubApplicationResponse.toClubApplicationResponse(clubApplication);
+    }
+
+//    public List<ClubResponse> findMyClub(Long sportsId, User user) {
+//
+//    }
 }

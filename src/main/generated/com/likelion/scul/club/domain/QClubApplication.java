@@ -30,6 +30,8 @@ public class QClubApplication extends EntityPathBase<ClubApplication> {
 
     public final NumberPath<Long> clubApplicationId = createNumber("clubApplicationId", Long.class);
 
+    public final BooleanPath isApprove = createBoolean("isApprove");
+
     public final com.likelion.scul.common.domain.QUser leader;
 
     public QClubApplication(String variable) {

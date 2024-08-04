@@ -13,6 +13,7 @@ public class ClubApplication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clubApplicationId;
     private String applicantIntro;
+    private Boolean isApprove;
 
     @ManyToOne
     @JoinColumn(name = "club_id")
@@ -30,11 +31,12 @@ public class ClubApplication {
 
     }
 
-    public ClubApplication(String applicantIntro, Club club, User applicant, User leader) {
+    public ClubApplication(String applicantIntro, Club club, User applicant, User leader, Boolean isApprove) {
         this.applicantIntro = applicantIntro;
         this.club = club;
         this.applicant = applicant;
         this.leader = leader;
+        this.isApprove = isApprove;
     }
 
 }
