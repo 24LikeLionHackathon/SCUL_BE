@@ -34,7 +34,7 @@ public class PostController {
         }
     }
 
-    @PutMapping("/updatepost")
+    @PutMapping("/posts")
     public ResponseEntity<String> updatePost(@ModelAttribute PostUpdateRequestDto postUpdateRequestDto, HttpServletRequest request) {
         try {
             Claims claims = (Claims) request.getAttribute("claims");
@@ -59,16 +59,18 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostDetailDto> getPostDetail(@PathVariable Long postId) {
+    public ResponseEntity<PostDetailDto> getPostDetail(@PathVariable Long postId,HttpServletRequest request) {
         try {
-            PostDetailDto postDetail = postService.getPostDetail(postId);
+            Claims claims = (Claims) request.getAttribute("claims");
+            String email = claims.getSubject();
+            PostDetailDto postDetail = postService.getPostDetail(postId,email);
             return new ResponseEntity<>(postDetail, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PostMapping("/posts/list")
+    @PostMapping("/posts-list")
     public ResponseEntity<PostListResponseDto> getPostList(@RequestBody PostListRequestDto postListRequestDto) {
         try {
             PostListResponseDto postListResponse = postService.getPostList(postListRequestDto);
@@ -79,7 +81,7 @@ public class PostController {
     }
 
 
-    @GetMapping("/posts/recent-posts")
+    @GetMapping("/recent-posts")
     public ResponseEntity<List<PostListDto>> getRecentPosts() {
         try {
             List<PostListDto> recentPosts = postService.getRecentPosts();
@@ -89,7 +91,7 @@ public class PostController {
         }
     }
 
-    @GetMapping("/posts/hot-posts")
+    @GetMapping("/hot-posts")
     public ResponseEntity<List<PostListDto>> getHotPosts() {
         try {
             List<PostListDto> hotPosts = postService.getHotPosts();

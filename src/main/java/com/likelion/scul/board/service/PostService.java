@@ -138,7 +138,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostDetailDto getPostDetail(Long postId) {
+    public PostDetailDto getPostDetail(Long postId,String email) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
@@ -158,6 +158,7 @@ public class PostService {
                 ))
                 .collect(Collectors.toList());
 
+
         return new PostDetailDto(
                 post.getPostId(),
                 post.getUser().getNickname(),
@@ -169,7 +170,8 @@ public class PostService {
                 post.getPostView(),
                 imageUrls,
                 post.getLikes().size(),
-                comments
+                comments,
+                post.getUser().getEmail()==email
         );
     }
 
