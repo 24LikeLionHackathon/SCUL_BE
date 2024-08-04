@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/comment")
 public class CommentController {
 
     private final CommentService commentService;
@@ -20,7 +21,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/comment")
+    @PostMapping
     public ResponseEntity<CommentDto> createComment(@RequestBody CommentRequestDto commentRequestDto,
                                                     HttpServletRequest request) {
         try {
@@ -33,7 +34,7 @@ public class CommentController {
         }
     }
 
-    @PutMapping("/comment")
+    @PutMapping
     public ResponseEntity<CommentDto> updateComment(@RequestBody CommentUpdateRequestDto commentUpdateRequestDto,
                                                     HttpServletRequest request) {
         try {
@@ -46,7 +47,7 @@ public class CommentController {
         }
     }
 
-    @DeleteMapping("/comment")
+    @DeleteMapping
     public ResponseEntity<String> deleteComment(@RequestBody CommentDeleteRequestDto commentDeleteRequestDto,
                                                 HttpServletRequest request) {
         try {

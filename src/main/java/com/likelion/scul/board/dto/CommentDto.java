@@ -6,6 +6,7 @@ public record CommentDto(
         Long commentId,
         String nickname,
         String commentContent,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        String userImageUrl
 ) {
 }

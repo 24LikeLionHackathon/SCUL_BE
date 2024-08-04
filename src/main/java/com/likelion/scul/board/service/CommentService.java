@@ -19,9 +19,7 @@ import java.time.format.DateTimeFormatter;
 public class CommentService {
 
     private final UserRepository userRepository;
-
     private final PostRepository postRepository;
-
     private final CommentRepository commentRepository;
 
     public CommentService(UserRepository userRepository, PostRepository postRepository, CommentRepository commentRepository) {
@@ -47,7 +45,10 @@ public class CommentService {
         comment.setCreatedAt(createdDateTime.toString());
         commentRepository.save(comment);
 
-        return new CommentDto(comment.getCommentId(), user.getNickname(), comment.getCommentContent(), createdDateTime);
+        // Retrieve user image URL
+        String userImageUrl = user.getUserImage() != null ? user.getUserImage().getImageUrl() : null;
+
+        return new CommentDto(comment.getCommentId(), user.getNickname(), comment.getCommentContent(), createdDateTime, userImageUrl);
     }
 
     @Transactional
@@ -67,7 +68,10 @@ public class CommentService {
         comment.setCommentContent(commentUpdateRequestDto.commentContent());
         comment.setCreatedAt(createdDateTime.toString());
 
-        return new CommentDto(comment.getCommentId(), user.getNickname(), comment.getCommentContent(), createdDateTime);
+        // Retrieve user image URL
+        String userImageUrl = user.getUserImage() != null ? user.getUserImage().getImageUrl() : null;
+
+        return new CommentDto(comment.getCommentId(), user.getNickname(), comment.getCommentContent(), createdDateTime, userImageUrl);
     }
 
     @Transactional

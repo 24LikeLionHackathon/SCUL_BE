@@ -103,6 +103,12 @@ public class PostService {
         post.setPostContent(postUpdateRequestDto.getPostContent());
         post.setCreatedAt(createdDateTime);
 
+        List<Image> existingImages = imageRepository.findByPost(post);
+        for (Image image : existingImages) {
+            String key = image.getImageUrl().substring(image.getImageUrl().lastIndexOf("/") + 1);
+            s3Service.deleteFile(key);
+            imageRepository.delete(image);
+        }
         // imageUrls가 비어 있지 않은 경우 처리
         if (postUpdateRequestDto.getImageUrls() != null && !postUpdateRequestDto.getImageUrls().isEmpty()) {
             for (String imageUrl : postUpdateRequestDto.getImageUrls()) {
@@ -161,7 +167,8 @@ public class PostService {
                         comment.getCommentId(),
                         comment.getUser().getNickname(),
                         comment.getCommentContent(),
-                        LocalDateTime.parse(comment.getCreatedAt(), DateTimeFormatter.ISO_DATE_TIME)
+                        LocalDateTime.parse(comment.getCreatedAt(), DateTimeFormatter.ISO_DATE_TIME),
+                        comment.getUser().getUserImage().getImageUrl()
                 ))
                 .collect(Collectors.toList());
 
