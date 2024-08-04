@@ -103,21 +103,27 @@ public class PostService {
         post.setPostContent(postUpdateRequestDto.getPostContent());
         post.setCreatedAt(createdDateTime);
 
+// Find existing images and determine which ones to keep
         List<Image> existingImages = imageRepository.findByPost(post);
+        List<String> imageUrlsToKeep = postUpdateRequestDto.getImageUrls() != null ? postUpdateRequestDto.getImageUrls() : List.of();
+
         for (Image image : existingImages) {
-            String key = image.getImageUrl().substring(image.getImageUrl().lastIndexOf("/") + 1);
-            s3Service.deleteFile(key);
-            imageRepository.delete(image);
+            if (!imageUrlsToKeep.contains(image.getImageUrl())) {
+                String key = image.getImageUrl().substring(image.getImageUrl().lastIndexOf("/") + 1);
+                s3Service.deleteFile(key);
+                imageRepository.delete(image);
+            }
         }
-        // imageUrls가 비어 있지 않은 경우 처리
-        if (postUpdateRequestDto.getImageUrls() != null && !postUpdateRequestDto.getImageUrls().isEmpty()) {
-            for (String imageUrl : postUpdateRequestDto.getImageUrls()) {
+
+        // Save new image URLs that are not already present
+        for (String imageUrl : imageUrlsToKeep) {
+            if (existingImages.stream().noneMatch(image -> image.getImageUrl().equals(imageUrl))) {
                 Image postImage = new Image(imageUrl, post);
                 imageRepository.save(postImage);
             }
         }
 
-        // files가 비어 있지 않은 경우 처리
+        // Handle new file uploads
         if (postUpdateRequestDto.getFiles() != null && !postUpdateRequestDto.getFiles().isEmpty()) {
             for (MultipartFile file : postUpdateRequestDto.getFiles()) {
                 String key = s3Service.uploadFile(file);
