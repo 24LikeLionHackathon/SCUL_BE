@@ -17,5 +17,6 @@ public class PostUpdateRequestDto{
     private String postTitle;
     private String postContent;
     private String createdAt;
+    private List<String> imageUrls;
     private List<MultipartFile> files;
 }

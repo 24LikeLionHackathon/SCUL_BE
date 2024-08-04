@@ -103,18 +103,22 @@ public class PostService {
         post.setPostContent(postUpdateRequestDto.getPostContent());
         post.setCreatedAt(createdDateTime);
 
-        List<Image> existingImages = imageRepository.findByPost(post);
-        for (Image image : existingImages) {
-            String key = image.getImageUrl().substring(image.getImageUrl().lastIndexOf("/") + 1);
-            s3Service.deleteFile(key);
-            imageRepository.delete(image);
+        // imageUrls가 비어 있지 않은 경우 처리
+        if (postUpdateRequestDto.getImageUrls() != null && !postUpdateRequestDto.getImageUrls().isEmpty()) {
+            for (String imageUrl : postUpdateRequestDto.getImageUrls()) {
+                Image postImage = new Image(imageUrl, post);
+                imageRepository.save(postImage);
+            }
         }
 
-        for (MultipartFile file : postUpdateRequestDto.getFiles()) {
-            String key = s3Service.uploadFile(file);
-            String imageUrl = s3Service.getFileUrl(key).toString();
-            Image postImage = new Image(imageUrl, post);
-            imageRepository.save(postImage);
+        // files가 비어 있지 않은 경우 처리
+        if (postUpdateRequestDto.getFiles() != null && !postUpdateRequestDto.getFiles().isEmpty()) {
+            for (MultipartFile file : postUpdateRequestDto.getFiles()) {
+                String key = s3Service.uploadFile(file);
+                String imageUrl = s3Service.getFileUrl(key).toString();
+                Image postImage = new Image(imageUrl, post);
+                imageRepository.save(postImage);
+            }
         }
     }
 
