@@ -7,5 +7,6 @@ import java.util.List;
 
 @Repository
 public interface ClubRepositoryCustom {
-    List<Club> findBySearchOption(Long sportsId, String status, LocalDate date, String place, int minCost, int maxCost, int participantCount);
+
+    List<Club> findBySearchOption(Long sportsId, String status, LocalDate date, String place, int minCost, int maxCost, int participantCount, String searchCondition, String SearchText);
 }

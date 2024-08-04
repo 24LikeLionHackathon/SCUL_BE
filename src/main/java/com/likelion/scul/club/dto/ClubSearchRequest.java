@@ -13,4 +13,6 @@ public class ClubSearchRequest {
     private int clubMaxCost;
     private int participantsCount;
 
+    private String searchCondition;
+    private String searchText;
 }

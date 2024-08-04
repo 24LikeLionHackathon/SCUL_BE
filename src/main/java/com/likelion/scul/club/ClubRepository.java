@@ -13,9 +13,5 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 
     Club findByClubId(Long id);
 
-//    List<Club> findAllBySports_SportsId(Long sportsId);
     List<Club> findAllBySports_SportsIdOrderByCreatedAtDesc(Long sportsId);
-
-
-//    List<Club> findAllBySportsOrderByCreatedAtDesc_SportsId(Long sportsId);
 }

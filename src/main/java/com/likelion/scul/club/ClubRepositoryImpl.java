@@ -20,26 +20,12 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
     }
 
     @Override
-    public List<Club> findBySearchOption(Long sportsId, String status, LocalDate date, String place, int minCost, int maxCost, int participantCount) {
+    public List<Club> findBySearchOption(Long sportsId, String status, LocalDate date, String place, int minCost, int maxCost, int participantCount, String searchCondition, String SearchText) {
         QClub club = QClub.club;
 
         JPQLQuery<Club> query = queryFactory.selectFrom(club)
-                .where(eqSports(sportsId), eqStatus(status), eqDate(date), searchPlace(place), filterCost(minCost, maxCost), eqParticipantCount(participantCount))
+                .where(eqSports(sportsId), eqStatus(status), eqDate(date), eqPlace(place), filterCost(minCost, maxCost), eqParticipantCount(participantCount), searchContent(searchCondition, SearchText))
                 .orderBy(club.createdAt.desc());
-
-        System.out.println("sportId : " + sportsId);
-        System.out.println("status : " + status);
-        System.out.println("date : " + date);
-        System.out.println("place : " + place);
-        System.out.println("minCost : " + minCost);
-        System.out.println("maxCost : " + maxCost);
-        System.out.println("participantCount : " + participantCount);
-
-        System.out.println();
-        System.out.println(query.toString());
-        System.out.println();
-        System.out.println(query.fetchCount());
-        System.out.println();
 
         return query.fetch();
     }
@@ -91,10 +77,22 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
         return club.clubParticipateNumber.eq(participantCount);
     }
 
-    private BooleanExpression searchPlace (String place) {
+    private BooleanExpression eqPlace (String place) {
         if (place == null || place.isEmpty()) {
             return null;
         }
         return club.clubPlace.eq(place);
+    }
+
+    private BooleanExpression searchContent (String searchCondition, String searchText) {
+        if (searchCondition == null || searchCondition.isEmpty() || searchText == null || searchText.isEmpty()) {
+            return null;
+        }
+        return switch (searchCondition) {
+            case "제목" -> club.clubName.contains(searchText);
+            case "내용" -> club.clubContent.contains(searchText);
+            case "작성자" -> club.user.nickname.contains(searchText);
+            default -> null;
+        };
     }
 }
