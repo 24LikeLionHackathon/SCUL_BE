@@ -29,11 +29,11 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDto createComment(Long postId,String email, CommentRequestDto commentRequestDto) {
+    public CommentDto createComment(String email, CommentRequestDto commentRequestDto) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findById(commentRequestDto.postId())
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
         LocalDateTime createdDateTime = LocalDateTime.parse(commentRequestDto.createdAt(), DateTimeFormatter.ISO_DATE_TIME);

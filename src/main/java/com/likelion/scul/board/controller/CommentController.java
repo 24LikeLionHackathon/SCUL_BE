@@ -20,13 +20,13 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/{commentId}")
-    public ResponseEntity<CommentDto> createComment(@PathVariable Long commentId,@RequestBody CommentRequestDto commentRequestDto,
+    @PostMapping()
+    public ResponseEntity<CommentDto> createComment(@RequestBody CommentRequestDto commentRequestDto,
                                                     HttpServletRequest request) {
         try {
             Claims claims = (Claims) request.getAttribute("claims");
             String email = claims.getSubject();
-            CommentDto commentDto = commentService.createComment(commentId,email, commentRequestDto);
+            CommentDto commentDto = commentService.createComment(email, commentRequestDto);
             return new ResponseEntity<>(commentDto, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
