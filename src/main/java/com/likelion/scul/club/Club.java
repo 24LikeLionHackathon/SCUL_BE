@@ -1,7 +1,7 @@
 package com.likelion.scul.club;
 
-import com.likelion.scul.auth.domain.User;
 import com.likelion.scul.club.dto.ClubRequest;
+import com.likelion.scul.common.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
