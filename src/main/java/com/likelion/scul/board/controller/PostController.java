@@ -46,12 +46,12 @@ public class PostController {
         }
     }
 
-    @DeleteMapping("/posts")
-    public ResponseEntity<String> deletePost(@RequestBody PostDeleteRequestDto postDeleteRequestDto, HttpServletRequest request) {
+    @DeleteMapping("/posts{postId}")
+    public ResponseEntity<String> deletePost(@PathVariable Long postId, HttpServletRequest request) {
         try {
             Claims claims = (Claims) request.getAttribute("claims");
             String email = claims.getSubject();
-            postService.deletePost(postDeleteRequestDto.postId(), email);
+            postService.deletePost(postId, email);
             return new ResponseEntity<>("Post deleted successfully", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
