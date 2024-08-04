@@ -55,6 +55,7 @@ public class FollowController {
         // 테스트 용
         return ResponseEntity.ok(followService.getFollowers(email, pageNum));
     }
+
     @GetMapping("/following")
     public ResponseEntity<List<FollowProfileResponse>> getFollowings(@RequestParam int pageNum , HttpServletRequest request) {
 //        Claims claims = (Claims) request.getAttribute("claims");
