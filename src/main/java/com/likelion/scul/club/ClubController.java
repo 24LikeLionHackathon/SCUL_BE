@@ -3,6 +3,7 @@ package com.likelion.scul.club;
 import com.likelion.scul.auth.service.UserService;
 import com.likelion.scul.club.dto.ClubRequest;
 import com.likelion.scul.club.dto.ClubResponse;
+import com.likelion.scul.club.dto.ClubSearchRequest;
 import com.likelion.scul.club.dto.ClubUpdateRequest;
 import com.likelion.scul.common.domain.User;
 import io.jsonwebtoken.Claims;
@@ -62,6 +63,16 @@ public class ClubController {
         return ResponseEntity.noContent().build();
     }
 
-    // 
+    // 모집 완료로 상태 바꾸기
+    @PatchMapping("/club/status/{id}")
+    public ClubResponse completeClubRecruitment(@PathVariable Long id) {
+        return clubService.updateClubStatus(id);
+    }
+
+    // club 필터 & 검색
+    @PostMapping("/club/sports/search/{id}")
+    public List<ClubResponse> filterClubs(@PathVariable Long id, @RequestBody ClubSearchRequest clubSearchRequest) {
+        return clubService.findBySearchOptions(id, clubSearchRequest);
+    }
 }
 
