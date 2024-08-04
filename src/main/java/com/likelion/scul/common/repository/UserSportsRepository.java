@@ -24,4 +24,10 @@ public interface UserSportsRepository extends JpaRepository<UserSports, Long> {
     @Transactional
     @Query(value = "DELETE FROM User_Sports us WHERE us.user_id = :userId", nativeQuery = true)
     void deleteByUserId(@Param("userId") Long userId);
+
+    @Query(value = "SELECT s.sports_name " +
+            "FROM scul.user_sports us " +
+            "JOIN sports s ON us.sports_id = s.sports_id " +
+            "WHERE user_id = :userId and sports_priority = 0 ;", nativeQuery = true)
+    String getUserSportsNameByUserId(@Param("userId") Long userId);
 }

@@ -45,4 +45,8 @@ public class UserSportsService {
     public void deleteUserSports(User user) {
         userSportsRepository.deleteByUserId(user.getUserId());
     }
+
+    public String getFavoriteSportsNameByUser(User user){
+        return userSportsRepository.getUserSportsNameByUserId(user.getUserId());
+    }
 }
