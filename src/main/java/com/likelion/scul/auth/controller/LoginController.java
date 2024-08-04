@@ -68,11 +68,6 @@ public class LoginController {
         this.userSportsService = userSportsService;
     }
 
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
-
 //    @GetMapping("/oauth2/google/redirect")
 //    public RedirectView redirectGoogleLogin() {
 //        StringBuilder reqUrl = new StringBuilder("https://accounts.google.com/o/oauth2/v2/auth");

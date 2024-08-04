@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public interface UserSportsRepository extends JpaRepository<UserSports, Long> {
 
+    List<UserSports> findByUserUserId(Long userId);
+
     @Query(value = "SELECT sports_name " +
             "FROM user_sports us " +
             "JOIN sports s ON us.sports_id = s.sports_id " +
