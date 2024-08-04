@@ -19,9 +19,6 @@ public class User {
     private String email;
     private String nickname;
 
-    @OneToMany(mappedBy = "user")
-    private List<UserSports> userSports;
-    // Getters and Setters
 
     public Long getUserId() {
         return userId;
