@@ -5,7 +5,7 @@
 </head>
 <body>
 <h2>Additional Information</h2>
-<form>
+<form id="additional-info-form">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required><br>
 
@@ -15,11 +15,11 @@
     <label for="age">Age:</label>
     <input type="number" id="age" name="age" required><br>
 
-    <label for="region">Region:</label>
-    <input type="text" id="region" name="region" required><br>
-
     <label for="nickname">Nickname:</label>
     <input type="text" id="nickname" name="nickname" required><br>
+
+    <label for="sports">Sports (comma-separated):</label>
+    <input type="text" id="sports" name="sports" required><br>
 
     <button type="submit">Submit</button>
 </form>
@@ -31,30 +31,40 @@
         const name = document.getElementById('name').value;
         const gender = document.getElementById('gender').value;
         const age = document.getElementById('age').value;
-        const region = document.getElementById('region').value;
         const nickname = document.getElementById('nickname').value;
+        const sports = document.getElementById('sports').value.split(',').map(sport => sport.trim());
 
-        // 새로운 URL 생성
-        const url = `/submit-additional-info?name=${encodeURIComponent(name)}&gender=${encodeURIComponent(gender)}&age=${encodeURIComponent(age)}&region=${encodeURIComponent(region)}&nickname=${encodeURIComponent(nickname)}`;
+        // 요청 데이터 생성
+        const requestData = {
+            name: name,
+            gender: gender,
+            age: parseInt(age, 10),
+            nickname: nickname,
+            sportsName: sports
+        };
 
-        // 동적으로 생성된 URL로 POST 요청
-        fetch(url, {
+        // 서버로 데이터 전송
+        fetch('/auth/join/submit-info', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/json'
             },
-            body: `name=${encodeURIComponent(name)}&gender=${encodeURIComponent(gender)}&age=${encodeURIComponent(age)}&region=${encodeURIComponent(region)}&nickname=${encodeURIComponent(nickname)}`
-        }).then(response => {
-            return response.json();
-        }).then(data => {
-            console.log(data);
-            // 서버 응답에 따라 추가 작업을 수행할 수 있습니다.
-        }).catch(error => {
-            console.error('Error:', error);
-        });
+            body: JSON.stringify(requestData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                // 서버 응답에 따라 추가 작업을 수행할 수 있습니다.
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     });
 </script>
 </body>
 </html>
-
-

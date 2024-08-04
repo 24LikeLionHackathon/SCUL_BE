@@ -29,7 +29,6 @@ public class UserSportsService {
             UserSports newUserSports = new UserSports();
             newUserSports.setSports(selectedSports);
             newUserSports.setUser(newUser);
-            newUserSports.setSportsPriority(i);
 
             userSportsRepository.save(newUserSports);
         }
