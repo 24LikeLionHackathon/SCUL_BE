@@ -1,9 +1,6 @@
 package com.likelion.scul.mypage.controller;
 
-import com.likelion.scul.mypage.dto.ActivityCommentsDto;
-import com.likelion.scul.mypage.dto.ActivityLikesDto;
-import com.likelion.scul.mypage.dto.ActivityPostsDto;
-import com.likelion.scul.mypage.dto.MyPageHeaderDto;
+import com.likelion.scul.mypage.dto.*;
 import com.likelion.scul.mypage.service.MyPageService;
 import jakarta.servlet.http.HttpServletRequest;
 import io.jsonwebtoken.Claims;
@@ -58,14 +55,14 @@ public class MyPageController {
     }
 
     @GetMapping("/activity/likes")
-    public ResponseEntity<ActivityLikesDto> getActivityLikes(
+    public ResponseEntity<LikedPostsDto> getActivityLikes(
             HttpServletRequest request,
             @RequestParam("page") int page) {
 
         Claims claims = (Claims) request.getAttribute("claims");
         String email = claims.getSubject();
 
-        ActivityLikesDto activityLikesInfo = myPageService.getActivityLikes(email, page);
-        return ResponseEntity.ok(activityLikesInfo);
+        LikedPostsDto likedPostsDto=myPageService.getActivityLikes(email, page);
+        return ResponseEntity.ok(likedPostsDto);
     }
 }
