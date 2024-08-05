@@ -53,16 +53,23 @@ public class PostService {
         System.out.println(postRequestDto.getPostTitle());
         System.out.println(postRequestDto.getPostContent());
 
+        System.out.println("--------------------------------------------------------------");
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        System.out.println("--------------------------------------------------------------");
 
         // Sports 찾기
         Sports sports = sportsRepository.findBySportsName(postRequestDto.getSportsName())
                 .orElseThrow(() -> new RuntimeException("Sports not found for given sportsName"));
 
+        System.out.println("--------------------------------------------------------------");
+
         // Board 찾기: boardName과 sportsId를 함께 사용
         Board board = boardRepository.findByBoardNameAndSportsSportsId(postRequestDto.getBoardName(), sports.getSportsId())
                 .orElseThrow(() -> new RuntimeException("Board not found for given boardName and sportsId"));
+
+        System.out.println("--------------------------------------------------------------");
 
         Tag tag = tagRepository.findByTagName(postRequestDto.getTagName())
                 .orElseThrow(() -> new RuntimeException("Tag not found"));
