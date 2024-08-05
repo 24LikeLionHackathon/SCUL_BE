@@ -36,6 +36,7 @@ public class ClubController {
         return clubService.findBySportsId(id);
     }
 
+    // 로그인 필요
     // club 생성
     @PostMapping("/club")
     public ResponseEntity<ClubResponse> createClub(@RequestBody ClubRequest clubRequest, HttpServletRequest request) {
@@ -48,12 +49,14 @@ public class ClubController {
         return ResponseEntity.created(URI.create("/club/" + clubResponse.getClubId())).body(clubResponse);
     }
 
+    // 로그인 필요
     // club 수정
     @PutMapping("/club/{id}")
     public ClubResponse updateClub(@RequestBody ClubUpdateRequest clubUpdateRequest, @PathVariable Long id) {
         return clubService.update(id, clubUpdateRequest);
     }
 
+    // 로그인 필요
     // id에 해당하는 club 삭제
     @DeleteMapping("/club/{id}")
     public ResponseEntity<ClubResponse> deleteClub(@PathVariable Long id) {
@@ -61,6 +64,7 @@ public class ClubController {
         return ResponseEntity.noContent().build();
     }
 
+    // 로그인 필요
     // 모집 완료로 상태 바꾸기
     @PatchMapping("/club/status/{id}")
     public ClubResponse completeClubRecruitment(@PathVariable Long id) {
@@ -73,6 +77,7 @@ public class ClubController {
         return clubService.findBySearchOptions(id, clubSearchRequest);
     }
 
+    // 로그인 필요
     // club 신청
     @PostMapping("/club/application/{id}")
     public ResponseEntity<ClubApplicationResponse> applicateClub(@PathVariable Long id, @RequestBody ClubApplicationRequest clubApplicationRequest, HttpServletRequest request) {
@@ -85,6 +90,7 @@ public class ClubController {
         return ResponseEntity.created(URI.create("/club/application/" + clubApplicationResponse.getClubApplicationId())).body(clubApplicationResponse);
     }
 
+    // 로그인 필요
     // club 신청 승인
     @PostMapping("/club/application/approve/{id}")
     public ResponseEntity<ClubApplicationResponse> approveApplication(@PathVariable Long id, @RequestBody ClubApplicationApproveRequest clubApplicationApproveRequest, HttpServletRequest request) {
@@ -93,6 +99,7 @@ public class ClubController {
         return ResponseEntity.ok(clubApplicationResponse);
     }
 
+    // 로그인 필요
     // 내 소모임 조회
     @GetMapping("/club/mine")
     public ResponseEntity<List<ClubResponse>> getMyClubs(HttpServletRequest request) {
