@@ -1,6 +1,7 @@
 package com.likelion.scul.club.dto;
 
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -15,6 +16,6 @@ public class ClubUpdateRequest {
     private String clubQnaLink;
     private String clubParticipateLink;
     private int clubCost;
-    private String clubImage;
+    private MultipartFile clubImage;
     private String clubStatus;
 }

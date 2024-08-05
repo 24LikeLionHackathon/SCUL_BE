@@ -222,8 +222,6 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostListResponseDto getPostList(PostListRequestDto postListRequestDto) {
 
-        System.out.println("111111111111111111111111111111111111111111111111111");
-
 
         List<Post> filteredPosts = postRepository.findAll()
                 .stream()
@@ -238,7 +236,6 @@ public class PostService {
                 })
                 .collect(Collectors.toList());
 
-        System.out.println("111111111111111111111111111111111111111111111111111");
 
         // 필터링된 게시물 목록을 페이징 처리
         if (postListRequestDto.searchContent() != null && !postListRequestDto.searchContent().trim().isEmpty()) {
@@ -261,9 +258,6 @@ public class PostService {
             }
         }
 
-        System.out.println("3333333333333333333333333333333333333333333333");
-
-        System.out.println(postListRequestDto.sortMethod());
 
         switch (postListRequestDto.sortMethod()) {
             case "최신 순":
@@ -283,8 +277,6 @@ public class PostService {
                 break;
         }
 
-        System.out.println("4444444444444444444444444444444444444444");
-
 
         int start = (postListRequestDto.page() - 1) * 14;
         int end = Math.min(start + 14, filteredPosts.size());
@@ -302,7 +294,6 @@ public class PostService {
                 ))
                 .collect(Collectors.toList());
 
-        System.out.println("111111111111111111111111111111111111111111111111111");
 
         int totalPosts = filteredPosts.size(); // 필터 조건을 만족하는 총 게시물 수 계산
         return new PostListResponseDto(paginatedPosts, totalPosts);

@@ -19,6 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
     private static final String[] PROTECTED_PATHS = {
             //예시
 //            "/user/**",         // 회원 전용 페이지
+            "/club/**",
             "/follow/**",
             "/like",
             "/sports/**",
