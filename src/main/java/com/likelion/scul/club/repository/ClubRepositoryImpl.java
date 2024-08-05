@@ -49,6 +49,7 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
         if (status == null || status.isEmpty() || status.equals("마감 포함")) {
             return null;
         }
+
         return club.clubStatus.eq(status);
     }
 
@@ -111,7 +112,7 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
         return switch (searchCondition) {
             case "제목" -> club.clubName.contains(searchText);
             case "내용" -> club.clubContent.contains(searchText);
-            case "작성자" -> club.user.nickname.contains(searchText);
+            case "작성자" -> club.user != null ? club.user.nickname.contains(searchText) : null;
             default -> null;
         };
     }
