@@ -40,10 +40,10 @@ public class FollowController {
 //    }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteFollow(@RequestParam String userNickname, HttpServletRequest servletRequest) {
+    public ResponseEntity<Void> deleteFollow(@RequestBody FollowRequest followRequest, HttpServletRequest servletRequest) {
         Long userId = userService.extractUserIdByAccessToken(servletRequest);
 
-        User followedUser = userService.findByNickName(userNickname)
+        User followedUser = userService.findByNickName(followRequest.getFollowedNickName())
                 .orElseThrow(()->new IllegalStateException("user not found"));
         followService.deleteFollow(userId, followedUser.getUserId());
         return ResponseEntity.noContent().build();
