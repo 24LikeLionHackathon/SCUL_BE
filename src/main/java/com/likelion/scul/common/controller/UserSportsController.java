@@ -5,6 +5,7 @@ import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.dto.usersports.UserSportsRequest;
 import com.likelion.scul.common.dto.usersports.UserSportsResponse;
 import com.likelion.scul.common.service.UserSportsService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,8 @@ public class UserSportsController {
     }
 
     @GetMapping
-    public ResponseEntity<UserSportsResponse> getUserSports(@RequestParam Long userId) {
+    public ResponseEntity<UserSportsResponse> getUserSports(HttpServletRequest request) {
+        Long userId = userService.extractUserIdByAccessToken(request);
         UserSportsResponse response = userSportsService.findByUserId(userId);
         return ResponseEntity.ok(response);
     }
