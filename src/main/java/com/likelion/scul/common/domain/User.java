@@ -1,5 +1,6 @@
 package com.likelion.scul.common.domain;
 
+import com.likelion.scul.club.domain.ClubUser;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -25,4 +26,6 @@ public class User {
     @OneToOne(mappedBy = "user")
     private UserImage userImage;
 
+    @OneToMany(mappedBy = "user")
+    private List<ClubUser> clubUsers;
 }

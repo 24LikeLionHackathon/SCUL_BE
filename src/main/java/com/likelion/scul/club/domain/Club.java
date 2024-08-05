@@ -1,5 +1,6 @@
-package com.likelion.scul.club;
+package com.likelion.scul.club.domain;
 
+import com.likelion.scul.club.TimeEntity;
 import com.likelion.scul.club.dto.ClubRequest;
 import com.likelion.scul.common.domain.Sports;
 import com.likelion.scul.common.domain.User;
@@ -8,11 +9,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
+
 
 @Setter
 @Getter
 @Entity
-public class Club {
+public class Club extends TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clubId;
@@ -31,17 +34,21 @@ public class Club {
     private String clubStatus;
     private String clubImage;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "sports_id")
     private Sports sports;
 
+    @OneToMany(mappedBy = "club")
+    private List<ClubUser> clubUsers;
+
     public Club(Long clubId, String clubName, String clubContent, String clubPlace, LocalDate clubDate,
                 int clubTotalNumber, int clubParticipateNumber, String clubQnaLink, String clubParticipateLink,
-                int clubCost, String clubStatus, String clubImage, User user) {
+                int clubCost, String clubStatus, String clubImage, User user, Sports sports) {
         this.clubId = clubId;
         this.clubName = clubName;
         this.clubContent = clubContent;
@@ -55,18 +62,23 @@ public class Club {
         this.clubStatus = clubStatus;
         this.clubImage = clubImage;
         this.user = user;
+        this.sports = sports;
     }
 
-    public Club(ClubRequest clubRequest, String clubStatus) {
+    public Club(ClubRequest clubRequest, String clubStatus, User user, Sports sports) {
         this.clubName = clubRequest.getClubName();
         this.clubContent = clubRequest.getClubContent();
         this.clubPlace = clubRequest.getClubPlace();
         this.clubDate = clubRequest.getClubDate();
         this.clubTotalNumber = clubRequest.getClubTotalNumber();
         this.clubParticipateNumber = clubRequest.getClubParticipateNumber();
+        this.clubQnaLink = clubRequest.getClubQnaLink();
+        this.clubParticipateLink = clubRequest.getClubParticipateLink();
         this.clubCost = clubRequest.getClubCost();
         this.clubImage = clubRequest.getClubImage();
         this.clubStatus = clubStatus;
+        this.user = user;
+        this.sports = sports;
     }
 
     public Club() {}
