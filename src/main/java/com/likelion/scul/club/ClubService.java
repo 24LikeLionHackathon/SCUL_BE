@@ -111,7 +111,7 @@ public class ClubService {
 
     // 필터링 검색
     public List<ClubResponse> findBySearchOptions(Long sportsId, ClubSearchRequest clubSearchRequest) {
-        return clubRepositoryCustom.findBySearchOption(sportsId, clubSearchRequest.getClubStatus(), clubSearchRequest.getClubDate(), clubSearchRequest.getClubPlace(), clubSearchRequest.getClubMinCost(), clubSearchRequest.getClubMaxCost(), clubSearchRequest.getParticipantMinCount(), clubSearchRequest.getParticipantMaxCount(), clubSearchRequest.getSearchCondition(), clubSearchRequest.getSearchText())
+        return clubRepositoryCustom.findBySearchOption(sportsId, clubSearchRequest.getClubStatus(), clubSearchRequest.getClubDate(), clubSearchRequest.getClubPlace(), clubSearchRequest.getClubMinCost(), clubSearchRequest.getClubMaxCost(), clubSearchRequest.getTotalMinCount(), clubSearchRequest.getTotalMaxCount(), clubSearchRequest.getSearchCondition(), clubSearchRequest.getSearchText())
                 .stream().map(ClubResponse::toClubResponse).toList();
     }
 
