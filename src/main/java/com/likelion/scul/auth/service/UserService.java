@@ -5,6 +5,7 @@ import com.likelion.scul.auth.repository.RefreshTokenRepository;
 import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.repository.UserRepository;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,24 @@ public class UserService {
     public UserService(UserRepository userRepository, RefreshTokenRepository refreshTokenRepository) {
         this.userRepository = userRepository;
         this.refreshTokenRepository = refreshTokenRepository;
+    }
+
+    public User extractUserByAccessToken(HttpServletRequest request) {
+        Claims claims = (Claims) request.getAttribute("claims");
+        String email = claims.getSubject();
+        User user = findByEmail(email)
+                .orElseThrow(()->new IllegalStateException("user not found : extract user failed"));
+        return user;
+    }
+
+    public Long extractUserIdByAccessToken(HttpServletRequest request) {
+        User user = extractUserByAccessToken(request);
+        return user.getUserId();
+    }
+
+    public String extractUserEmailByAccessToken(HttpServletRequest request) {
+        User user = extractUserByAccessToken(request);
+        return user.getEmail();
     }
 
     public Optional<User> findByEmail(String email) {
@@ -57,7 +76,7 @@ public class UserService {
     }
 
     public boolean isNickNameDuplicate(String nickName) {
-        Optional<User> user = userRepository.findBynickname(nickName);
+        Optional<User> user = userRepository.findByNickname(nickName);
         return user.isPresent();
     }
 }

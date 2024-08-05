@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class FollowRequest {
-    private Long followerUserId;
-    private Long followedUserId;
+    private String followerNickName; // 팔로우 하는 사람의 닉네임
+    private String followedNickName; // 팔로우 당하는 사람의 닉네임
 }

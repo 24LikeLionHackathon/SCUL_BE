@@ -37,8 +37,10 @@ public class FollowService {
 
     private Follow makeFollow(FollowRequest request) {
         Follow newFollow = new Follow();
-        User follower = userRepository.findById(request.getFollowerUserId()).get();
-        User followed = userRepository.findById(request.getFollowedUserId()).get();
+        User follower = userRepository.findByNickname(request.getFollowerNickName())
+                .orElseThrow(()-> new IllegalStateException("닉네임으로 유저를 찾을 수 없습니다."));
+        User followed = userRepository.findByNickname(request.getFollowedNickName())
+                .orElseThrow(()-> new IllegalStateException("닉네임으로 유저를 찾을 수 없습니다."));
         newFollow.setFollower(follower);
         newFollow.setFollowed(followed);
         return newFollow;
