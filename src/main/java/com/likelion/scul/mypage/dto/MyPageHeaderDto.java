@@ -9,13 +9,16 @@ public class MyPageHeaderDto {
     private int participatingClubNum;
     private String userProfileImageUrl;
 
-    public MyPageHeaderDto(String nickname, String topPrioritySportsName, int followerNum, int followedNum, int participatingClubNum, String userProfileImageUrl) {
+    private Boolean isMe;
+
+    public MyPageHeaderDto(String nickname, String topPrioritySportsName, int followerNum, int followedNum, int participatingClubNum, String userProfileImageUrl,Boolean isMe) {
         this.nickname = nickname;
         this.topPrioritySportsName = topPrioritySportsName;
         this.followerNum = followerNum;
         this.followedNum = followedNum;
         this.participatingClubNum = participatingClubNum;
         this.userProfileImageUrl = userProfileImageUrl;
+        this.isMe=isMe;
     }
 
     // Getters and Setters
