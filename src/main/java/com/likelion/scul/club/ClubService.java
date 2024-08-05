@@ -73,8 +73,16 @@ public class ClubService {
     }
 
     // id에 해당하는 club 조회
-    public ClubResponse findById(Long id) {
-        return ClubResponse.toClubResponse(clubRepository.findByClubId(id));
+    public ClubDetailResponse findById(Long id, User user) {
+        boolean isMe;
+        Club club = clubRepository.findByClubId(id);
+        if(user == null){
+            isMe = false;
+        }
+        else {
+            isMe = user.equals(club.getUser());
+        }
+        return new ClubDetailResponse(ClubResponse.toClubResponse(club), isMe);
     }
 
     // sports의 모든 club 조회

@@ -20,6 +20,7 @@ public class ClubController {
     public final ClubService clubService;
     private final UserService userService;
 
+    @Autowired
     public ClubController(ClubService clubService, UserService userService) {
         this.clubService = clubService;
         this.userService = userService;
@@ -27,8 +28,10 @@ public class ClubController {
 
     // id에 해당하는 club 조회 (club 상세 조회)
     @GetMapping("/api/club/{id}")
-    public ClubResponse getClub(@PathVariable Long id) {
-        return clubService.findById(id);
+    public ClubDetailResponse getClub(@PathVariable Long id, HttpServletRequest request) {
+        User user = (User) request.getAttribute("user");
+
+        return clubService.findById(id, user);
     }
 
     // sports에 해당하는 모든 club 조회
