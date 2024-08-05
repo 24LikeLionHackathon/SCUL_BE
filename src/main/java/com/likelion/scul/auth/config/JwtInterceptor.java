@@ -33,15 +33,15 @@ public class JwtInterceptor implements HandlerInterceptor {
                     request.setAttribute("claims", claims);
 
                     // request에 user 정보 추가
-//                    String email = claims.getSubject();
-//                    Optional<User> optionalUser = userService.findByEmail(email);
-//                    if (optionalUser.isPresent()) {
-//                        User user = optionalUser.get();
-//                        request.setAttribute("user", user);
-//                    }
-//                    else{
-//                        return false;
-//                    }
+                    String email = claims.getSubject();
+                    Optional<User> optionalUser = userService.findByEmail(email);
+                    if (optionalUser.isPresent()) {
+                        User user = optionalUser.get();
+                        request.setAttribute("user", user);
+                    }
+                    else{
+                        return false;
+                    }
                     return true;
                 }
             } catch (ExpiredJwtException e) {
