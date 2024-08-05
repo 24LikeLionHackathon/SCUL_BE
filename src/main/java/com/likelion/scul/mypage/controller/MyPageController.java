@@ -29,37 +29,28 @@ public class MyPageController {
 
     @GetMapping("/activity/posts")
     public ResponseEntity<ActivityPostsDto> getActivityPosts(
-            HttpServletRequest request,
-            @RequestParam("page") int page) {
-
-        Claims claims = (Claims) request.getAttribute("claims");
-        String email = claims.getSubject();
-
-        ActivityPostsDto activityPostsInfo = myPageService.getActivityPostsInfo(email, page);
+            @RequestParam("page") int page,
+            @RequestParam("userNickname") String userNickname
+    ){
+        ActivityPostsDto activityPostsInfo = myPageService.getActivityPostsInfo(userNickname, page);
         return ResponseEntity.ok(activityPostsInfo);
     }
 
     @GetMapping("/activity/comments")
     public ResponseEntity<ActivityCommentsDto> getActivityComments(
-            HttpServletRequest request,
-            @RequestParam("page") int page) {
-
-        Claims claims = (Claims) request.getAttribute("claims");
-        String email = claims.getSubject();
-
-        ActivityCommentsDto activityCommentsInfo = myPageService.getActivityComments(email, page);
+            @RequestParam("page") int page,
+            @RequestParam("userNickname") String userNickname
+    ){
+        ActivityCommentsDto activityCommentsInfo = myPageService.getActivityComments(userNickname, page);
         return ResponseEntity.ok(activityCommentsInfo);
     }
 
     @GetMapping("/activity/likes")
     public ResponseEntity<ActivityLikesDto> getActivityLikes(
-            HttpServletRequest request,
-            @RequestParam("page") int page) {
-
-        Claims claims = (Claims) request.getAttribute("claims");
-        String email = claims.getSubject();
-
-        ActivityLikesDto likedPostsDto=myPageService.getActivityLikes(email, page);
+            @RequestParam("page") int page,
+            @RequestParam("userNickname") String userNickname
+    ){
+        ActivityLikesDto likedPostsDto=myPageService.getActivityLikes(userNickname, page);
         return ResponseEntity.ok(likedPostsDto);
     }
 }

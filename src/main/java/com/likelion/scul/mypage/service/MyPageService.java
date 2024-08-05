@@ -48,7 +48,7 @@ public class MyPageService {
         this.likeRepository = likeRepository;
     }
     public MyPageHeaderDto getHeaderInfo(String userNickname,String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+        Optional<User> optionalUser = userRepository.findByNickname(userNickname);
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
         }
@@ -76,12 +76,12 @@ public class MyPageService {
                 followedNum,
                 participatingClubNum,
                 userProfileImageUrl,
-                user.getNickname().equals(userNickname)
+                user.getEmail().equals(email)
         );
     }
 
-    public ActivityPostsDto getActivityPostsInfo(String email, int page) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+    public ActivityPostsDto getActivityPostsInfo(String userNickname, int page) {
+        Optional<User> optionalUser = userRepository.findByNickname(userNickname);
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
         }
@@ -119,8 +119,8 @@ public class MyPageService {
         );
     }
 
-    public ActivityCommentsDto getActivityComments(String email, int page) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+    public ActivityCommentsDto getActivityComments(String userNickname, int page) {
+        Optional<User> optionalUser = userRepository.findByNickname(userNickname);
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
         }
@@ -154,8 +154,8 @@ public class MyPageService {
         );
     }
 
-    public ActivityLikesDto getActivityLikes(String email, int page) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+    public ActivityLikesDto getActivityLikes(String userNickname, int page) {
+        Optional<User> optionalUser = userRepository.findByNickname(userNickname);
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
         }
