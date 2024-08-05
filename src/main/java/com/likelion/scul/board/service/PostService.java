@@ -169,16 +169,6 @@ public class PostService {
                 .map(Image::getImageUrl)
                 .collect(Collectors.toList());
 
-        System.out.println("----------------------------------------------");
-
-        for(Comment comment: post.getComments()){
-            System.out.println(email);
-            System.out.println("comment.getUser().getNickname() = " + comment.getUser().getNickname());
-            System.out.println(comment.getCommentContent());
-            System.out.println(comment.getUser().getEmail().equals(email));
-            System.out.println(comment.getUser().getUserImage().getImageUrl());
-        }
-
         List<CommentDto> comments = post.getComments().stream()
                 .map(comment -> {
                     User user = comment.getUser();
@@ -194,7 +184,6 @@ public class PostService {
                     );
                 })
                 .collect(Collectors.toList());
-        System.out.println("----------------------------------------------");
 
 
         return new PostDetailDto(

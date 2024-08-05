@@ -9,7 +9,6 @@ public record CommentDto(
         String commentContent,
         LocalDateTime createdAt,
         String userImageUrl,
-
         Boolean isMe
 ) {
 }
