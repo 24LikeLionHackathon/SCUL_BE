@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
             //예시
 //            "/user/**",         // 회원 전용 페이지
             "/sports/**",
-            "/comment",
+            "/comment/**",
             "/posts/**",
             "/newpost",
             "/dashboard/**",    // 대시보드

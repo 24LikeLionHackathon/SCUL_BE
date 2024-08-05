@@ -54,18 +54,13 @@ public class CommentService {
     @Transactional
     public CommentDto updateComment(Long commentId,String email, CommentUpdateRequestDto commentUpdateRequestDto) {
 
-        System.out.println(email);
-        System.out.println(commentId);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        System.out.println("-----------------------------");
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
-        System.out.println("-----------------------------");
 
-        System.out.println("comment.getCommentId() = " + comment.getCommentId());
-        
+
         LocalDateTime createdDateTime = LocalDateTime.parse(commentUpdateRequestDto.createdAt(), DateTimeFormatter.ISO_DATE_TIME);
 
         comment.setCommentContent(commentUpdateRequestDto.commentContent());
@@ -74,7 +69,6 @@ public class CommentService {
         System.out.println(user.getNickname());
         // Retrieve user image URL
         String userImageUrl = user.getUserImage() != null ? user.getUserImage().getImageUrl() : null;
-        System.out.println("userImageUrl = " + userImageUrl);
 
         return new CommentDto(comment.getCommentId(), user.getNickname(), comment.getCommentContent(), createdDateTime, userImageUrl,comment.getUser().getEmail().equals(email));
     }
