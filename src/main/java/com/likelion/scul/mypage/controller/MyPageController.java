@@ -45,14 +45,14 @@ public class MyPageController {
         return ResponseEntity.ok(activityCommentsInfo);
     }
 
-//    @GetMapping("/activity/likes")
-//    public ResponseEntity<ActivityClubsDto> getActivityClubs(
-//            @RequestParam("page") int page,
-//            @RequestParam("userNickname") String userNickname
-//    ){
-//        ActivityClubsDto activityClubsInfo=myPageService.getActivityClubsImfo(userNickname, page);
-//        return ResponseEntity.ok(activityClubsInfo);
-//    }
+    @GetMapping("/activity/clubs")
+    public ResponseEntity<ActivityClubsDto> getActivityClubs(
+            @RequestParam("page") int page,
+            @RequestParam("userNickname") String userNickname
+    ) {
+        ActivityClubsDto activityClubsInfo = myPageService.getActivityClubsInfo(userNickname, page);
+        return ResponseEntity.ok(activityClubsInfo);
+    }
 
     @GetMapping("/activity/likes")
     public ResponseEntity<ActivityLikesDto> getActivityLikes(

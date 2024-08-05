@@ -6,6 +6,8 @@ import com.likelion.scul.board.domain.Post;
 import com.likelion.scul.board.repository.CommentRepository;
 import com.likelion.scul.board.repository.LikeRepository;
 import com.likelion.scul.board.repository.PostRepository;
+import com.likelion.scul.club.domain.Club;
+import com.likelion.scul.club.domain.ClubUser;
 import com.likelion.scul.club.repository.ClubRepository;
 import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.domain.UserSports;
@@ -151,6 +153,42 @@ public class MyPageService {
                 totalComments,
                 totalLikes,
                 participatingClubs
+        );
+    }
+
+    public ActivityClubsDto getActivityClubsInfo(String userNickname, int page) {
+        Optional<User> optionalUser = userRepository.findByNickname(userNickname);
+        if (optionalUser.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+
+        User user = optionalUser.get();
+
+        // 사용자가 소속된 클럽을 페이지 단위로 조회
+        Page<ClubUser> clubUsersPage = clubRepository.findClubsByUser(user, PageRequest.of(page - 1, 10));
+
+        int totalPosts = postRepository.countByUser(user);
+        int totalComments = commentRepository.countByUser(user);
+        int totalLikes = likeRepository.countByUser(user);
+        int totalParticipatedClubs = (int) clubUsersPage.getTotalElements();
+
+        List<ClubInfoDto> clubsList = clubUsersPage.getContent().stream().map(clubUser -> {
+            Club club = clubUser.getClub();
+            return new ClubInfoDto(
+                    club.getSports().getSportsName(),
+                    club.getClubName(),
+                    club.getClubPlace(),
+                    club.getUser().getNickname(),
+                    club.getClubDate()
+            );
+        }).collect(Collectors.toList());
+
+        return new ActivityClubsDto(
+                clubsList,
+                totalPosts,
+                totalComments,
+                totalParticipatedClubs,
+                totalLikes
         );
     }
 
