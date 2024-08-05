@@ -50,6 +50,10 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public Optional<User> findByNickName(String nickName) {
+        return userRepository.findByNickname(nickName);
+    }
+
     public User makeNewUser(AddUserInfoRequest request,
                             HttpSession session) {
 

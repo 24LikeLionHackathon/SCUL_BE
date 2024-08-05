@@ -3,10 +3,7 @@ package com.likelion.scul.common.controller;
 import com.likelion.scul.auth.service.UserService;
 import com.likelion.scul.common.domain.Follow;
 import com.likelion.scul.common.domain.User;
-import com.likelion.scul.common.dto.follow.FollowNumResponse;
-import com.likelion.scul.common.dto.follow.FollowProfileResponse;
-import com.likelion.scul.common.dto.follow.FollowRequest;
-import com.likelion.scul.common.dto.follow.FollowResponse;
+import com.likelion.scul.common.dto.follow.*;
 import com.likelion.scul.common.service.FollowService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,40 +26,54 @@ public class FollowController {
     }
 
     @PostMapping
-    public ResponseEntity<Follow> addFollow(@RequestBody FollowRequest request) {
-        Follow follow = followService.saveFollow(request);
+    public ResponseEntity<Follow> addFollow(@RequestBody FollowRequest followRequest, HttpServletRequest servletRequest) {
+        User user = userService.extractUserByAccessToken(servletRequest);
+        Follow follow = followService.saveFollow(followRequest, user);
         return ResponseEntity.ok(follow);
     }
 
-    @GetMapping
-    public ResponseEntity<FollowResponse> getFollow(HttpServletRequest request) {
-        User user = userService.extractUserByAccessToken(request);
-        FollowResponse response = followService.getFollows(user.getUserId());
-        return ResponseEntity.ok(response);
-    }
+//    @GetMapping
+//    public ResponseEntity<FollowResponse> getFollow(HttpServletRequest request) {
+//        User user = userService.extractUserByAccessToken(request);
+//        FollowResponse response = followService.getFollows(user.getUserId());
+//        return ResponseEntity.ok(response);
+//    }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteFollow(@RequestParam Long followId) {
-        followService.deleteFollow(followId);
+    public ResponseEntity<Void> deleteFollow(@RequestBody FollowRequest followRequest, HttpServletRequest servletRequest) {
+        Long userId = userService.extractUserIdByAccessToken(servletRequest);
+
+        User followedUser = userService.findByNickName(followRequest.getFollowedNickName())
+                .orElseThrow(()->new IllegalStateException("user not found"));
+        followService.deleteFollow(userId, followedUser.getUserId());
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/num")
-    public ResponseEntity<FollowNumResponse> getFollowNum(HttpServletRequest request) {
-        User user = userService.extractUserByAccessToken(request);
-        FollowNumResponse response = followService.getFollowNum(user.getUserId());
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping("/follower")
-    public ResponseEntity<List<FollowProfileResponse>> getFollowers(@RequestParam int pageNum, HttpServletRequest request) {
-        String email = userService.extractUserEmailByAccessToken(request);
-        return ResponseEntity.ok(followService.getFollowers(email, pageNum));
+    public ResponseEntity<List<FollowProfileResponse>> getFollowers(@RequestBody MyPageFollowRequest request) {
+        String email = userService.findByNickName(request.getUserNickName())
+                .orElseThrow(()-> new IllegalStateException("닉네임으로 해당 유저를 찾을 수 없습니다."))
+                .getEmail();
+
+        return ResponseEntity.ok(followService.getFollowers(email, request.getPageNum()));
     }
 
     @GetMapping("/following")
-    public ResponseEntity<List<FollowProfileResponse>> getFollowings(@RequestParam int pageNum, HttpServletRequest request) {
-        String email = userService.extractUserEmailByAccessToken(request);
-        return ResponseEntity.ok(followService.getFollowings(email, pageNum));
+    public ResponseEntity<List<FollowProfileResponse>> getFollowings(@RequestBody MyPageFollowRequest request) {
+        String email = userService.findByNickName(request.getUserNickName())
+                .orElseThrow(()-> new IllegalStateException("닉네임으로 해당 유저를 찾을 수 없습니다."))
+                .getEmail();
+
+        return ResponseEntity.ok(followService.getFollowings(email, request.getPageNum()));
+    }
+
+    @GetMapping("/num")
+    public ResponseEntity<FollowNumResponse> getFollowNum(@RequestBody FollowRequest request) {
+        Long userId = userService.findByNickName(request.getFollowedNickName())
+                .orElseThrow(()-> new IllegalStateException("닉네임으로 해당 유저를 찾을 수 없습니다."))
+                .getUserId();
+
+        FollowNumResponse response = followService.getFollowNum(userId);
+        return ResponseEntity.ok(response);
     }
 }

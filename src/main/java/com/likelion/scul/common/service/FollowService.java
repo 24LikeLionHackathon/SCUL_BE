@@ -30,18 +30,16 @@ public class FollowService {
         this.userSportsService = userSportsService;
     }
 
-    public Follow saveFollow(FollowRequest request) {
-        Follow follow = makeFollow(request);
+    public Follow saveFollow(FollowRequest request, User user) {
+        Follow follow = makeFollow(request, user);
         return followRepository.save(follow);
     }
 
-    private Follow makeFollow(FollowRequest request) {
+    private Follow makeFollow(FollowRequest request, User user) {
         Follow newFollow = new Follow();
-        User follower = userRepository.findByNickname(request.getFollowerNickName())
-                .orElseThrow(()-> new IllegalStateException("닉네임으로 유저를 찾을 수 없습니다."));
         User followed = userRepository.findByNickname(request.getFollowedNickName())
                 .orElseThrow(()-> new IllegalStateException("닉네임으로 유저를 찾을 수 없습니다."));
-        newFollow.setFollower(follower);
+        newFollow.setFollower(user);
         newFollow.setFollowed(followed);
         return newFollow;
     }
@@ -67,8 +65,8 @@ public class FollowService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteFollow(Long followId) {
-        followRepository.deleteById(followId);
+    public void deleteFollow(Long userId, Long followedUserId) {
+        followRepository.deleteFollowByUsersId(userId, followedUserId);
     }
 
     public FollowNumResponse getFollowNum(Long userId) {
