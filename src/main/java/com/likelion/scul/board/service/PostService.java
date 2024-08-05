@@ -6,6 +6,7 @@ import com.likelion.scul.common.domain.User;
 import com.likelion.scul.board.domain.*;
 import com.likelion.scul.board.repository.*;
 import com.likelion.scul.common.domain.Sports;
+import com.likelion.scul.common.domain.UserImage;
 import com.likelion.scul.common.repository.SportsRepository;
 import com.likelion.scul.common.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -173,19 +174,24 @@ public class PostService {
         for(Comment comment: post.getComments()){
             System.out.println("comment.getUser().getNickname() = " + comment.getUser().getNickname());
             System.out.println(comment.getCommentContent());
-            System.out.println(comment.getUser().getUserImage().getImageUrl());
             comment.getUser().getEmail().equals(email);
+            System.out.println(comment.getUser().getUserImage().getImageUrl());
         }
 
         List<CommentDto> comments = post.getComments().stream()
-                .map(comment -> new CommentDto(
-                        comment.getCommentId(),
-                        comment.getUser().getNickname(),
-                        comment.getCommentContent(),
-                        comment.getCreatedAt(),
-                        comment.getUser().getUserImage().getImageUrl(),
-                        comment.getUser().getEmail().equals(email)
-                ))
+                .map(comment -> {
+                    User user = comment.getUser();
+                    UserImage userImage = user != null ? user.getUserImage() : null;
+
+                    return new CommentDto(
+                            comment.getCommentId(),
+                            user != null ? user.getNickname() : "Anonymous", // Default nickname if user is null
+                            comment.getCommentContent(),
+                            comment.getCreatedAt(),
+                            userImage != null ? userImage.getImageUrl() : null, // Default imageUrl if userImage is null
+                            user != null && user.getEmail() != null && user.getEmail().equals(email)
+                    );
+                })
                 .collect(Collectors.toList());
         System.out.println("----------------------------------------------");
 
