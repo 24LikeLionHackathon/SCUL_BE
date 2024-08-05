@@ -7,6 +7,7 @@ import com.likelion.scul.board.domain.*;
 import com.likelion.scul.board.repository.*;
 import com.likelion.scul.common.domain.Sports;
 import com.likelion.scul.common.domain.UserImage;
+import com.likelion.scul.common.repository.FollowRepository;
 import com.likelion.scul.common.repository.SportsRepository;
 import com.likelion.scul.common.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -31,14 +32,17 @@ public class PostService {
     private final ImageRepository imageRepository;
     private final S3Service s3Service;
 
+    private final FollowRepository followRepository;
+
     public PostService(UserRepository userRepository, BoardRepository boardRepository, PostRepository postRepository,
                        TagRepository tagRepository, SportsRepository sportsRepository, ImageRepository imageRepository,
-                       S3Service s3Service) {
+                       S3Service s3Service, FollowRepository followRepository) {
         this.userRepository = userRepository;
         this.boardRepository = boardRepository;
         this.postRepository = postRepository;
         this.tagRepository = tagRepository;
         this.sportsRepository = sportsRepository;
+        this.followRepository = followRepository;
         this.imageRepository = imageRepository;
         this.s3Service = s3Service;
     }
@@ -186,6 +190,17 @@ public class PostService {
                 .collect(Collectors.toList());
 
 
+        // 현재 사용자를 가져오기
+        User currentUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        // 사용자가 이 게시물을 좋아요 했는지 확인
+        boolean isLike = post.getLikes().stream()
+                .anyMatch(like -> like.getUser().equals(currentUser));
+
+        // 사용자가 게시물 작성자를 팔로우하고 있는지 확인
+        boolean isFollowing = followRepository.existsByFollowerAndFollowed(currentUser, post.getUser());
+
+
         return new PostDetailDto(
                 post.getPostId(),
                 post.getUser().getNickname(),
@@ -198,7 +213,9 @@ public class PostService {
                 imageUrls,
                 post.getLikes().size(),
                 comments,
-                post.getUser().getEmail().equals(email)
+                post.getUser().getEmail().equals(email),
+                isLike,
+                isFollowing
         );
     }
 

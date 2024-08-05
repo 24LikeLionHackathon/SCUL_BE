@@ -25,19 +25,19 @@ public class FollowService {
         this.userRepository = userRepository;
     }
 
-    public Follow saveFollow(FollowRequest request) {
-        Follow follow = makeFollow(request);
-        return followRepository.save(follow);
-    }
-
-    private Follow makeFollow(FollowRequest request) {
-        Follow newFollow = new Follow();
-        User follower = userRepository.findById(request.getFollowerUserId()).get();
-        User followed = userRepository.findById(request.getFollowedUserId()).get();
-        newFollow.setFollower(follower);
-        newFollow.setFollowed(followed);
-        return newFollow;
-    }
+//    public Follow saveFollow(String email,Long postId) {
+//        Follow follow = makeFollow(email,postId);
+//        return followRepository.save(follow);
+//    }
+//
+//    private Follow makeFollow(FollowRequest request) {
+//        Follow newFollow = new Follow();
+//        User follower = userRepository.findById(request.getFollowerUserId()).get();
+//        User followed = userRepository.findById(request.getFollowedUserId()).get();
+//        newFollow.setFollower(follower);
+//        newFollow.setFollowed(followed);
+//        return newFollow;
+//    }
 
     public FollowResponse getFollows(Long userId) {
         FollowResponse response = new FollowResponse();

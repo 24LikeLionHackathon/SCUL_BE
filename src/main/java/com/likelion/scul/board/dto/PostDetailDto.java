@@ -15,5 +15,7 @@ public record PostDetailDto(
         List<String> imageUrls,
         int likeCount,
         List<CommentDto> comments,
-        Boolean isMe
+        Boolean isMe,
+        Boolean isLike,
+        Boolean isFollowing
 ) {}
