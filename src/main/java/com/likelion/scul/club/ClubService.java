@@ -44,7 +44,8 @@ public class ClubService {
     public ClubResponse save(ClubRequest clubRequest, User user) throws IOException {
         String status = "모집 중";
 
-        System.out.println("11111111111111111111");
+        int participateNumber = 1;
+
         Sports sports = sportsRepository.findBySportsName(clubRequest.getSportsName()).orElseThrow(()-> new IllegalArgumentException("해당하는 sports name이 없습니다"));
 
         String imageUrl;
@@ -56,8 +57,7 @@ public class ClubService {
             imageUrl = sports.getSportsDefaultImg();
         }
 
-        System.out.println("222222222222222222222222222");
-        Club club = new Club(clubRequest, status, user, sports, imageUrl);
+        Club club = new Club(clubRequest, status, user, sports, imageUrl, participateNumber);
 
         System.out.println("club name: " + club.getClubName());
         System.out.println("club participate number: " + club.getClubParticipateNumber());
@@ -97,14 +97,14 @@ public class ClubService {
         clubRepository.deleteById(id);
     }
 
-    // 모집 중 -> 모집 완료
+    // 모집 중 -> 마감
     public ClubResponse updateClubStatus(Long id) {
         Club club = clubRepository.findByClubId(id);
-        if (club.getClubStatus().equals("모집 완료")) {
-            throw new IllegalArgumentException("이미 모집 완료된 모임 입니다");
+        if (club.getClubStatus().equals("마감")) {
+            throw new IllegalArgumentException("이미 마감된 모임 입니다");
         }
 
-        club.setClubStatus("모집 완료");
+        club.setClubStatus("마감");
         clubRepository.save(club);
         return ClubResponse.toClubResponse(club);
     }

@@ -50,7 +50,10 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
             return null;
         }
 
-        return club.clubStatus.eq(status);
+        if(status.equals("마감 미포함")) {
+            return club.clubStatus.eq("모집 중");
+        }
+        return null;
     }
 
     private BooleanExpression eqDate(LocalDate date) {
