@@ -33,7 +33,7 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Like> likes;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "post")
