@@ -36,6 +36,7 @@ public class CommentController {
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentDto> updateComment(@PathVariable Long commentId,@RequestBody CommentUpdateRequestDto commentUpdateRequestDto,
                                                     HttpServletRequest request) {
+        System.out.println("이까지 들어가나?");
         try {
             Claims claims = (Claims) request.getAttribute("claims");
             String email = claims.getSubject();

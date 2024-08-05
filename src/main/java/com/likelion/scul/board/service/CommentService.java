@@ -52,13 +52,15 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDto updateComment(Long postId,String email, CommentUpdateRequestDto commentUpdateRequestDto) {
+    public CommentDto updateComment(Long commentId,String email, CommentUpdateRequestDto commentUpdateRequestDto) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Comment comment = commentRepository.findById(postId)
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
 
+        System.out.println("comment.getCommentId() = " + comment.getCommentId());
+        
         LocalDateTime createdDateTime = LocalDateTime.parse(commentUpdateRequestDto.createdAt(), DateTimeFormatter.ISO_DATE_TIME);
 
         comment.setCommentContent(commentUpdateRequestDto.commentContent());
