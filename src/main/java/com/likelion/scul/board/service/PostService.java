@@ -263,6 +263,7 @@ public class PostService {
 
         System.out.println("3333333333333333333333333333333333333333333333");
 
+        System.out.println(postListRequestDto.sortMethod());
 
         switch (postListRequestDto.sortMethod()) {
             case "최신 순":
