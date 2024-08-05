@@ -19,6 +19,9 @@ public class WebConfig implements WebMvcConfigurer {
     private static final String[] PROTECTED_PATHS = {
             //예시
 //            "/user/**",         // 회원 전용 페이지
+            "/club/**",
+            "/follow/**",
+            "/like",
             "/sports/**",
             "/comment/**",
             "/posts/**",
@@ -27,6 +30,14 @@ public class WebConfig implements WebMvcConfigurer {
             "/profile/**",      // 프로필 페이지
             // 필요한 경로 (게시물 작성/삭제/수정, 댓글작성/삭제/수정, 마이페이지 ..)
             // 프론트는 우리가 매번 보내주는 is_authorized를 보고 페이지를 어떻게 보여줄지 정한다
+    };
+
+    // 비회원도 접근할 수 있는 경로 설정 (토큰이 있으면 email을 설정)
+    private static final String[] PUBLIC_PATHS = {
+//            "/public/**",   // 예: 공개된 게시물 목록
+//            "/info/**",     // 예: 정보 페이지
+//            "/home/**",     // 예: 홈 페이지
+//            "/posts/{postId}" // 예: 특정 게시물 상세보기 (비회원 접근 허용)
     };
     @Bean
     public RestTemplate restTemplate() {
@@ -44,5 +55,9 @@ public class WebConfig implements WebMvcConfigurer {
         // PROTECTED_PATHS 경로에만 인터셉터 적용
         registry.addInterceptor(new JwtInterceptor(jwtService, userService))
                 .addPathPatterns(PROTECTED_PATHS);
+
+//        // PUBLIC_PATHS 경로에 새로운 인터셉터 적용 (회원/비회원 구분)
+//        registry.addInterceptor(new OptionalJwtInterceptor(jwtService))
+//                .addPathPatterns(PUBLIC_PATHS);
     }
 }

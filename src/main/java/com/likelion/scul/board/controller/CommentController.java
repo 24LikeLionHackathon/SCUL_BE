@@ -20,7 +20,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<CommentDto> createComment(@RequestBody CommentRequestDto commentRequestDto,
                                                     HttpServletRequest request) {
         try {

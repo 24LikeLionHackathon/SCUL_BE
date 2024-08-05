@@ -18,11 +18,11 @@ public class FollowController {
         this.followService = followService;
     }
 
-    @PostMapping
-    public ResponseEntity<Follow> addFollow(@RequestBody FollowRequest request) {
-        Follow follow = followService.saveFollow(request);
-        return ResponseEntity.ok(follow);
-    }
+//    @PostMapping("{postId}")
+//    public ResponseEntity<Follow> addFollow(@PathVariable Long postId) {
+//        Follow follow = followService.saveFollow(postId);
+//        return ResponseEntity.ok(follow);
+//    }
 
     @GetMapping
     public ResponseEntity<FollowResponse> getFollow(@RequestParam Long userId) {

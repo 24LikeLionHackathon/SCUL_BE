@@ -3,14 +3,14 @@ package com.likelion.scul.board.domain;
 import com.likelion.scul.common.domain.Sports;
 import com.likelion.scul.common.domain.User;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Entity
 public class Post {
 

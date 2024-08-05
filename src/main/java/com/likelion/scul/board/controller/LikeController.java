@@ -8,15 +8,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/like")
 public class LikeController {
 
     private final LikeService likeService;
+
 
     public LikeController(LikeService likeService) {
         this.likeService = likeService;
     }
 
-    @PostMapping("/like")
+    @PostMapping
     public ResponseEntity<String> addLike(@RequestParam("post_id") Long postId, HttpServletRequest request) {
         try {
             Claims claims = (Claims) request.getAttribute("claims");
@@ -28,7 +30,7 @@ public class LikeController {
         }
     }
 
-    @DeleteMapping("/like")
+    @DeleteMapping
     public ResponseEntity<String> removeLike(@RequestParam("post_id") Long postId, HttpServletRequest request) {
         try {
             Claims claims = (Claims) request.getAttribute("claims");

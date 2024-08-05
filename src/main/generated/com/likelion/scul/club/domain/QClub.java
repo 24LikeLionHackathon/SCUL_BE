@@ -30,6 +30,8 @@ public class QClub extends EntityPathBase<Club> {
 
     public final DatePath<java.time.LocalDate> clubDate = createDate("clubDate", java.time.LocalDate.class);
 
+    public final DatePath<java.time.LocalDate> clubEndDate = createDate("clubEndDate", java.time.LocalDate.class);
+
     public final NumberPath<Long> clubId = createNumber("clubId", Long.class);
 
     public final StringPath clubImage = createString("clubImage");

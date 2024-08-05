@@ -22,11 +22,17 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
     }
 
     @Override
-    public List<Club> findBySearchOption(Long sportsId, String status, LocalDate date, String place, int minCost, int maxCost, int participantCount, String searchCondition, String SearchText) {
+    public List<Club> findBySearchOption(Long sportsId, String status, LocalDate date, String place, int minCost, int maxCost, int totalMinCount, int totalMaxCount, String searchCondition, String searchText) {
         QClub club = QClub.club;
 
+        System.out.println("sportsId:" + sportsId);
+        System.out.println("status:" + status);
+        System.out.println("date:" + date);
+        System.out.println("searchCondition: " + searchCondition);
+        System.out.println("searchText: " + searchText);
+
         JPQLQuery<Club> query = queryFactory.selectFrom(club)
-                .where(eqSports(sportsId), eqStatus(status), eqDate(date), eqPlace(place), filterCost(minCost, maxCost), eqParticipantCount(participantCount), searchContent(searchCondition, SearchText))
+                .where(eqSports(sportsId), eqStatus(status), eqDate(date), eqPlace(place), filterCost(minCost, maxCost), filterTotalCount(totalMinCount, totalMaxCount), searchContent(searchCondition, searchText))
                 .orderBy(club.createdAt.desc());
 
         return query.fetch();
@@ -40,9 +46,10 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
     }
 
     private BooleanExpression eqStatus(String status) {
-        if (status == null || status.isEmpty()) {
+        if (status == null || status.isEmpty() || status.equals("마감 포함")) {
             return null;
         }
+
         return club.clubStatus.eq(status);
     }
 
@@ -72,11 +79,22 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
         return costCondition;
     }
 
-    private BooleanExpression eqParticipantCount(Integer participantCount) {
-        if (participantCount == null || participantCount == 0) {
+    private BooleanExpression filterTotalCount(Integer totalMinCount, Integer totalMaxCount) {
+        if ((totalMinCount == null || totalMinCount == 0) && (totalMaxCount == null || totalMaxCount == 0)) {
             return null;
         }
-        return club.clubParticipateNumber.eq(participantCount);
+        BooleanExpression totalCountCondition = null;
+        if (totalMinCount != null && totalMaxCount > 0) {
+            totalCountCondition = club.clubTotalNumber.goe(totalMinCount);
+        }
+        if (totalMaxCount != null && totalMaxCount > 0) {
+            if (totalCountCondition == null) {
+                totalCountCondition = club.clubTotalNumber.loe(totalMaxCount);
+            } else {
+                totalCountCondition = totalCountCondition.and(club.clubTotalNumber.loe(totalMaxCount));
+            }
+        }
+        return totalCountCondition;
     }
 
     private BooleanExpression eqPlace (String place) {
@@ -93,7 +111,7 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
         return switch (searchCondition) {
             case "제목" -> club.clubName.contains(searchText);
             case "내용" -> club.clubContent.contains(searchText);
-            case "작성자" -> club.user.nickname.contains(searchText);
+            case "작성자" -> club.user != null ? club.user.nickname.contains(searchText) : null;
             default -> null;
         };
     }
