@@ -1,7 +1,14 @@
 package com.likelion.scul.mypage.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ActivityLikesDto {
     private List<LikedPostInfoDto> postsList;
     private int totalPosts;
@@ -17,47 +24,6 @@ public class ActivityLikesDto {
         this.participatingClubs = participatingClubs;
     }
 
-    // Getters and Setters
-
-    public List<LikedPostInfoDto> getPostsList() {
-        return postsList;
-    }
-
-    public void setPostsList(List<LikedPostInfoDto> postsList) {
-        this.postsList = postsList;
-    }
-
-    public int getTotalPosts() {
-        return totalPosts;
-    }
-
-    public void setTotalPosts(int totalPosts) {
-        this.totalPosts = totalPosts;
-    }
-
-    public int getTotalComments() {
-        return totalComments;
-    }
-
-    public void setTotalComments(int totalComments) {
-        this.totalComments = totalComments;
-    }
-
-    public int getTotalLikes() {
-        return totalLikes;
-    }
-
-    public void setTotalLikes(int totalLikes) {
-        this.totalLikes = totalLikes;
-    }
-
-    public int getParticipatingClubs() {
-        return participatingClubs;
-    }
-
-    public void setParticipatingClubs(int participatingClubs) {
-        this.participatingClubs = participatingClubs;
-    }
 }
 
 
