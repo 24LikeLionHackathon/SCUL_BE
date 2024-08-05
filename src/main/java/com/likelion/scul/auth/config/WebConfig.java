@@ -55,8 +55,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new JwtInterceptor(jwtService, userService))
                 .addPathPatterns(PROTECTED_PATHS);
 
-        // PUBLIC_PATHS 경로에 새로운 인터셉터 적용 (회원/비회원 구분)
-        registry.addInterceptor(new OptionalJwtInterceptor(jwtService))
-                .addPathPatterns(PUBLIC_PATHS);
+//        // PUBLIC_PATHS 경로에 새로운 인터셉터 적용 (회원/비회원 구분)
+//        registry.addInterceptor(new OptionalJwtInterceptor(jwtService))
+//                .addPathPatterns(PUBLIC_PATHS);
     }
 }
