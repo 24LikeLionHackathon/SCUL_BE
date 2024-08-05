@@ -22,11 +22,10 @@ public class UserSportsController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> modifyUserSports(@RequestBody UserSportsRequest request) {
-        User user = userService.findById(request.getUserId())
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저의 id입니다."));
+    public ResponseEntity<Void> modifyUserSports(@RequestBody UserSportsRequest userSportsRequest, HttpServletRequest servletRequest) {
+        User user = userService.extractUserByAccessToken(servletRequest);
         userSportsService.deleteUserSports(user);
-        userSportsService.saveUserSports(request.getSportsName(), user);
+        userSportsService.saveUserSports(userSportsRequest.getSportsName(), user);
         return ResponseEntity.ok().build();
     }
 

@@ -6,6 +6,5 @@ import java.util.List;
 
 @Data
 public class UserSportsRequest {
-    private long userId;
     private List<String> sportsName;
 }
