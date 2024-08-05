@@ -40,7 +40,7 @@ public class ClubController {
     // login
     // club 생성
     @PostMapping("/club")
-    public ResponseEntity<ClubResponse> createClub(@RequestBody ClubRequest clubRequest, HttpServletRequest request) throws IOException {
+    public ResponseEntity<ClubResponse> createClub(@ModelAttribute ClubRequest clubRequest, HttpServletRequest request) throws IOException {
         // 필수 입력 사항 정리 필요
 //        if (... == null) {
 //            return ResponseEntity.badRequest().build();
@@ -53,7 +53,7 @@ public class ClubController {
     // login
     // club 수정
     @PutMapping("/club/{id}")
-    public ClubResponse updateClub(@RequestBody ClubUpdateRequest clubUpdateRequest, @PathVariable Long id) throws IOException {
+    public ClubResponse updateClub(@ModelAttribute ClubUpdateRequest clubUpdateRequest, @PathVariable Long id) throws IOException {
         return clubService.update(id, clubUpdateRequest);
     }
 
