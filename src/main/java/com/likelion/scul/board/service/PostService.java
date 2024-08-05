@@ -261,7 +261,7 @@ public class PostService {
             }
         }
 
-        System.out.println("111111111111111111111111111111111111111111111111111");
+        System.out.println("3333333333333333333333333333333333333333333333");
 
 
         switch (postListRequestDto.sortMethod()) {
@@ -282,7 +282,7 @@ public class PostService {
                 break;
         }
 
-        System.out.println("111111111111111111111111111111111111111111111111111");
+        System.out.println("4444444444444444444444444444444444444444");
 
 
         int start = (postListRequestDto.page() - 1) * 14;
