@@ -7,16 +7,16 @@ import lombok.Getter;
 public class ClubApplicationResponse {
     private long clubApplicationId;
     private String clubName;
-    private String applicantName;
-    private String leaderName;
+    private String applicantNickname;
+    private String leaderNickname;
     private String applicantIntro;
     private Boolean isApprove;
 
-    ClubApplicationResponse(long clubApplicationId, String clubName, String applicantName, String leaderName, String applicantIntro, Boolean isApprove) {
+    ClubApplicationResponse(long clubApplicationId, String clubName, String applicantNickname, String leaderNickname, String applicantIntro, Boolean isApprove) {
         this.clubApplicationId = clubApplicationId;
         this.clubName = clubName;
-        this.applicantName = applicantName;
-        this.leaderName = leaderName;
+        this.applicantNickname = applicantNickname;
+        this.leaderNickname = leaderNickname;
         this.applicantIntro = applicantIntro;
         this.isApprove = isApprove;
     }
@@ -29,8 +29,8 @@ public class ClubApplicationResponse {
         System.out.println("applicantIntro: " + clubApplication.getApplicantIntro());
 
         return new ClubApplicationResponse(
-                clubApplication.getClubApplicationId(), clubApplication.getClub().getClubName(), clubApplication.getApplicant().getName(),
-                clubApplication.getLeader().getName(), clubApplication.getApplicantIntro(), clubApplication.getIsApprove()
+                clubApplication.getClubApplicationId(), clubApplication.getClub().getClubName(), clubApplication.getApplicant().getNickname(),
+                clubApplication.getLeader().getNickname(), clubApplication.getApplicantIntro(), clubApplication.getIsApprove()
         );
     }
 }

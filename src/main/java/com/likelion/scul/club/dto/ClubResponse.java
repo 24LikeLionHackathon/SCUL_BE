@@ -26,10 +26,10 @@ public class ClubResponse {
     private String clubStatus;
     private String clubImage;
 
-    private String userName;
+    private String userNickname;
     private String sportsName;
 
-    public ClubResponse(Long clubId, String clubName, String clubContent, String clubPlace, LocalDate clubDate, LocalDate clubEndDate, LocalDateTime createdAt, int clubTotalNumber, int clubParticipateNumber, String clubQnaLink, String clubParticipateLink, int clubCost, String clubStatus, String clubImage, String name, String sportsName) {
+    public ClubResponse(Long clubId, String clubName, String clubContent, String clubPlace, LocalDate clubDate, LocalDate clubEndDate, LocalDateTime createdAt, int clubTotalNumber, int clubParticipateNumber, String clubQnaLink, String clubParticipateLink, int clubCost, String clubStatus, String clubImage, String nickname, String sportsName) {
         this.clubId = clubId;
         this.clubName = clubName;
         this.clubContent = clubContent;
@@ -44,15 +44,22 @@ public class ClubResponse {
         this.clubCost = clubCost;
         this.clubStatus = clubStatus;
         this.clubImage = clubImage;
-        this.userName = name;
+        this.userNickname = nickname;
         this.sportsName = sportsName;
     }
 
     public static ClubResponse toClubResponse(Club club) {
+
+        System.out.println(club.getClubId());
+        System.out.println(club.getClubName());
+        System.out.println(club.getClubContent());
+        System.out.println(club.getUser().getUserId());
+        System.out.println(club.getUser().getNickname());
+
         return new ClubResponse(
                 club.getClubId(), club.getClubName(), club.getClubContent(), club.getClubPlace(), club.getClubDate(), club.getClubEndDate(), club.getCreatedAt(),
                 club.getClubTotalNumber(), club.getClubParticipateNumber(), club.getClubQnaLink(), club.getClubParticipateLink(),
-                club.getClubCost(), club.getClubStatus(), club.getClubImage(), club.getUser().getName(), club.getSports().getSportsName()
+                club.getClubCost(), club.getClubStatus(), club.getClubImage(), club.getUser().getNickname(), club.getSports().getSportsName()
         );
     }
 }
