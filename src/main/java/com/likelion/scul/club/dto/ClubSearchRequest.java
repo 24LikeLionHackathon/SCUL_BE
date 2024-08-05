@@ -1,10 +1,15 @@
 package com.likelion.scul.club.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClubSearchRequest {
     private String clubStatus;
     private String clubPlace;
