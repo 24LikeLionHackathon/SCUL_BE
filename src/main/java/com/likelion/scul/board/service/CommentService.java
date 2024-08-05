@@ -75,16 +75,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long commentId,String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+    public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
-
-        if (!comment.getUser().getEmail().equals(email)) {
-            throw new RuntimeException("User not authorized to delete this comment");
-        }
 
         commentRepository.delete(comment);
     }

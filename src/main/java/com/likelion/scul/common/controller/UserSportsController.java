@@ -5,9 +5,14 @@ import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.dto.usersports.UserSportsRequest;
 import com.likelion.scul.common.dto.usersports.UserSportsResponse;
 import com.likelion.scul.common.service.UserSportsService;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/sports")
@@ -30,8 +35,11 @@ public class UserSportsController {
     }
 
     @GetMapping
-    public ResponseEntity<UserSportsResponse> getUserSports(@RequestParam Long userId) {
-        UserSportsResponse response = userSportsService.findByUserId(userId);
+    public ResponseEntity<UserSportsResponse> getUserSports(HttpServletRequest request) {
+        Claims claims = (Claims) request.getAttribute("claims");
+        String email = claims.getSubject();
+        Optional<User> user = userService.findByEmail(email);
+        UserSportsResponse response = userSportsService.findByUserId(user.get().getUserId());
         return ResponseEntity.ok(response);
     }
 }

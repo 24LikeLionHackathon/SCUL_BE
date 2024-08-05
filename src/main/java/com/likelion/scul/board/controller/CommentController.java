@@ -50,9 +50,7 @@ public class CommentController {
     public ResponseEntity<String> deleteComment(@PathVariable Long commentId,
                                                 HttpServletRequest request) {
         try {
-            Claims claims = (Claims) request.getAttribute("claims");
-            String email = claims.getSubject();
-            commentService.deleteComment(commentId,email);
+            commentService.deleteComment(commentId);
             return new ResponseEntity<>("Comment deleted successfully", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -58,6 +58,8 @@ public class PostController {
         }
     }
 
+
+    //여기에 interceptor가 동작하고 있는데 만약에 비회원 로그인이면 허용해줘야함
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostDetailDto> getPostDetail(@PathVariable Long postId,HttpServletRequest request) {
         try {
