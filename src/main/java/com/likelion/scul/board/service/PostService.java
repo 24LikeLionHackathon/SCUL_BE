@@ -172,9 +172,10 @@ public class PostService {
         System.out.println("----------------------------------------------");
 
         for(Comment comment: post.getComments()){
+            System.out.println(email);
             System.out.println("comment.getUser().getNickname() = " + comment.getUser().getNickname());
             System.out.println(comment.getCommentContent());
-            comment.getUser().getEmail().equals(email);
+            System.out.println(comment.getUser().getEmail().equals(email));
             System.out.println(comment.getUser().getUserImage().getImageUrl());
         }
 
@@ -185,7 +186,7 @@ public class PostService {
 
                     return new CommentDto(
                             comment.getCommentId(),
-                            user != null ? user.getNickname() : "Anonymous", // Default nickname if user is null
+                            user.getNickname(), // Default nickname if user is null
                             comment.getCommentContent(),
                             comment.getCreatedAt(),
                             userImage != null ? userImage.getImageUrl() : null, // Default imageUrl if userImage is null

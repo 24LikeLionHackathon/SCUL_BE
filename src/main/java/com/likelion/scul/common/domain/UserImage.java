@@ -13,6 +13,6 @@ public class UserImage {
     private String imageUrl;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 }
