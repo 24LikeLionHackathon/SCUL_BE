@@ -22,7 +22,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<UserSports> userSports;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user")
     private UserImage userImage;
 
 }

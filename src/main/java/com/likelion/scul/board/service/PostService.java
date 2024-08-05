@@ -169,6 +169,14 @@ public class PostService {
                 .collect(Collectors.toList());
 
         System.out.println("----------------------------------------------");
+
+        for(Comment comment: post.getComments()){
+            System.out.println("comment.getUser().getNickname() = " + comment.getUser().getNickname());
+            System.out.println(comment.getCommentContent());
+            System.out.println(comment.getUser().getUserImage().getImageUrl());
+            comment.getUser().getEmail().equals(email);
+        }
+
         List<CommentDto> comments = post.getComments().stream()
                 .map(comment -> new CommentDto(
                         comment.getCommentId(),
