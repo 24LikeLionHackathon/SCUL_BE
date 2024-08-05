@@ -45,6 +45,7 @@ public class ClubService {
         String status = "모집 중";
         int participateNumber = 1;
 
+        System.out.println("11111111111111111111");
         Sports sports = sportsRepository.findBySportsName(clubRequest.getSportsName()).orElseThrow(()-> new IllegalArgumentException("해당하는 sports name이 없습니다"));
 
         String imageUrl;
@@ -56,11 +57,13 @@ public class ClubService {
             imageUrl = sports.getSportsDefaultImg();
         }
 
+        System.out.println("222222222222222222222222222");
         Club club = new Club(clubRequest, status, user, sports, imageUrl, participateNumber);
 
         System.out.println("club name: " + club.getClubName());
         System.out.println("club participate number: " + club.getClubParticipateNumber());
 
+        System.out.println("333333333333333333333333333333");
         clubRepository.save(club);
 
         ClubUser clubUser = new ClubUser(club, user);
