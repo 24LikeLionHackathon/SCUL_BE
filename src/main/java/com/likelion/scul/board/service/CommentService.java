@@ -53,11 +53,16 @@ public class CommentService {
 
     @Transactional
     public CommentDto updateComment(Long commentId,String email, CommentUpdateRequestDto commentUpdateRequestDto) {
+
+        System.out.println(email);
+        System.out.println(commentId);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        System.out.println("-----------------------------");
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
+        System.out.println("-----------------------------");
 
         System.out.println("comment.getCommentId() = " + comment.getCommentId());
         
