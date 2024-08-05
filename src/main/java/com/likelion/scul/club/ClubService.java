@@ -13,6 +13,9 @@ import com.likelion.scul.common.domain.Sports;
 import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.repository.SportsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -111,6 +114,19 @@ public class ClubService {
     public List<ClubResponse> findBySearchOptions(Long sportsId, ClubSearchRequest clubSearchRequest) {
         return clubRepositoryCustom.findBySearchOption(sportsId, clubSearchRequest.getClubStatus(), clubSearchRequest.getClubDate(), clubSearchRequest.getClubPlace(), clubSearchRequest.getClubMinCost(), clubSearchRequest.getClubMaxCost(), clubSearchRequest.getTotalMinCount(), clubSearchRequest.getTotalMaxCount(), clubSearchRequest.getSearchCondition(), clubSearchRequest.getSearchText())
                 .stream().map(ClubResponse::toClubResponse).toList();
+    }
+
+    // 필터링 검색 with page
+    public ClubSearchWithPageResponse findBySearchOptionsWithPage(Long sportsId, ClubSearchWithPageRequest clubSearchWithPageRequest) {
+        int pageSize = 8; // page size는 항상 8로 고정
+        Pageable pageable = PageRequest.of(clubSearchWithPageRequest.getPage(), pageSize);
+        Page<Club> clubPage = clubRepositoryCustom.findBySearchOptionWithPage(sportsId, clubSearchWithPageRequest.getClubStatus(), clubSearchWithPageRequest.getClubDate(), clubSearchWithPageRequest.getClubPlace(),
+                clubSearchWithPageRequest.getClubMinCost(), clubSearchWithPageRequest.getClubMaxCost(), clubSearchWithPageRequest.getTotalMinCount(), clubSearchWithPageRequest.getTotalMaxCount(),
+                clubSearchWithPageRequest.getSearchCondition(), clubSearchWithPageRequest.getSearchText(), pageable);
+
+        List<ClubResponse> clubResponses = clubPage.getContent().stream().map(ClubResponse::toClubResponse).toList();
+
+        return new ClubSearchWithPageResponse(clubResponses, clubPage.getTotalPages());
     }
 
     // 소모임 신청

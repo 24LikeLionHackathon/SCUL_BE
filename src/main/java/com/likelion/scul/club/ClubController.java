@@ -77,9 +77,14 @@ public class ClubController {
     }
 
     // club 필터 & 검색
+//    @PostMapping("/api/club/sports/search/{id}")
+//    public List<ClubResponse> filterClubs(@PathVariable Long id, @RequestBody ClubSearchRequest clubSearchRequest) {
+//        return clubService.findBySearchOptions(id, clubSearchRequest);
+//    }
+
     @PostMapping("/api/club/sports/search/{id}")
-    public List<ClubResponse> filterClubs(@PathVariable Long id, @RequestBody ClubSearchRequest clubSearchRequest) {
-        return clubService.findBySearchOptions(id, clubSearchRequest);
+    public ClubSearchWithPageResponse filterClubs(@PathVariable Long id, @RequestBody ClubSearchWithPageRequest clubSearchWithPageRequest) {
+        return clubService.findBySearchOptionsWithPage(id, clubSearchWithPageRequest);
     }
 
     // login

@@ -5,10 +5,14 @@ import com.likelion.scul.club.domain.QClub;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static com.likelion.scul.club.domain.QClub.club;
 
@@ -30,6 +34,21 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
                 .orderBy(club.createdAt.desc());
 
         return query.fetch();
+    }
+
+    // filtering with pagination
+    @Override
+    public Page<Club> findBySearchOptionWithPage(Long sportsId, String status, LocalDate date, String place, int minCost, int maxCost, int totalMinCount, int totalMaxCount, String searchCondition, String searchText, Pageable pageable) {
+        QClub club = QClub.club;
+
+        JPQLQuery<Club> query = queryFactory.selectFrom(club)
+                .where(eqSports(sportsId), eqStatus(status), eqDate(date), eqPlace(place), filterCost(minCost, maxCost), filterTotalCount(totalMinCount, totalMaxCount), searchContent(searchCondition, searchText))
+                .orderBy(club.createdAt.desc());
+
+        long total = query.fetchCount();
+        List<Club> results = Objects.requireNonNull(getQuerydsl()).applyPagination(pageable, query).fetch();
+
+        return new PageImpl<>(results, pageable, total);
     }
 
     private BooleanExpression eqSports(Long sportsId) {
