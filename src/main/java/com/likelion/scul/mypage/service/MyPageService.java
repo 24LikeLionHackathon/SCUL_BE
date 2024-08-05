@@ -9,6 +9,7 @@ import com.likelion.scul.board.repository.PostRepository;
 import com.likelion.scul.club.domain.Club;
 import com.likelion.scul.club.domain.ClubUser;
 import com.likelion.scul.club.repository.ClubRepository;
+import com.likelion.scul.club.repository.ClubUserRepository;
 import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.domain.UserSports;
 import com.likelion.scul.common.repository.UserRepository;
@@ -33,6 +34,7 @@ public class MyPageService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
+    private final ClubUserRepository clubUserRepository;
 
     public MyPageService(UserRepository userRepository,
                          UserSportsRepository userSportsRepository,
@@ -40,7 +42,9 @@ public class MyPageService {
                          ClubRepository clubRepository,
                          PostRepository postRepository,
                          CommentRepository commentRepository,
-                         LikeRepository likeRepository) {
+                         LikeRepository likeRepository,
+                         ClubUserRepository clubUserRepository
+    ) {
         this.userRepository = userRepository;
         this.userSportsRepository = userSportsRepository;
         this.followRepository = followRepository;
@@ -48,6 +52,7 @@ public class MyPageService {
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.likeRepository = likeRepository;
+        this.clubUserRepository = clubUserRepository;
     }
     public MyPageHeaderDto getHeaderInfo(String userNickname,String email) {
         Optional<User> optionalUser = userRepository.findByNickname(userNickname);
@@ -165,7 +170,7 @@ public class MyPageService {
         User user = optionalUser.get();
 
         // 사용자가 소속된 클럽을 페이지 단위로 조회
-        Page<ClubUser> clubUsersPage = clubRepository.findClubsByUser(user, PageRequest.of(page - 1, 10));
+        Page<ClubUser> clubUsersPage = clubUserRepository.findByUser(user, PageRequest.of(page - 1, 10));
 
         int totalPosts = postRepository.countByUser(user);
         int totalComments = commentRepository.countByUser(user);
@@ -191,6 +196,7 @@ public class MyPageService {
                 totalLikes
         );
     }
+
 
     public ActivityLikesDto getActivityLikes(String userNickname, int page) {
         Optional<User> optionalUser = userRepository.findByNickname(userNickname);
