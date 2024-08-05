@@ -75,6 +75,10 @@ public class PostController {
     @PostMapping("/postlist")
     public ResponseEntity<PostListResponseDto> getPostList(@RequestBody PostListRequestDto postListRequestDto) {
         try {
+            System.out.println(postListRequestDto.boardName());
+            System.out.println(postListRequestDto.searchType());
+            System.out.println(postListRequestDto.sortMethod());
+
             PostListResponseDto postListResponse = postService.getPostList(postListRequestDto);
             return new ResponseEntity<>(postListResponse, HttpStatus.OK);
         } catch (Exception e) {
