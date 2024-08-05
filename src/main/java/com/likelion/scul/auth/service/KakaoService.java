@@ -3,7 +3,10 @@ package com.likelion.scul.auth.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.likelion.scul.auth.domain.KakaoRefreshToken;
 import com.likelion.scul.auth.domain.KakaoToken;
+import com.likelion.scul.auth.repository.KakaoRefreshTokenRepository;
+import com.likelion.scul.common.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -27,6 +30,11 @@ public class KakaoService {
 
     @Autowired
     private RestTemplate restTemplate;
+    private KakaoRefreshTokenRepository kakaoRefreshTokenRepository;
+
+    public KakaoService(KakaoRefreshTokenRepository kakaoRefreshTokenRepository) {
+        this.kakaoRefreshTokenRepository = kakaoRefreshTokenRepository;
+    }
 
     public KakaoToken getToken(String authCode) {
         HttpHeaders headers = new HttpHeaders();
@@ -81,5 +89,15 @@ public class KakaoService {
         return email.asText();
     }
 
+    public void saveKakaoRefreshToken(KakaoRefreshToken kakaoRefreshToken) {
+        kakaoRefreshTokenRepository.save(kakaoRefreshToken);
+    }
 
+    public KakaoRefreshToken makeKakaoRefreshToken(User user, String refreshToken) {
+        KakaoRefreshToken kakaoRefreshToken = new KakaoRefreshToken();
+        kakaoRefreshToken.setKakaoRefreshToken("Bearer " + refreshToken);
+        kakaoRefreshToken.setUserId(user.getUserId());
+
+        return kakaoRefreshToken;
+    }
 }

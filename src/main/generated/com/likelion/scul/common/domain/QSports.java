@@ -26,9 +26,7 @@ public class QSports extends EntityPathBase<Sports> {
 
     public final StringPath sportsName = createString("sportsName");
 
-    public final StringPath sportsType = createString("sportsType");
-
-    public final ListPath<com.likelion.scul.auth.domain.UserSports, com.likelion.scul.auth.domain.QUserSports> userSports = this.<com.likelion.scul.auth.domain.UserSports, com.likelion.scul.auth.domain.QUserSports>createList("userSports", com.likelion.scul.auth.domain.UserSports.class, com.likelion.scul.auth.domain.QUserSports.class, PathInits.DIRECT2);
+    public final ListPath<UserSports, QUserSports> userSports = this.<UserSports, QUserSports>createList("userSports", UserSports.class, QUserSports.class, PathInits.DIRECT2);
 
     public QSports(String variable) {
         super(Sports.class, forVariable(variable));

@@ -47,7 +47,7 @@ public class QLike extends EntityPathBase<Like> {
     public QLike(Class<? extends Like> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.post = inits.isInitialized("post") ? new QPost(forProperty("post"), inits.get("post")) : null;
-        this.user = inits.isInitialized("user") ? new com.likelion.scul.common.domain.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.likelion.scul.common.domain.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

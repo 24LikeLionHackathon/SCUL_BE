@@ -1,14 +1,12 @@
 package com.likelion.scul.common.domain;
 
-import com.likelion.scul.auth.domain.UserSports;
 import com.likelion.scul.board.domain.Board;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.List;
-@Setter
-@Getter
+
+@Data
 @Entity
 public class Sports {
 
@@ -17,7 +15,9 @@ public class Sports {
     private Long sportsId;
 
     private String sportsName;
-    private String sportsType;
+
+    @Transient
+    private String sportsIcon;
 
     @Transient
     private String sportsDefaultImg;
@@ -27,4 +27,6 @@ public class Sports {
 
     @OneToMany(mappedBy = "sports")
     private List<Board> boards;
+
+    // Getters and Setters
 }

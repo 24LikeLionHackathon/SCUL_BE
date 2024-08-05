@@ -40,8 +40,6 @@ public class QPost extends EntityPathBase<Post> {
 
     public final NumberPath<Integer> postView = createNumber("postView", Integer.class);
 
-    public final com.likelion.scul.common.domain.QSports sports;
-
     public final QTag tag;
 
     public final com.likelion.scul.common.domain.QUser user;
@@ -65,9 +63,8 @@ public class QPost extends EntityPathBase<Post> {
     public QPost(Class<? extends Post> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.board = inits.isInitialized("board") ? new QBoard(forProperty("board"), inits.get("board")) : null;
-        this.sports = inits.isInitialized("sports") ? new com.likelion.scul.common.domain.QSports(forProperty("sports")) : null;
         this.tag = inits.isInitialized("tag") ? new QTag(forProperty("tag")) : null;
-        this.user = inits.isInitialized("user") ? new com.likelion.scul.common.domain.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.likelion.scul.common.domain.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

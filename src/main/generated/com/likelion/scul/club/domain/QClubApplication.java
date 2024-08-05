@@ -52,9 +52,9 @@ public class QClubApplication extends EntityPathBase<ClubApplication> {
 
     public QClubApplication(Class<? extends ClubApplication> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.applicant = inits.isInitialized("applicant") ? new com.likelion.scul.common.domain.QUser(forProperty("applicant")) : null;
+        this.applicant = inits.isInitialized("applicant") ? new com.likelion.scul.common.domain.QUser(forProperty("applicant"), inits.get("applicant")) : null;
         this.club = inits.isInitialized("club") ? new QClub(forProperty("club"), inits.get("club")) : null;
-        this.leader = inits.isInitialized("leader") ? new com.likelion.scul.common.domain.QUser(forProperty("leader")) : null;
+        this.leader = inits.isInitialized("leader") ? new com.likelion.scul.common.domain.QUser(forProperty("leader"), inits.get("leader")) : null;
     }
 
 }

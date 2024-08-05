@@ -46,8 +46,8 @@ public class QFollow extends EntityPathBase<Follow> {
 
     public QFollow(Class<? extends Follow> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.followed = inits.isInitialized("followed") ? new QUser(forProperty("followed")) : null;
-        this.follower = inits.isInitialized("follower") ? new QUser(forProperty("follower")) : null;
+        this.followed = inits.isInitialized("followed") ? new QUser(forProperty("followed"), inits.get("followed")) : null;
+        this.follower = inits.isInitialized("follower") ? new QUser(forProperty("follower"), inits.get("follower")) : null;
     }
 
 }

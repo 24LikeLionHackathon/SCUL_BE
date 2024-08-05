@@ -1,6 +1,7 @@
 package com.likelion.scul.common.controller;
 
 import com.likelion.scul.common.domain.Follow;
+import com.likelion.scul.common.dto.follow.FollowNumResponse;
 import com.likelion.scul.common.dto.follow.FollowRequest;
 import com.likelion.scul.common.dto.follow.FollowResponse;
 import com.likelion.scul.common.service.FollowService;
@@ -33,5 +34,11 @@ public class FollowController {
     public ResponseEntity<Void> deleteFollow(@RequestParam Long followId) {
         followService.deleteFollow(followId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/num")
+    public ResponseEntity<FollowNumResponse> getFollowNum(@RequestParam Long userId) {
+        FollowNumResponse response = followService.getFollowNum(userId);
+        return ResponseEntity.ok(response);
     }
 }

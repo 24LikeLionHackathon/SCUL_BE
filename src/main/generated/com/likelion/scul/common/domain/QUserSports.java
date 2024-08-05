@@ -1,4 +1,4 @@
-package com.likelion.scul.auth.domain;
+package com.likelion.scul.common.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,15 +16,17 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QUserSports extends EntityPathBase<UserSports> {
 
-    private static final long serialVersionUID = -1962126873L;
+    private static final long serialVersionUID = -1835099862L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QUserSports userSports = new QUserSports("userSports");
 
-    public final com.likelion.scul.common.domain.QSports sports;
+    public final QSports sports;
 
-    public final com.likelion.scul.common.domain.QUser user;
+    public final NumberPath<Integer> sportsPriority = createNumber("sportsPriority", Integer.class);
+
+    public final QUser user;
 
     public final NumberPath<Long> userSportId = createNumber("userSportId", Long.class);
 
@@ -46,8 +48,8 @@ public class QUserSports extends EntityPathBase<UserSports> {
 
     public QUserSports(Class<? extends UserSports> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.sports = inits.isInitialized("sports") ? new com.likelion.scul.common.domain.QSports(forProperty("sports")) : null;
-        this.user = inits.isInitialized("user") ? new com.likelion.scul.common.domain.QUser(forProperty("user")) : null;
+        this.sports = inits.isInitialized("sports") ? new QSports(forProperty("sports")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

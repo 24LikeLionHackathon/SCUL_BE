@@ -27,10 +27,6 @@ public class Post {
     private Tag tag;
 
     @ManyToOne
-    @JoinColumn(name = "sports_id")
-    private Sports sports;
-
-    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -48,10 +44,9 @@ public class Post {
     private LocalDateTime createdAt;
     private int postView;
 
-    public Post(Board board, Tag tag, Sports sports, User user, String postTitle, String postContent, LocalDateTime createdAt, int postView) {
+    public Post(Board board, Tag tag, User user, String postTitle, String postContent, LocalDateTime createdAt, int postView) {
         this.board = board;
         this.tag = tag;
-        this.sports = sports;
         this.user = user;
         this.postTitle = postTitle;
         this.postContent = postContent;

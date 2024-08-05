@@ -76,7 +76,7 @@ public class QClub extends EntityPathBase<Club> {
     public QClub(Class<? extends Club> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.sports = inits.isInitialized("sports") ? new com.likelion.scul.common.domain.QSports(forProperty("sports")) : null;
-        this.user = inits.isInitialized("user") ? new com.likelion.scul.common.domain.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new com.likelion.scul.common.domain.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

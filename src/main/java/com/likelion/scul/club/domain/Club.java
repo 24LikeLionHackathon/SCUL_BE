@@ -34,11 +34,12 @@ public class Club extends TimeEntity {
     private String clubStatus;
     private String clubImage;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "sports_id")
     private Sports sports;
 

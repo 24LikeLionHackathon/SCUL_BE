@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 public class FollowResponse {
-    private List<User> followers ;
-    private List<User> followings ;
+    private List<User> followers;
+    private List<User> followings;
 }
