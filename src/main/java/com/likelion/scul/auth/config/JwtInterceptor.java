@@ -2,8 +2,8 @@ package com.likelion.scul.auth.config;
 
 import com.likelion.scul.auth.service.JwtService;
 import com.likelion.scul.auth.service.UserService;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -36,7 +36,9 @@ public class JwtInterceptor implements HandlerInterceptor {
                 return false;
             }
         }
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        // 로그인 페이지로 리다이렉트
+//        response.sendRedirect("/login");
         return false;
     }
 }

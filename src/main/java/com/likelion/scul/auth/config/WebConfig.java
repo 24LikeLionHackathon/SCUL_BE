@@ -15,16 +15,19 @@ public class WebConfig implements WebMvcConfigurer {
     private final JwtService jwtService;
     private final UserService userService;
 
+    // 로그인이 필요한 경로 설정
+    private static final String[] PROTECTED_PATHS = {
+            //예시
+//            "/user/**",         // 회원 전용 페이지
+            "/dashboard/**",    // 대시보드
+            "/profile/**",      // 프로필 페이지
+            // 필요한 경로 (게시물 작성/삭제/수정, 댓글작성/삭제/수정, 마이페이지 ..)
+            // 프론트는 우리가 매번 보내주는 is_authorized를 보고 페이지를 어떻게 보여줄지 정한다
+    };
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-    private static final String[] AUTH_WHITELIST = {
-            "/api/auth/**", // 로그인 및 회원가입 경로
-            "/oauth2/**", // OAuth2 관련 경로
-            "/additional-info", // 추가 정보 입력 페이지
-            "/submit-additional-info" // 추가 정보 입력 처리
-    };
 
     @Autowired
     public WebConfig(JwtService jwtService, UserService userService) {
@@ -34,8 +37,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // PROTECTED_PATHS 경로에만 인터셉터 적용
         registry.addInterceptor(new JwtInterceptor(jwtService, userService))
-                .addPathPatterns("/**")
-                .excludePathPatterns(AUTH_WHITELIST);
+                .addPathPatterns(PROTECTED_PATHS);
     }
 }
