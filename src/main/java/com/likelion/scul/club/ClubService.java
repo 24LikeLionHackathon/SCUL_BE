@@ -57,6 +57,10 @@ public class ClubService {
         }
 
         Club club = new Club(clubRequest, status, user, sports, imageUrl, participateNumber);
+
+        System.out.println("club name: " + club.getClubName());
+        System.out.println("club participate number: " + club.getClubParticipateNumber());
+
         clubRepository.save(club);
 
         ClubUser clubUser = new ClubUser(club, user);
