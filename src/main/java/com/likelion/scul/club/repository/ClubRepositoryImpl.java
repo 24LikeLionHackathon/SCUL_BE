@@ -25,12 +25,6 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
     public List<Club> findBySearchOption(Long sportsId, String status, LocalDate date, String place, int minCost, int maxCost, int totalMinCount, int totalMaxCount, String searchCondition, String searchText) {
         QClub club = QClub.club;
 
-        System.out.println("sportsId:" + sportsId);
-        System.out.println("status:" + status);
-        System.out.println("date:" + date);
-        System.out.println("searchCondition: " + searchCondition);
-        System.out.println("searchText: " + searchText);
-
         JPQLQuery<Club> query = queryFactory.selectFrom(club)
                 .where(eqSports(sportsId), eqStatus(status), eqDate(date), eqPlace(place), filterCost(minCost, maxCost), filterTotalCount(totalMinCount, totalMaxCount), searchContent(searchCondition, searchText))
                 .orderBy(club.createdAt.desc());
