@@ -95,14 +95,14 @@ public class ClubService {
         clubRepository.deleteById(id);
     }
 
-    // 모집 중 -> 모집 완료
+    // 모집 중 -> 마감
     public ClubResponse updateClubStatus(Long id) {
         Club club = clubRepository.findByClubId(id);
-        if (club.getClubStatus().equals("모집 완료")) {
-            throw new IllegalArgumentException("이미 모집 완료된 모임 입니다");
+        if (club.getClubStatus().equals("마감")) {
+            throw new IllegalArgumentException("이미 마감된 모임 입니다");
         }
 
-        club.setClubStatus("모집 완료");
+        club.setClubStatus("마감");
         clubRepository.save(club);
         return ClubResponse.toClubResponse(club);
     }

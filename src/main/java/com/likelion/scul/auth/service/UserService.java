@@ -5,6 +5,7 @@ import com.likelion.scul.auth.repository.RefreshTokenRepository;
 import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.repository.UserRepository;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,29 @@ public class UserService {
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
+    public User extractUserByAccessToken(HttpServletRequest request) {
+        Claims claims = (Claims) request.getAttribute("claims");
+        String email = claims.getSubject();
+        User user = findByEmail(email)
+                .orElseThrow(()->new IllegalStateException("user not found : extract user failed"));
+        return user;
+    }
+
+    public Long extractUserIdByAccessToken(HttpServletRequest request) {
+        User user = extractUserByAccessToken(request);
+        return user.getUserId();
+    }
+
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
+    }
+
+    public Optional<User> findByNickName(String nickName) {
+        return userRepository.findByNickname(nickName);
     }
 
     public User makeNewUser(AddUserInfoRequest request,
@@ -50,8 +68,14 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public Optional<User> getUserFromToken(String token, JwtService jwtService) {
+        Claims claims = jwtService.getClaimsFromToken(token);
+        String email = claims.getSubject();
+        return findByEmail(email);
+    }
+
     public boolean isNickNameDuplicate(String nickName) {
-        Optional<User> user = userRepository.findBynickname(nickName);
+        Optional<User> user = userRepository.findByNickname(nickName);
         return user.isPresent();
     }
 }

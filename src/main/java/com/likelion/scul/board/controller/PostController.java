@@ -26,7 +26,6 @@ public class PostController {
         try {
             Claims claims = (Claims) request.getAttribute("claims");
             String email = claims.getSubject();
-            System.out.println(postRequestDto.getPostTitle());
             postService.createPost(postRequestDto, email);
             return new ResponseEntity<>("Post created successfully", HttpStatus.CREATED);
         } catch (Exception e) {

@@ -3,9 +3,11 @@ package com.likelion.scul.common.repository;
 import com.likelion.scul.common.domain.Follow;
 import com.likelion.scul.common.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,4 +29,10 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     @Query("SELECT COUNT(f) FROM Follow f WHERE f.follower.userId = :userId")
     int countFollowingByUserId(@Param("userId") Long userId);
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM scul.follow " +
+            "WHERE (following_id = :followedUserId and user_id = :userId )", nativeQuery = true)
+    void deleteFollowByUsersId(Long userId, Long followedUserId);
+
 }
