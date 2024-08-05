@@ -43,7 +43,6 @@ public class ClubService {
     // club 생성
     public ClubResponse save(ClubRequest clubRequest, User user) throws IOException {
         String status = "모집 중";
-        int participateNumber = 1;
 
         System.out.println("11111111111111111111");
         Sports sports = sportsRepository.findBySportsName(clubRequest.getSportsName()).orElseThrow(()-> new IllegalArgumentException("해당하는 sports name이 없습니다"));
@@ -58,7 +57,7 @@ public class ClubService {
         }
 
         System.out.println("222222222222222222222222222");
-        Club club = new Club(clubRequest, status, user, sports, imageUrl, participateNumber);
+        Club club = new Club(clubRequest, status, user, sports, imageUrl);
 
         System.out.println("club name: " + club.getClubName());
         System.out.println("club participate number: " + club.getClubParticipateNumber());
