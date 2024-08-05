@@ -17,7 +17,7 @@ public class MyPageController {
         this.myPageService = myPageService;
     }
 
-    @GetMapping("/header")
+    @GetMapping("/header/{userNickname}")
     public ResponseEntity<MyPageHeaderDto> getHeader(@PathVariable String userNickname, HttpServletRequest request) {
         Claims claims = (Claims) request.getAttribute("claims");
         String email = claims.getSubject();
