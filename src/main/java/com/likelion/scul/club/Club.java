@@ -1,6 +1,7 @@
 package com.likelion.scul.club;
 
 import com.likelion.scul.club.dto.ClubRequest;
+import com.likelion.scul.common.domain.Sports;
 import com.likelion.scul.common.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -34,9 +35,9 @@ public class Club {
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "sports_id")
-//    private Sports sports;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "sports_id")
+    private Sports sports;
 
     public Club(Long clubId, String clubName, String clubContent, String clubPlace, LocalDate clubDate,
                 int clubTotalNumber, int clubParticipateNumber, String clubQnaLink, String clubParticipateLink,
