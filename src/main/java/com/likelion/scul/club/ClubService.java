@@ -2,10 +2,12 @@ package com.likelion.scul.club;
 
 import com.likelion.scul.club.domain.Club;
 import com.likelion.scul.club.domain.ClubApplication;
+import com.likelion.scul.club.domain.ClubUser;
 import com.likelion.scul.club.dto.*;
 import com.likelion.scul.club.repository.ClubApplicationRepository;
 import com.likelion.scul.club.repository.ClubRepository;
 import com.likelion.scul.club.repository.ClubRepositoryCustom;
+import com.likelion.scul.club.repository.ClubUserRepository;
 import com.likelion.scul.common.domain.Sports;
 import com.likelion.scul.common.domain.User;
 import com.likelion.scul.common.repository.SportsRepository;
@@ -23,13 +25,15 @@ public class ClubService {
     private final SportsRepository sportsRepository;
     private final ClubRepositoryCustom clubRepositoryCustom;
     private final ClubApplicationRepository clubApplicationRepository;
+    private final ClubUserRepository clubUserRepository;
 
     @Autowired
-    public ClubService(ClubRepository clubRepository, SportsRepository sportsRepository, ClubRepositoryCustom clubRepositoryCustom, ClubApplicationRepository clubApplicationRepository) {
+    public ClubService(ClubRepository clubRepository, SportsRepository sportsRepository, ClubRepositoryCustom clubRepositoryCustom, ClubApplicationRepository clubApplicationRepository, ClubUserRepository clubUserRepository) {
         this.clubRepository = clubRepository;
         this.sportsRepository = sportsRepository;
         this.clubRepositoryCustom = clubRepositoryCustom;
         this.clubApplicationRepository = clubApplicationRepository;
+        this.clubUserRepository = clubUserRepository;
     }
 
     // club 생성
@@ -39,8 +43,10 @@ public class ClubService {
         Sports sports = sportsRepository.getReferenceById(clubRequest.getSportsId());
 
         Club club = new Club(clubRequest, status, user, sports);
-
         clubRepository.save(club);
+
+        ClubUser clubUser = new ClubUser(club, user);
+        clubUserRepository.save(clubUser);
 
         return ClubResponse.toClubResponse(club);
     }
@@ -129,11 +135,19 @@ public class ClubService {
 
             clubApplication.setIsApprove(true);
             clubApplicationRepository.save(clubApplication);
+
+            ClubUser clubUser = new ClubUser(club, clubApplication.getApplicant());
+            clubUserRepository.save(clubUser);
         }
         return ClubApplicationResponse.toClubApplicationResponse(clubApplication);
     }
 
-//    public List<ClubResponse> findMyClub(Long sportsId, User user) {
-//
-//    }
+    public List<Long> getClubIdsForUser(User user) {
+        return clubUserRepository.findClubIdsByUser(user);
+    }
+
+    public List<ClubResponse> findMyClub(User user) {
+        List<Long> clubIds = getClubIdsForUser(user);
+        return clubRepository.findByClubIdIn(clubIds).stream().map(ClubResponse::toClubResponse).toList();
+    }
 }

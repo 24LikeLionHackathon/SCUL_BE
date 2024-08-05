@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -20,6 +21,8 @@ public class QUser extends EntityPathBase<User> {
     public static final QUser user = new QUser("user");
 
     public final NumberPath<Integer> age = createNumber("age", Integer.class);
+
+    public final ListPath<com.likelion.scul.club.domain.ClubUser, com.likelion.scul.club.domain.QClubUser> clubUsers = this.<com.likelion.scul.club.domain.ClubUser, com.likelion.scul.club.domain.QClubUser>createList("clubUsers", com.likelion.scul.club.domain.ClubUser.class, com.likelion.scul.club.domain.QClubUser.class, PathInits.DIRECT2);
 
     public final StringPath email = createString("email");
 

@@ -48,6 +48,8 @@ public class QClub extends EntityPathBase<Club> {
 
     public final NumberPath<Integer> clubTotalNumber = createNumber("clubTotalNumber", Integer.class);
 
+    public final ListPath<ClubUser, QClubUser> clubUsers = this.<ClubUser, QClubUser>createList("clubUsers", ClubUser.class, QClubUser.class, PathInits.DIRECT2);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

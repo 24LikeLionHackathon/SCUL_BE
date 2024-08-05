@@ -93,10 +93,11 @@ public class ClubController {
         return ResponseEntity.ok(clubApplicationResponse);
     }
 
-//    @GetMapping("/club/mine/{id}")
-//    public ResponseEntity<List<ClubResponse>> getMyClubs(@PathVariable Long id, HttpServletRequest request) {
-//        User user = (User) request.getAttribute("user");
-//
-//    }
+    // 내 소모임 조회
+    @GetMapping("/club/mine")
+    public ResponseEntity<List<ClubResponse>> getMyClubs(HttpServletRequest request) {
+        User user = (User) request.getAttribute("user");
+        return ResponseEntity.ok(clubService.findMyClub(user));
+    }
 }
 

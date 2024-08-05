@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Setter
@@ -40,6 +41,9 @@ public class Club extends TimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sports_id")
     private Sports sports;
+
+    @OneToMany(mappedBy = "club")
+    private List<ClubUser> clubUsers;
 
     public Club(Long clubId, String clubName, String clubContent, String clubPlace, LocalDate clubDate,
                 int clubTotalNumber, int clubParticipateNumber, String clubQnaLink, String clubParticipateLink,
