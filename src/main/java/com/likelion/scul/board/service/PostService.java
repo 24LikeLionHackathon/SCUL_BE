@@ -49,6 +49,10 @@ public class PostService {
 
     @Transactional
     public void createPost(PostRequestDto postRequestDto, String email) throws IOException {
+        System.out.println(email);
+        System.out.println(postRequestDto.getPostTitle());
+        System.out.println(postRequestDto.getPostContent());
+
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
