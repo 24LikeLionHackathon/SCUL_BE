@@ -18,7 +18,6 @@ public class ClubRequest {
     private LocalDate clubDate;
     private LocalDate clubEndDate;
     private int clubTotalNumber;
-    private int clubParticipateNumber;
     private String clubQnaLink;
     private String clubParticipateLink;
     private int clubCost;

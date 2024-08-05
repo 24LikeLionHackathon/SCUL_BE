@@ -45,10 +45,9 @@ public class ClubController {
 //        if (... == null) {
 //            return ResponseEntity.badRequest().build();
 //        }
-
         System.out.println("clubRequest.getSportsName() = " + clubRequest.getSportsName());
         System.out.println("clubRequest.getClubName() = " + clubRequest.getClubName());
-        System.out.println("clubRequest.getClubPlace() = " + clubRequest.getClubPlace());
+        System.out.println("clubRequest.getClubDate() = " + clubRequest.getClubDate());
         System.out.println(clubRequest.getClubContent());
         User user = (User) request.getAttribute("user");
         ClubResponse clubResponse = clubService.save(clubRequest, user);

@@ -16,7 +16,8 @@ public class ClubSearchRequest {
     private LocalDate clubDate;
     private int clubMinCost;
     private int clubMaxCost;
-    private int participantsCount;
+    private int participantMinCount;
+    private int participantMaxCount;
 
     private String searchCondition;
     private String searchText;

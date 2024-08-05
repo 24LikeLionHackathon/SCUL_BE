@@ -43,6 +43,7 @@ public class ClubService {
     // club 생성
     public ClubResponse save(ClubRequest clubRequest, User user) throws IOException {
         String status = "모집 중";
+        int participateNumber = 1;
 
         Sports sports = sportsRepository.findBySportsName(clubRequest.getSportsName()).orElseThrow(()-> new IllegalArgumentException("해당하는 sports name이 없습니다"));
 
@@ -55,7 +56,7 @@ public class ClubService {
             imageUrl = sports.getSportsDefaultImg();
         }
 
-        Club club = new Club(clubRequest, status, user, sports, imageUrl);
+        Club club = new Club(clubRequest, status, user, sports, imageUrl, participateNumber);
         clubRepository.save(club);
 
         ClubUser clubUser = new ClubUser(club, user);
@@ -104,7 +105,7 @@ public class ClubService {
 
     // 필터링 검색
     public List<ClubResponse> findBySearchOptions(Long sportsId, ClubSearchRequest clubSearchRequest) {
-        return clubRepositoryCustom.findBySearchOption(sportsId, clubSearchRequest.getClubStatus(), clubSearchRequest.getClubDate(), clubSearchRequest.getClubPlace(), clubSearchRequest.getClubMinCost(), clubSearchRequest.getClubMaxCost(), clubSearchRequest.getParticipantsCount(), clubSearchRequest.getSearchCondition(), clubSearchRequest.getSearchText())
+        return clubRepositoryCustom.findBySearchOption(sportsId, clubSearchRequest.getClubStatus(), clubSearchRequest.getClubDate(), clubSearchRequest.getClubPlace(), clubSearchRequest.getClubMinCost(), clubSearchRequest.getClubMaxCost(), clubSearchRequest.getParticipantMinCount(), clubSearchRequest.getParticipantMaxCount(), clubSearchRequest.getSearchCondition(), clubSearchRequest.getSearchText())
                 .stream().map(ClubResponse::toClubResponse).toList();
     }
 

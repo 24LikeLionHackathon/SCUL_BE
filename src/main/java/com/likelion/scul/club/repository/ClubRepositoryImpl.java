@@ -22,11 +22,17 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
     }
 
     @Override
-    public List<Club> findBySearchOption(Long sportsId, String status, LocalDate date, String place, int minCost, int maxCost, int participantCount, String searchCondition, String SearchText) {
+    public List<Club> findBySearchOption(Long sportsId, String status, LocalDate date, String place, int minCost, int maxCost, int participantMinCount, int participantMaxCount, String searchCondition, String searchText) {
         QClub club = QClub.club;
 
+        System.out.println("sportsId:" + sportsId);
+        System.out.println("status:" + status);
+        System.out.println("date:" + date);
+        System.out.println("searchCondition: " + searchCondition);
+        System.out.println("searchText: " + searchText);
+
         JPQLQuery<Club> query = queryFactory.selectFrom(club)
-                .where(eqSports(sportsId), eqStatus(status), eqDate(date), eqPlace(place), filterCost(minCost, maxCost), eqParticipantCount(participantCount), searchContent(searchCondition, SearchText))
+                .where(eqSports(sportsId), eqStatus(status), eqDate(date), eqPlace(place), filterCost(minCost, maxCost), filterParticipantCount(participantMinCount, participantMaxCount), searchContent(searchCondition, searchText))
                 .orderBy(club.createdAt.desc());
 
         return query.fetch();
@@ -40,7 +46,7 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
     }
 
     private BooleanExpression eqStatus(String status) {
-        if (status == null || status.isEmpty()) {
+        if (status == null || status.isEmpty() || status.equals("마감 포함")) {
             return null;
         }
         return club.clubStatus.eq(status);
@@ -72,11 +78,23 @@ public class ClubRepositoryImpl extends QuerydslRepositorySupport implements Clu
         return costCondition;
     }
 
-    private BooleanExpression eqParticipantCount(Integer participantCount) {
-        if (participantCount == null || participantCount == 0) {
+    private BooleanExpression filterParticipantCount(Integer participateMinCount, Integer participateMaxCount) {
+
+        if ((participateMinCount == null || participateMinCount == 0) && (participateMaxCount == null || participateMaxCount == 0)) {
             return null;
         }
-        return club.clubParticipateNumber.eq(participantCount);
+        BooleanExpression participateCondition = null;
+        if (participateMinCount != null && participateMaxCount > 0) {
+            participateCondition = club.clubCost.goe(participateMinCount);
+        }
+        if (participateMaxCount != null && participateMaxCount > 0) {
+            if (participateCondition == null) {
+                participateCondition = club.clubCost.loe(participateMaxCount);
+            } else {
+                participateCondition = participateCondition.and(club.clubCost.loe(participateMaxCount));
+            }
+        }
+        return participateCondition;
     }
 
     private BooleanExpression eqPlace (String place) {

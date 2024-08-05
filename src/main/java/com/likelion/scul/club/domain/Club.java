@@ -68,14 +68,14 @@ public class Club extends TimeEntity {
         this.sports = sports;
     }
 
-    public Club(ClubRequest clubRequest, String clubStatus, User user, Sports sports, String clubImage) {
+    public Club(ClubRequest clubRequest, String clubStatus, User user, Sports sports, String clubImage, int participateNumber) {
         this.clubName = clubRequest.getClubName();
         this.clubContent = clubRequest.getClubContent();
         this.clubPlace = clubRequest.getClubPlace();
         this.clubDate = clubRequest.getClubDate();
         this.clubEndDate = clubRequest.getClubEndDate();
         this.clubTotalNumber = clubRequest.getClubTotalNumber();
-        this.clubParticipateNumber = clubRequest.getClubParticipateNumber();
+        this.clubParticipateNumber = participateNumber;
         this.clubQnaLink = clubRequest.getClubQnaLink();
         this.clubParticipateLink = clubRequest.getClubParticipateLink();
         this.clubCost = clubRequest.getClubCost();
