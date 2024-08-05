@@ -59,17 +59,15 @@ public class CommentService {
         Comment comment = commentRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
 
-        if (!comment.getUser().getEmail().equals(email)) {
-            throw new RuntimeException("User not authorized to update this comment");
-        }
-
         LocalDateTime createdDateTime = LocalDateTime.parse(commentUpdateRequestDto.createdAt(), DateTimeFormatter.ISO_DATE_TIME);
 
         comment.setCommentContent(commentUpdateRequestDto.commentContent());
         comment.setCreatedAt(createdDateTime);
 
+        System.out.println(user.getNickname());
         // Retrieve user image URL
         String userImageUrl = user.getUserImage() != null ? user.getUserImage().getImageUrl() : null;
+        System.out.println("userImageUrl = " + userImageUrl);
 
         return new CommentDto(comment.getCommentId(), user.getNickname(), comment.getCommentContent(), createdDateTime, userImageUrl,comment.getUser().getEmail().equals(email));
     }
