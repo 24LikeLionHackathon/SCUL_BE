@@ -14,5 +14,5 @@ public class ActivityCommentsDto {
     private int totalPosts;
     private int totalComments;
     private int totalLikes;
-    private int participatingClubs;
+    private int totalParticipatingClubs;
 }

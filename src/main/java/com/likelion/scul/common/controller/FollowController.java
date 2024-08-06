@@ -26,10 +26,10 @@ public class FollowController {
     }
 
     @PostMapping
-    public ResponseEntity<Follow> addFollow(@RequestBody FollowRequest followRequest, HttpServletRequest servletRequest) {
+    public ResponseEntity addFollow(@RequestBody FollowRequest followRequest, HttpServletRequest servletRequest) {
         User user = userService.extractUserByAccessToken(servletRequest);
         Follow follow = followService.saveFollow(followRequest, user);
-        return ResponseEntity.ok(follow);
+        return ResponseEntity.ok("성공적으로 follow 했습니다");
     }
 
 //    @GetMapping
