@@ -16,6 +16,6 @@ public class LikedPostInfoDto {
     private String postAuthorNickname;
     private LocalDateTime createdAt;
     private int commentCount;
-
+    private long postId;
 }
 

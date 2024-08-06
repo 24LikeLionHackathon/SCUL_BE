@@ -113,7 +113,8 @@ public class MyPageService {
                     post.getBoard().getBoardName(),
                     post.getPostTitle(),
                     post.getCreatedAt(),
-                    commentCount
+                    commentCount,
+                    post.getPostId()
             );
         }).collect(Collectors.toList());
 
@@ -148,7 +149,8 @@ public class MyPageService {
                     comment.getCreatedAt(),
                     comment.getPost().getBoard().getSports().getSportsName(),
                     comment.getPost().getBoard().getBoardName(),
-                    comment.getPost().getPostTitle()
+                    comment.getPost().getPostTitle(),
+                    comment.getPost().getPostId()
             );
         }).collect(Collectors.toList());
 
@@ -184,7 +186,8 @@ public class MyPageService {
                     club.getClubName(),
                     club.getClubPlace(),
                     club.getUser().getNickname(),
-                    club.getClubDate()
+                    club.getClubDate(),
+                    club.getClubId()
             );
         }).collect(Collectors.toList());
 
@@ -226,7 +229,8 @@ public class MyPageService {
                     post.getPostTitle(),
                     post.getUser().getNickname(),
                     post.getCreatedAt(),
-                    commentCount
+                    commentCount,
+                    post.getPostId()
             );
         }).collect(Collectors.toList());
 

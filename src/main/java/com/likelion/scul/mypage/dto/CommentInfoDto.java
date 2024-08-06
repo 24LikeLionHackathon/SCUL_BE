@@ -15,5 +15,6 @@ public class CommentInfoDto {
     private String sportsName;
     private String boardName;
     private String postTitle;
+    private long postId;
 }
 

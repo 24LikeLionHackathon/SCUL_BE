@@ -10,16 +10,19 @@ public class PostInfoDto {
     private LocalDateTime createdAt;
     private int commentCount;
 
-    public PostInfoDto(String postImage, String sportsName, String boardName, String postTitle, LocalDateTime createdAt, int commentCount) {
+    private long postId;
+
+    public PostInfoDto(String postImage, String sportsName, String boardName, String postTitle, LocalDateTime createdAt, int commentCount, long postId) {
         this.postImage = postImage;
         this.sportsName = sportsName;
         this.boardName = boardName;
         this.postTitle = postTitle;
         this.createdAt = createdAt;
         this.commentCount = commentCount;
+        this.postId = postId;
     }
 
-    // Getters and Setters
+// Getters and Setters
 
     public String getPostImage() {
         return postImage;

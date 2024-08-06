@@ -13,4 +13,5 @@ public class ClubInfoDto {
     private String clubPlace;
     private String userNickname;
     private LocalDate clubDate;
+    private long postId;
 }
