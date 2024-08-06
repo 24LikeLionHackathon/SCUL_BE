@@ -49,7 +49,11 @@ public class FollowController {
     }
 
     @GetMapping("/api/follower")
-    public ResponseEntity<List<FollowProfileResponse>> getFollowers(@RequestBody MyPageFollowRequest request) {
+    public ResponseEntity<List<FollowProfileResponse>> getFollowers(
+            @RequestParam("userNickname") String userNickname,
+            @RequestParam("pageNum") int pageNum
+    ) {
+        MyPageFollowRequest request = new MyPageFollowRequest(userNickname, pageNum);
         String email = userService.findByNickName(request.getUserNickName())
                 .orElseThrow(()-> new IllegalStateException("닉네임으로 해당 유저를 찾을 수 없습니다."))
                 .getEmail();
@@ -58,7 +62,11 @@ public class FollowController {
     }
 
     @GetMapping("/api/following")
-    public ResponseEntity<List<FollowProfileResponse>> getFollowings(@RequestBody MyPageFollowRequest request) {
+    public ResponseEntity<List<FollowProfileResponse>> getFollowings(
+            @RequestParam("userNickname") String userNickname,
+            @RequestParam("pageNum") int pageNum
+    ) {
+        MyPageFollowRequest request = new MyPageFollowRequest(userNickname, pageNum);
         String email = userService.findByNickName(request.getUserNickName())
                 .orElseThrow(()-> new IllegalStateException("닉네임으로 해당 유저를 찾을 수 없습니다."))
                 .getEmail();
