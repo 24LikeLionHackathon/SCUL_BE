@@ -28,8 +28,8 @@ public class ClubController {
 
     // id에 해당하는 club 조회 (club 상세 조회)
     @GetMapping("/api/club/{id}")
-    public ClubDetailResponse getClub(@PathVariable Long id, HttpServletRequest request) {
-        User user = (User) request.getAttribute("user");
+    public ClubDetailResponse getClub(@PathVariable Long id, @RequestParam (value = "userId", required = false) Long userId ) {
+        User user = (userId != null) ? userService.findById(userId).orElse(null) : null;
 
         return clubService.findById(id, user);
     }
