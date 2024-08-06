@@ -57,14 +57,12 @@ public class PostController {
         }
     }
 
-
     //여기에 interceptor가 동작하고 있는데 만약에 비회원 로그인이면 허용해줘야함
-    @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostDetailDto> getPostDetail(@PathVariable Long postId,HttpServletRequest request) {
+    @GetMapping("/api/posts")
+    public ResponseEntity<PostDetailDto> getPostDetail(  @RequestParam("postId") Long postId,
+                                                         @RequestParam("userId") Long userId) {
         try {
-            Claims claims = (Claims) request.getAttribute("claims");
-            String email = claims.getSubject();
-            PostDetailDto postDetail = postService.getPostDetail(postId,email);
+            PostDetailDto postDetail = postService.getPostDetail(postId,userId);
             return new ResponseEntity<>(postDetail, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

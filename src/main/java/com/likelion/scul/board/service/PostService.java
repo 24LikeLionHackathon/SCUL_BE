@@ -164,7 +164,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostDetailDto getPostDetail(Long postId,String email) {
+    public PostDetailDto getPostDetail(Long postId,Long userId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
@@ -186,14 +186,14 @@ public class PostService {
                             comment.getCommentContent(),
                             comment.getCreatedAt(),
                             userImage != null ? userImage.getImageUrl() : null, // Default imageUrl if userImage is null
-                            user != null && user.getEmail() != null && user.getEmail().equals(email)
+                            user != null && user.getEmail() != null && user.getUserId().equals(userId)
                     );
                 })
                 .collect(Collectors.toList());
 
 
         // 현재 사용자를 가져오기
-        User currentUser = userRepository.findByEmail(email)
+        User currentUser = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         // 사용자가 이 게시물을 좋아요 했는지 확인
         boolean isLike = post.getLikes().stream()
@@ -215,7 +215,7 @@ public class PostService {
                 imageUrls,
                 post.getLikes().size(),
                 comments,
-                post.getUser().getEmail().equals(email),
+                post.getUser().getUserId().equals(userId),
                 isLike,
                 isFollowing
         );

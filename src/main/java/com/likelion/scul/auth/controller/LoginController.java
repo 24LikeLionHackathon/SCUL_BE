@@ -68,30 +68,9 @@ public class LoginController {
         this.userSportsService = userSportsService;
     }
 
-//    @GetMapping("/oauth2/google/redirect")
-//    public RedirectView redirectGoogleLogin() {
-//        StringBuilder reqUrl = new StringBuilder("https://accounts.google.com/o/oauth2/v2/auth");
-//        reqUrl.append("?client_id=").append(googleClientId)
-//                .append("&redirect_uri=").append(googleRedirectUri)
-//                .append("&response_type=code")
-//                .append("&scope=email%20profile%20openid")
-//                .append("&access_type=offline");
-//        return new RedirectView(reqUrl.toString());
-//    }
-//
-//    @GetMapping("/oauth2/kakao/redirect")
-//    public RedirectView redirectKakaoLogin() {
-//        StringBuilder reqUrl = new StringBuilder("https://kauth.kakao.com/oauth/authorize");
-//        reqUrl.append("?client_id=").append(kakaoClientKey)
-//                .append("&redirect_uri=").append(kakaoRedirectUri)
-//                .append("&response_type=code")
-//                .append("&scope=account_email");
-//        return new RedirectView(reqUrl.toString());
-//    }
-
     @GetMapping("/oauth2/google")
     public ResponseEntity<Map<String, Object>> loginGoogle(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) throws IOException {
-        // 구글에 accessToken, refreshToken 요청
+        // Request accessToken, refreshToken from Google
         GoogleRequest googleOAuthRequestParam = GoogleRequest
                 .builder()
                 .clientId(googleClientId)
@@ -108,7 +87,7 @@ public class LoginController {
         String jwtToken = resultEntity.getBody().getId_token();
         String accessToken = resultEntity.getBody().getAccess_token();
 
-        // 구글에게 사용자 email 요청
+        // Request user email from Google
         ResponseEntity<GoogleUserInfoResponse> userInfoResponseEntity = restTemplate.getForEntity(
                 "https://www.googleapis.com/oauth2/v3/userinfo?access_token=" + accessToken,
                 GoogleUserInfoResponse.class);
@@ -116,108 +95,81 @@ public class LoginController {
         GoogleUserInfoResponse userInfo = userInfoResponseEntity.getBody();
         String email = userInfo.getEmail();
 
-        // 이메일이 데이터베이스에 존재하는지 확인
+        // Check if the email exists in the database
         Optional<User> user = userService.findByEmail(email);
+        Map<String, Object> responseBody = new HashMap<>();
         if (!user.isPresent()) {
             session.setAttribute("loginType", "google");
             session.setAttribute("googleUser", userInfo);
             session.setAttribute("UserEmail", email);
-            Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("is_member", false);
-            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } else {
+            responseBody.put("access_token", "Bearer " + jwtService.createAccessToken(email));
+            responseBody.put("refresh_token", "Bearer " + jwtService.findOrCreateRefreshToken(user.get()));
+            responseBody.put("is_member", true);
+            responseBody.put("userId", user.get().getUserId()); // Add userId
         }
-
-
-        Map<String, Object> tokens = new HashMap<>();
-        tokens.put("access_token", "Bearer " + jwtService.createAccessToken(email)); // Bearer 추가
-        tokens.put("refresh_token", "Bearer " + jwtService.findOrCreateRefreshToken(user.get())); // Bearer 추가
-        tokens.put("is_member", true);
-        return ResponseEntity.ok(tokens);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
     @GetMapping("/oauth2/kakao")
     public ResponseEntity<Map<String, Object>> loginKakao(@RequestParam(value = "code") String authCode, HttpSession session, HttpServletResponse response) throws IOException {
-        // Kakao Auth Server로 부터 Token 발급
+        // Get Token from Kakao Auth Server
         KakaoToken kakaoToken = kakaoService.getToken(authCode);
         String accessToken = kakaoToken.getAccess_token();
-        // Token으로 User의 KakaoAccount Email 정보
+        // Get user's KakaoAccount Email information
         String email = kakaoService.getEmail(accessToken);
 
         Optional<User> user = userService.findByEmail(email);
-        // 기존 회원이 아니라면
+        Map<String, Object> responseBody = new HashMap<>();
         if (!user.isPresent()) {
-            // 세션에 사용자 정보 저장
             session.setAttribute("loginType", "kakao");
             session.setAttribute("UserEmail", email);
-
-            Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("is_member", false);
-            return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        } else {
+            responseBody.put("access_token", "Bearer " + jwtService.createAccessToken(email));
+            responseBody.put("refresh_token", "Bearer " + jwtService.findOrCreateRefreshToken(user.get()));
+            responseBody.put("is_member", true);
+            responseBody.put("userId", user.get().getUserId()); // Add userId
         }
-
-        Map<String, Object> tokens = new HashMap<>();
-        tokens.put("access_token", "Bearer " + jwtService.createAccessToken(email)); // Bearer 추가
-        tokens.put("refresh_token", "Bearer " + jwtService.findOrCreateRefreshToken(user.get())); // Bearer 추가
-        tokens.put("is_member", true);
-
-        return ResponseEntity.ok(tokens);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
-
-//    @GetMapping("/additional-info")
-//    public String additionalInfoForm() {
-//        return "additional-info";
-//    }
 
     @PostMapping("/auth/join/submit-info")
     public ResponseEntity<Map<String, String>> submitAdditionalInfo(
             @RequestBody AddUserInfoRequest request,
             HttpSession session) {
 
-
-        if ((String) session.getAttribute("loginType") == "kakao") {
-
-            User newUser = userService.makeNewUser(request, session);
+        User newUser;
+        if ("kakao".equals(session.getAttribute("loginType"))) {
+            newUser = userService.makeNewUser(request, session);
             newUser = userService.saveUser(newUser);
-            // 새로운 UserSports DB에 저장
+            // Save new UserSports to DB
             userSportsService.saveUserSports(request.getSportsName(), newUser);
-
-
-            // 유저의 email을 기반으로 페이지 내부 토큰 발급
-            String accessJwt = jwtService.createAccessToken(newUser.getEmail());
-            String refreshJwt = jwtService.createRefreshToken(newUser.getEmail());
-
-            // Refresh Token 생성 및 저장
-            jwtService.createAndSaveRefreshToken(newUser, refreshJwt);
-
-            Map<String, String> tokens = new HashMap<>();
-            tokens.put("access_token", "Bearer " + accessJwt);
-            tokens.put("refresh_token", "Bearer " + refreshJwt);
-
-            return ResponseEntity.ok(tokens);
         } else {
-
-            User newUser = userService.makeNewUser(request, session);
+            newUser = userService.makeNewUser(request, session);
             newUser = userService.saveUser(newUser);
 
-            for(String sport: request.getSportsName()){
+            for (String sport : request.getSportsName()) {
                 System.out.println("sport = " + sport);
             }
-
-            // 새로운 UserSports DB에 저장
+            // Save new UserSports to DB
             userSportsService.saveUserSports(request.getSportsName(), newUser);
-
-            // 유저의 email을 기반으로 페이지 내부 토큰 발급
-            String accessJwt = jwtService.createAccessToken(newUser.getEmail());
-            String refreshJwt = jwtService.createRefreshToken(newUser.getEmail());
-
-            // Refresh Token 생성 및 저장
-            jwtService.createAndSaveRefreshToken(newUser, refreshJwt);
-
-            Map<String, String> tokens = new HashMap<>();
-            tokens.put("access_token", "Bearer " + accessJwt);
-            tokens.put("refresh_token", "Bearer " + refreshJwt);
-
-            return ResponseEntity.ok(tokens);
         }
+
+        // Issue tokens based on user's email
+        String accessJwt = jwtService.createAccessToken(newUser.getEmail());
+        String refreshJwt = jwtService.createRefreshToken(newUser.getEmail());
+
+        // Create and save Refresh Token
+        jwtService.createAndSaveRefreshToken(newUser, refreshJwt);
+
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("access_token", "Bearer " + accessJwt);
+        tokens.put("refresh_token", "Bearer " + refreshJwt);
+        tokens.put("userId", newUser.getUserId().toString()); // Add userId to response
+
+        return ResponseEntity.ok(tokens);
     }
+
 }

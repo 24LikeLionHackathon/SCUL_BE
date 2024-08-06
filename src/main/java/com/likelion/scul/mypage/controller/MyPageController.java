@@ -17,12 +17,13 @@ public class MyPageController {
         this.myPageService = myPageService;
     }
 
-    @GetMapping("/header/{userNickname}")
-    public ResponseEntity<MyPageHeaderDto> getHeader(@PathVariable String userNickname, HttpServletRequest request) {
-        Claims claims = (Claims) request.getAttribute("claims");
-        String email = claims.getSubject();
+    @GetMapping("/api/header/{userNickname}")
+    public ResponseEntity<MyPageHeaderDto> getHeader(
+            @RequestParam("userId") Long userId,
+            @RequestParam("userNickname") String userNickname) {
 
-        MyPageHeaderDto headerInfo = myPageService.getHeaderInfo(userNickname,email);
+
+        MyPageHeaderDto headerInfo = myPageService.getHeaderInfo(userNickname,userId);
 
         return ResponseEntity.ok(headerInfo);
     }

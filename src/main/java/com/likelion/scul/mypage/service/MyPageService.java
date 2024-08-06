@@ -54,7 +54,7 @@ public class MyPageService {
         this.likeRepository = likeRepository;
         this.clubUserRepository = clubUserRepository;
     }
-    public MyPageHeaderDto getHeaderInfo(String userNickname,String email) {
+    public MyPageHeaderDto getHeaderInfo(String userNickname,Long userId) {
         Optional<User> optionalUser = userRepository.findByNickname(userNickname);
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
@@ -83,7 +83,7 @@ public class MyPageService {
                 followedNum,
                 participatingClubNum,
                 userProfileImageUrl,
-                user.getEmail().equals(email)
+                user.getUserId().equals(userId)
         );
     }
 

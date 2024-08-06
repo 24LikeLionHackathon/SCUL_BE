@@ -7,4 +7,5 @@ import java.util.List;
 @Data
 public class UserSportsResponse {
     List<String> sportsName;
+    String userImgUrl;
 }

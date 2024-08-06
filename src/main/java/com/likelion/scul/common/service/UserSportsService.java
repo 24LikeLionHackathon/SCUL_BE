@@ -2,9 +2,11 @@ package com.likelion.scul.common.service;
 
 import com.likelion.scul.common.domain.Sports;
 import com.likelion.scul.common.domain.User;
+import com.likelion.scul.common.domain.UserImage;
 import com.likelion.scul.common.domain.UserSports;
 import com.likelion.scul.common.dto.usersports.UserSportsResponse;
 import com.likelion.scul.common.repository.SportsRepository;
+import com.likelion.scul.common.repository.UserImageRepository;
 import com.likelion.scul.common.repository.UserSportsRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +16,15 @@ import java.util.List;
 public class UserSportsService {
     private UserSportsRepository userSportsRepository;
     private SportsRepository sportsRepository;
+    private UserImageRepository userImageRepository;
 
     public UserSportsService(
             UserSportsRepository userSportsRepository,
-            SportsRepository sportsRepository) {
+            SportsRepository sportsRepository,
+            UserImageRepository userImageRepository) {
         this.userSportsRepository = userSportsRepository;
         this.sportsRepository = sportsRepository;
+        this.userImageRepository = userImageRepository;
     }
 
     public void saveUserSports(List<String> sportsName, User newUser) {
@@ -39,6 +44,15 @@ public class UserSportsService {
         UserSportsResponse response = new UserSportsResponse();
         List<String> list = userSportsRepository.findSportsNamesByUserId(userId);
         response.setSportsName(list);
+
+        UserImage userImage = userImageRepository.findById(userId)
+                .orElse(null);
+        if (userImage == null) {
+            response.setUserImgUrl(null);
+        }
+        else {
+            response.setUserImgUrl(userImage.getImageUrl());
+        }
         return response;
     }
 
