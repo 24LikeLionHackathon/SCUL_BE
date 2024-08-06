@@ -27,6 +27,18 @@ public class MyPageController {
         return ResponseEntity.ok(headerInfo);
     }
 
+    @GetMapping("/mypage/header")
+    public ResponseEntity<LoginMyPageHeaderDto> getHeader(
+            @RequestParam("userNickname") String userNickname,
+            HttpServletRequest request
+    ) {
+        Claims claims = (Claims) request.getAttribute("claims");
+        String email = claims.getSubject();
+        LoginMyPageHeaderDto headerInfo = myPageService.getMyHeaderInfo(userNickname,email);
+
+        return ResponseEntity.ok(headerInfo);
+    }
+
     @GetMapping("/mypage/activity/posts")
     public ResponseEntity<ActivityPostsDto> getActivityPosts(
             @RequestParam("page") int page,

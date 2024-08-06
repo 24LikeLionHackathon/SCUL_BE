@@ -54,6 +54,38 @@ public class MyPageService {
         this.likeRepository = likeRepository;
         this.clubUserRepository = clubUserRepository;
     }
+
+    public LoginMyPageHeaderDto getMyHeaderInfo(String userNickname,String email) {
+        Optional<User> optionalUser = userRepository.findByNickname(userNickname);
+        if (optionalUser.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+
+        User user = optionalUser.get();
+
+        // Find the user's sports with priority 0
+        List<UserSports> userSportsList = userSportsRepository.findByUserUserId(user.getUserId());
+        String topPrioritySportsName = userSportsList.stream()
+                .filter(us -> us.getSportsPriority() == 0)
+                .map(us -> us.getSports().getSportsName())
+                .findFirst()
+                .orElse(null);
+
+        int followerNum = followRepository.countByFollowed(user);
+        int followedNum = followRepository.countByFollower(user);
+        int participatingClubNum = clubRepository.countByUser(user);
+        // Get user image URL
+        String userProfileImageUrl = user.getUserImage() != null ? user.getUserImage().getImageUrl() : null;
+
+        return new LoginMyPageHeaderDto(
+                user.getNickname(),
+                topPrioritySportsName,
+                followerNum,
+                followedNum,
+                participatingClubNum,
+                userProfileImageUrl
+        );
+    }
     public MyPageHeaderDto getHeaderInfo(String userNickname,Long userId) {
         Optional<User> optionalUser = userRepository.findByNickname(userNickname);
         if (optionalUser.isEmpty()) {
