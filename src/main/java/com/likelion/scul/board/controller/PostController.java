@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -80,20 +81,20 @@ public class PostController {
     }
 
 
-    @GetMapping("/recent-posts")
-    public ResponseEntity<List<PostListDto>> getRecentPosts() {
+    @GetMapping("/recent-posts/{sportsName}")
+    public ResponseEntity<List<PostListDto>> getRecentPosts(@PathVariable String sportsName) {
         try {
-            List<PostListDto> recentPosts = postService.getRecentPosts();
+            List<PostListDto> recentPosts = postService.getRecentPosts(sportsName);
             return new ResponseEntity<>(recentPosts, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/hot-posts")
-    public ResponseEntity<List<PostListDto>> getHotPosts() {
+    @GetMapping("/hot-posts/{sportsName}")
+    public ResponseEntity<List<PostListDto>> getHotPosts(@PathVariable String sportsName) {
         try {
-            List<PostListDto> hotPosts = postService.getHotPosts();
+            List<PostListDto> hotPosts = postService.getHotPosts(sportsName);
             return new ResponseEntity<>(hotPosts, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

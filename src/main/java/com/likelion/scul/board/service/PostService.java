@@ -301,8 +301,9 @@ public class PostService {
         return new PostListResponseDto(paginatedPosts, totalPosts);
     }
     @Transactional(readOnly = true)
-    public List<PostListDto> getRecentPosts() {
+    public List<PostListDto> getRecentPosts(String sportsName) {
         List<Post> posts = postRepository.findAll().stream()
+                .filter(post -> post.getBoard().getSports().getSportsName().equals(sportsName))
                 .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                 .limit(5)
                 .collect(Collectors.toList());
@@ -323,8 +324,9 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostListDto> getHotPosts() {
+    public List<PostListDto> getHotPosts(String sportsName) {
         List<Post> posts = postRepository.findAll().stream()
+                .filter(post -> post.getBoard().getSports().getSportsName().equals(sportsName))
                 .sorted(Comparator.comparing((Post post) -> post.getLikes().size()).reversed())
                 .limit(5)
                 .collect(Collectors.toList());
