@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/follow")
 public class FollowController {
 
     private FollowService followService;
@@ -25,7 +24,7 @@ public class FollowController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @PostMapping("/follow")
     public ResponseEntity addFollow(@RequestBody FollowRequest followRequest, HttpServletRequest servletRequest) {
         User user = userService.extractUserByAccessToken(servletRequest);
         Follow follow = followService.saveFollow(followRequest, user);
@@ -39,7 +38,7 @@ public class FollowController {
 //        return ResponseEntity.ok(response);
 //    }
 
-    @DeleteMapping
+    @DeleteMapping("/follow")
     public ResponseEntity<Void> deleteFollow(@RequestBody FollowRequest followRequest, HttpServletRequest servletRequest) {
         Long userId = userService.extractUserIdByAccessToken(servletRequest);
 
@@ -49,7 +48,7 @@ public class FollowController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/follower")
+    @GetMapping("/api/follower")
     public ResponseEntity<List<FollowProfileResponse>> getFollowers(@RequestBody MyPageFollowRequest request) {
         String email = userService.findByNickName(request.getUserNickName())
                 .orElseThrow(()-> new IllegalStateException("닉네임으로 해당 유저를 찾을 수 없습니다."))
@@ -58,7 +57,7 @@ public class FollowController {
         return ResponseEntity.ok(followService.getFollowers(email, request.getPageNum()));
     }
 
-    @GetMapping("/following")
+    @GetMapping("/api/following")
     public ResponseEntity<List<FollowProfileResponse>> getFollowings(@RequestBody MyPageFollowRequest request) {
         String email = userService.findByNickName(request.getUserNickName())
                 .orElseThrow(()-> new IllegalStateException("닉네임으로 해당 유저를 찾을 수 없습니다."))
@@ -67,7 +66,7 @@ public class FollowController {
         return ResponseEntity.ok(followService.getFollowings(email, request.getPageNum()));
     }
 
-    @GetMapping("/num")
+    @GetMapping("/api/num")
     public ResponseEntity<FollowNumResponse> getFollowNum(@RequestBody FollowRequest request) {
         Long userId = userService.findByNickName(request.getFollowedNickName())
                 .orElseThrow(()-> new IllegalStateException("닉네임으로 해당 유저를 찾을 수 없습니다."))
