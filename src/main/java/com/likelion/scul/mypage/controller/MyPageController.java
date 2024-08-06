@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/mypage")
 public class MyPageController {
 
     private final MyPageService myPageService;
@@ -17,7 +16,7 @@ public class MyPageController {
         this.myPageService = myPageService;
     }
 
-    @GetMapping("/api/header/{userNickname}")
+    @GetMapping("/api/header")
     public ResponseEntity<MyPageHeaderDto> getHeader(
             @RequestParam("userId") Long userId,
             @RequestParam("userNickname") String userNickname) {
@@ -28,7 +27,7 @@ public class MyPageController {
         return ResponseEntity.ok(headerInfo);
     }
 
-    @GetMapping("/activity/posts")
+    @GetMapping("/mypage/activity/posts")
     public ResponseEntity<ActivityPostsDto> getActivityPosts(
             @RequestParam("page") int page,
             @RequestParam("userNickname") String userNickname
@@ -37,7 +36,7 @@ public class MyPageController {
         return ResponseEntity.ok(activityPostsInfo);
     }
 
-    @GetMapping("/activity/comments")
+    @GetMapping("/mypage/activity/comments")
     public ResponseEntity<ActivityCommentsDto> getActivityComments(
             @RequestParam("page") int page,
             @RequestParam("userNickname") String userNickname
@@ -46,7 +45,7 @@ public class MyPageController {
         return ResponseEntity.ok(activityCommentsInfo);
     }
 
-    @GetMapping("/activity/clubs")
+    @GetMapping("/mypage/activity/clubs")
     public ResponseEntity<ActivityClubsDto> getActivityClubs(
             @RequestParam("page") int page,
             @RequestParam("userNickname") String userNickname
@@ -55,7 +54,7 @@ public class MyPageController {
         return ResponseEntity.ok(activityClubsInfo);
     }
 
-    @GetMapping("/activity/likes")
+    @GetMapping("/mypage/activity/likes")
     public ResponseEntity<ActivityLikesDto> getActivityLikes(
             @RequestParam("page") int page,
             @RequestParam("userNickname") String userNickname
