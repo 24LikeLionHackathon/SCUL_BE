@@ -108,6 +108,8 @@ public class LoginController {
             responseBody.put("refresh_token", "Bearer " + jwtService.findOrCreateRefreshToken(user.get()));
             responseBody.put("is_member", true);
             responseBody.put("userId", user.get().getUserId()); // Add userId
+            responseBody.put("userNickname", user.get().getNickname());
+
         }
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
@@ -131,6 +133,8 @@ public class LoginController {
             responseBody.put("refresh_token", "Bearer " + jwtService.findOrCreateRefreshToken(user.get()));
             responseBody.put("is_member", true);
             responseBody.put("userId", user.get().getUserId()); // Add userId
+            responseBody.put("userNickname", user.get().getNickname());
+
         }
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
@@ -168,6 +172,7 @@ public class LoginController {
         tokens.put("access_token", "Bearer " + accessJwt);
         tokens.put("refresh_token", "Bearer " + refreshJwt);
         tokens.put("userId", newUser.getUserId().toString()); // Add userId to response
+        tokens.put("userNickname", newUser.getNickname());
 
         return ResponseEntity.ok(tokens);
     }
