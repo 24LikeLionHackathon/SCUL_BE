@@ -55,8 +55,8 @@ public class MyPageService {
         this.clubUserRepository = clubUserRepository;
     }
 
-    public LoginMyPageHeaderDto getMyHeaderInfo(String userNickname,String email) {
-        Optional<User> optionalUser = userRepository.findByNickname(userNickname);
+    public LoginMyPageHeaderDto getMyHeaderInfo(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found");
         }

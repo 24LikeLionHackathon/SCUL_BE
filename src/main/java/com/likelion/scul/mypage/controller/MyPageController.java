@@ -29,12 +29,11 @@ public class MyPageController {
 
     @GetMapping("/mypage/header")
     public ResponseEntity<LoginMyPageHeaderDto> getHeader(
-            @RequestParam("userNickname") String userNickname,
             HttpServletRequest request
     ) {
         Claims claims = (Claims) request.getAttribute("claims");
         String email = claims.getSubject();
-        LoginMyPageHeaderDto headerInfo = myPageService.getMyHeaderInfo(userNickname,email);
+        LoginMyPageHeaderDto headerInfo = myPageService.getMyHeaderInfo(email);
 
         return ResponseEntity.ok(headerInfo);
     }
